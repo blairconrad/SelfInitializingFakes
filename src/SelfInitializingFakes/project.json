@@ -1,0 +1,19 @@
+﻿{
+  "buildOptions": {
+    "additionalArguments": [ "/ruleset:../../SelfInitializingFakes.ruleset" ],
+    "warningsAsErrors": true,
+    "xmlDoc": true
+  },
+
+  "dependencies": {
+    "FakeItEasy": "3.0.0-beta002-build000066",
+    "StyleCop.Analyzers": "1.1.0-beta001"
+  },
+
+  "frameworks": {
+    "net40": {
+    },
+    "netstandard1.6": {
+    }
+  }
+}
