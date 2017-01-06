@@ -15,11 +15,11 @@ var nuspecs = new string[0];
 var acceptanceTests = new[] { "tests/SelfInitializingFakes.AcceptanceTests" };
 
 var solution = "./" + solutionName + ".sln";
-var logs = "./artifacts/logs";
+var logsDirectory = "./artifacts/logs";
 var msBuild = $"{Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86)}/MSBuild/14.0/Bin/msbuild.exe";
 var output = "./artifacts/output";
 var nuget = "./.nuget/NuGet.exe";
-var tests = "./artifacts/tests";
+var testsDirectory = "./artifacts/tests";
 var xunit = "./packages/xunit.runner.console.2.1.0/tools/xunit.console.exe";
 var frameworks = new[] { "net451", "netcoreapp1.0" };
 
@@ -37,17 +37,17 @@ var targets = new TargetDictionary();
 
 targets.Add("default", DependsOn("pack", "accept"));
 
-targets.Add("logs", () => Directory.CreateDirectory(logs));
+targets.Add("logsDirectory", () => Directory.CreateDirectory(logsDirectory));
 
-targets.Add("tests", () => Directory.CreateDirectory(tests));
+targets.Add("testsDirectory", () => Directory.CreateDirectory(testsDirectory));
 
 targets.Add(
     "build",
-    DependsOn("logs"),
+    DependsOn("logsDirectory"),
     () => Cmd(
         msBuild,
         $"{solution} /p:Configuration=Release /nologo /m /v:m /nr:false " +
-            $"/fl /flp:LogFile={logs}/msbuild.log;Verbosity=Detailed;PerformanceSummary"));
+            $"/fl /flp:LogFile={logsDirectory}/msbuild.log;Verbosity=Detailed;PerformanceSummary"));
 
 targets.Add("output", () => Directory.CreateDirectory(output));
 
@@ -77,16 +77,16 @@ targets.Add(
 
 targets.Add(
     "accept",
-    DependsOn("build", "tests"),
+    DependsOn("build", "testsDirectory"),
     () =>
     {
         foreach (var testDir in acceptanceTests)
         {
-            var outputDirectory = Path.GetFullPath(Path.Combine(tests, Path.GetFileName(testDir)));
+            var outputBase = Path.GetFullPath(Path.Combine(testsDirectory, Path.GetFileName(testDir)));
 
             foreach (var framework in frameworks)
             {
-                RunDotNet(testDir, "test", $"-c Release -f {framework} -nologo -xml {outputDirectory}-{framework}.xml");
+                RunDotNet(testDir, "test", $"-c Release -f {framework} -nologo -xml {outputBase}-{framework}.xml");
             }
         }
     });
