@@ -19,7 +19,9 @@ var logs = "./artifacts/logs";
 var msBuild = $"{Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86)}/MSBuild/14.0/Bin/msbuild.exe";
 var output = "./artifacts/output";
 var nuget = "./.nuget/NuGet.exe";
+var tests = "./artifacts/tests";
 var xunit = "./packages/xunit.runner.console.2.1.0/tools/xunit.console.exe";
+var frameworks = new[] { "net451", "netcoreapp1.0" };
 
 // version
 var versionSuffix = Environment.GetEnvironmentVariable("VERSION_SUFFIX") ?? "";
@@ -36,6 +38,8 @@ var targets = new TargetDictionary();
 targets.Add("default", DependsOn("pack", "accept"));
 
 targets.Add("logs", () => Directory.CreateDirectory(logs));
+
+targets.Add("tests", () => Directory.CreateDirectory(tests));
 
 targets.Add(
     "build",
@@ -73,12 +77,17 @@ targets.Add(
 
 targets.Add(
     "accept",
-    DependsOn("build"),
+    DependsOn("build", "tests"),
     () =>
     {
         foreach (var testDir in acceptanceTests)
         {
-            RunDotNet(testDir, "test", "-c Release");
+            var outputDirectory = Path.GetFullPath(Path.Combine(tests, Path.GetFileName(testDir)));
+
+            foreach (var framework in frameworks)
+            {
+                RunDotNet(testDir, "test", $"-c Release -f {framework} -nologo -xml {outputDirectory}-{framework}.xml");
+            }
         }
     });
 
