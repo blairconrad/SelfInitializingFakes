@@ -25,10 +25,18 @@
                 .x(() => serviceFactory = null);
 
             "When I create a self-initializing fake from the factory"
-                .x(() => exception = Record.Exception(() => new SelfInitializingFake<IService>(repository, serviceFactory)));
+                .x(
+                    () =>
+                        exception =
+                            Record.Exception(() => new SelfInitializingFake<IService>(repository, serviceFactory)));
 
             "Then the constructor throws an exception"
-                .x(() => exception.Should().BeOfType<ArgumentNullException>().Which.ParamName.Should().Be("serviceFactory"));
+                .x(
+                    () =>
+                        exception.Should()
+                            .BeOfType<ArgumentNullException>()
+                            .Which.ParamName.Should()
+                            .Be("serviceFactory"));
         }
 
         [Scenario]
@@ -44,10 +52,32 @@
                 .x(() => serviceFactory = A.Fake<Func<IService>>());
 
             "When I create a self-initializing fake from the factory"
-                .x(() => exception = Record.Exception(() => new SelfInitializingFake<IService>(repository, serviceFactory)));
+                .x(
+                    () =>
+                        exception =
+                            Record.Exception(() => new SelfInitializingFake<IService>(repository, serviceFactory)));
 
             "Then the constructor throws an exception"
                 .x(() => exception.Should().BeOfType<ArgumentNullException>().Which.ParamName.Should().Be("repository"));
+        }
+
+        [Scenario]
+        public static void CreatingFromRepositoryAndServiceFactory(
+            ISavedCallRepository repository,
+            Func<IService> serviceFactory,
+            SelfInitializingFake<IService> fake)
+        {
+            "Given a saved call repository"
+                 .x(() => repository = A.Fake<ISavedCallRepository>());
+
+            "And a service factory"
+                .x(() => serviceFactory = A.Fake<Func<IService>>());
+
+            "When I create a self-initializing fake from the factory"
+                .x(() => fake = new SelfInitializingFake<IService>(repository, serviceFactory));
+
+            "Then the fake is created"
+                .x(() => fake.Should().NotBeNull());
         }
     }
 }
