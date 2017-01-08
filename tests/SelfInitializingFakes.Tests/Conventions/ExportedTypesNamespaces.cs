@@ -1,4 +1,4 @@
-﻿namespace SelfInitializingFakes.AcceptanceTests.Conventions
+﻿namespace SelfInitializingFakes.Tests.Conventions
 {
     using System.Linq;
     using System.Reflection;

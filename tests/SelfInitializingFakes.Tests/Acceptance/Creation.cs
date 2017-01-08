@@ -1,4 +1,4 @@
-﻿namespace SelfInitializingFakes.AcceptanceTests
+﻿namespace SelfInitializingFakes.Tests.Acceptance
 {
     using System;
     using FakeItEasy;

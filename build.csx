@@ -12,7 +12,7 @@ var solutionName = "SelfInitializingFakes";
 
 // locations
 var nuspecs = new string[0];
-var acceptanceTests = new[] { "tests/SelfInitializingFakes.AcceptanceTests" };
+var testProjectDirs = new[] { "tests/SelfInitializingFakes.Tests" };
 
 var solution = "./" + solutionName + ".sln";
 var logsDirectory = "./artifacts/logs";
@@ -35,7 +35,7 @@ var version = "0.1.0";
 // targets
 var targets = new TargetDictionary();
 
-targets.Add("default", DependsOn("pack", "accept"));
+targets.Add("default", DependsOn("pack", "test"));
 
 targets.Add("logsDirectory", () => Directory.CreateDirectory(logsDirectory));
 
@@ -76,11 +76,11 @@ targets.Add(
     });
 
 targets.Add(
-    "accept",
+    "test",
     DependsOn("build", "testsDirectory"),
     () =>
     {
-        foreach (var testDir in acceptanceTests)
+        foreach (var testDir in testProjectDirs)
         {
             var outputBase = Path.GetFullPath(Path.Combine(testsDirectory, Path.GetFileName(testDir)));
 
