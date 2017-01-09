@@ -28,6 +28,11 @@
                 throw new ArgumentNullException(nameof(repository));
             }
 
+            if (repository.LoadCalls() == null)
+            {
+                var wrappedService = serviceFactory.Invoke();
+            }
+
             return A.Fake<TService>();
         }
     }
