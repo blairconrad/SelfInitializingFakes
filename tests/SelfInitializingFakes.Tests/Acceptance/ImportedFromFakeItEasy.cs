@@ -139,72 +139,67 @@
 ////                .x(() => @ref.Should().Be(8));
 ////        }
 ////
-////        [Scenario]
-////        public static void SelfInitializingIgnoresParameterValues(
-////            InMemoryStorage inMemoryStorage,
-////            ILibraryService realServiceWhileRecording,
-////            ILibraryService realServiceDuringPlayback,
-////            IEnumerable<int> countsWhileRecording,
-////            IEnumerable<int> countsDuringPlayback)
-////        {
-////            "Given a call storage object"
-////                .x(() => inMemoryStorage = new InMemoryStorage());
-////
-////            "And a real service to wrap while recording"
-////                .x(() =>
-////                {
-////                    realServiceWhileRecording = A.Fake<ILibraryService>();
-////
-////                    A.CallTo(() => realServiceWhileRecording.GetCount("1"))
-////                        .Returns(0x1);
-////                    A.CallTo(() => realServiceWhileRecording.GetCount("2"))
-////                        .Returns(0x2);
-////                });
-////
-////            "And a real service to wrap while playing back"
-////                .x(() => realServiceDuringPlayback = A.Fake<ILibraryService>());
-////
-////            "When I use a self-initializing fake in recording mode to get the counts for book 2 and 1"
-////                .x(() =>
-////                {
-////                    using (var recorder = new RecordingManager(inMemoryStorage))
-////                    {
-////                        var fakeService = A.Fake<ILibraryService>(options => options
-////                            .Wrapping(realServiceWhileRecording).RecordedBy(recorder));
-////
-////                        countsWhileRecording = new List<int>
-////                            {
-////                                fakeService.GetCount("2"),
-////                                fakeService.GetCount("1")
-////                            };
-////                    }
-////                });
-////
-////            "And I use a self-initializing fake in playback mode to get the counts for book 1 and 2"
-////                .x(() =>
-////                {
-////                    using (var recorder = new RecordingManager(inMemoryStorage))
-////                    {
-////                        var playbackFakeService = A.Fake<ILibraryService>(options => options
-////                            .Wrapping(realServiceDuringPlayback).RecordedBy(recorder));
-////
-////                        countsDuringPlayback = new List<int>
-////                            {
-////                                playbackFakeService.GetCount("1"),
-////                                playbackFakeService.GetCount("2"),
-////                            };
-////                    }
-////                });
-////
-////            "Then the recording fake returns the wrapped service's results"
-////                .x(() => countsWhileRecording.Should().Equal(0x2, 0x1));
-////
-////            // These results demonstrate that the self-initializing fake relies on a script
-////            // defined by which methods are called, without regard to the arguments
-////            // passed to the methods.
-////            "And the playback fake returns results in 'recorded order'"
-////                .x(() => countsDuringPlayback.Should().Equal(0x2, 0x1));
-////        }
+        [Scenario]
+        public static void SelfInitializingIgnoresParameterValues(
+            InMemoryStorage inMemoryStorage,
+            ILibraryService realServiceWhileRecording,
+            ILibraryService realServiceDuringPlayback,
+            IEnumerable<int> countsWhileRecording,
+            IEnumerable<int> countsDuringPlayback)
+        {
+            "Given a call storage object"
+                .x(() => inMemoryStorage = new InMemoryStorage());
+
+            "And a real service to wrap while recording"
+                .x(() =>
+                {
+                    realServiceWhileRecording = A.Fake<ILibraryService>();
+
+                    A.CallTo(() => realServiceWhileRecording.GetCount("1"))
+                        .Returns(0x1);
+                    A.CallTo(() => realServiceWhileRecording.GetCount("2"))
+                        .Returns(0x2);
+                });
+
+            "When I use a self-initializing fake in recording mode to get the counts for book 2 and 1"
+                .x(() =>
+                {
+                    var fakeService = SelfInitializingFake.For(() => realServiceWhileRecording, inMemoryStorage);
+                    var fake = fakeService.Fake;
+
+                    countsWhileRecording = new List<int>
+                    {
+                        fake.GetCount("2"),
+                        fake.GetCount("1"),
+                    };
+
+                    fakeService.EndSession();
+                });
+
+            "And I use a self-initializing fake in playback mode to get the counts for book 1 and 2"
+                .x(() =>
+                {
+                    var playbackFakeService = SelfInitializingFake.For<ILibraryService>(() => null, inMemoryStorage);
+                    var fake = playbackFakeService.Fake;
+
+                    countsDuringPlayback = new List<int>
+                    {
+                        fake.GetCount("1"),
+                        fake.GetCount("2"),
+                    };
+
+                    playbackFakeService.EndSession();
+                });
+
+            "Then the recording fake returns the wrapped service's results"
+                .x(() => countsWhileRecording.Should().Equal(0x2, 0x1));
+
+            // These results demonstrate that the self-initializing fake relies on a script
+            // defined by which methods are called, without regard to the arguments
+            // passed to the methods.
+            "And the playback fake returns results in 'recorded order'"
+                .x(() => countsDuringPlayback.Should().Equal(0x2, 0x1));
+        }
 ////
 ////        [Scenario]
 ////        public static void SelfInitializingThrowsIfWrongCallEncountered(
