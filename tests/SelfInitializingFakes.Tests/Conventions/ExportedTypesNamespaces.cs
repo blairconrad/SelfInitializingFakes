@@ -10,7 +10,7 @@
         [Fact]
         public void Exported_types_should_have_SelfInitializingFakes_namespace()
         {
-            typeof(SelfInitializingFake).GetTypeInfo().Assembly.GetExportedTypes()
+            typeof(SelfInitializingFake<>).GetTypeInfo().Assembly.GetExportedTypes()
                 .Where(t => t.Namespace != "SelfInitializingFakes")
                 .Should().BeEmpty();
         }
@@ -18,8 +18,8 @@
         [Fact]
         public void All_types_in_SelfInitializingFakes_namespace_should_be_exported()
         {
-            typeof(SelfInitializingFake).GetTypeInfo().Assembly.GetTypes()
-                .Where(t => t.Namespace == "SelfInitializingFakes" && !t.GetTypeInfo().IsVisible)
+            typeof(SelfInitializingFake<>).GetTypeInfo().Assembly.GetTypes()
+                .Where(t => t.Namespace == "SelfInitializingFakes" && !t.IsNested && !t.GetTypeInfo().IsVisible)
                 .Should().BeEmpty();
         }
     }

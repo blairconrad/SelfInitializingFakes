@@ -14,7 +14,7 @@
 
         [Scenario]
         public static void CreateFromNullServiceFactory(
-            ISavedCallRepository repository,
+            ICallDataRepository repository,
             Func<IService> serviceFactory,
             Exception exception)
         {
@@ -22,11 +22,11 @@
                 .x(() => serviceFactory = null);
 
             "And a saved call repository"
-                .x(() => repository = A.Fake<ISavedCallRepository>());
+                .x(() => repository = A.Fake<ICallDataRepository>());
 
             "When I create a self-initializing fake"
                 .x(() => exception = Record.Exception(() =>
-                        SelfInitializingFake.For<IService>(serviceFactory, repository)));
+                        SelfInitializingFake<IService>.For(serviceFactory, repository)));
 
             "Then the constructor throws an exception"
                 .x(() => exception.Should()
@@ -36,7 +36,7 @@
 
         [Scenario]
         public static void CreateFromNullCallRepository(
-            ISavedCallRepository repository,
+            ICallDataRepository repository,
             Func<IService> serviceFactory,
             Exception exception)
         {
@@ -48,7 +48,7 @@
 
             "When I create a self-initializing fake"
                 .x(() => exception = Record.Exception(() =>
-                        SelfInitializingFake.For<IService>(serviceFactory, repository)));
+                        SelfInitializingFake<IService>.For(serviceFactory, repository)));
 
             "Then the constructor throws an exception"
                 .x(() => exception.Should()
@@ -58,40 +58,43 @@
 
         [Scenario]
         public static void CreateFromRepositoryAndServiceFactory(
-            ISavedCallRepository repository,
+            ICallDataRepository repository,
             Func<IService> serviceFactory,
-            IService fake)
+            SelfInitializingFake<IService> fake)
         {
             "Given a saved call repository"
-                .x(() => repository = A.Fake<ISavedCallRepository>());
+                .x(() => repository = A.Fake<ICallDataRepository>());
 
             "And a service factory"
                 .x(() => serviceFactory = A.Fake<Func<IService>>());
 
             "When I create a self-initializing fake"
-                .x(() => fake = SelfInitializingFake.For<IService>(serviceFactory, repository));
+                .x(() => fake = SelfInitializingFake<IService>.For(serviceFactory, repository));
 
-            "Then the fake is created"
+            "Then the self-initializing fake is created"
                 .x(() => fake.Should().NotBeNull());
+
+            "And its Fake property is not null"
+                .x(() => fake.Fake.Should().NotBeNull());
         }
 
         [Scenario]
         public static void CreateFromInitializedRepository(
-            ISavedCallRepository repository,
+            ICallDataRepository repository,
             Func<IService> serviceFactory,
-            IService fake)
+            SelfInitializingFake<IService> fake)
         {
             "Given a saved call repository"
-                .x(() => repository = A.Fake<ISavedCallRepository>());
+                .x(() => repository = A.Fake<ICallDataRepository>());
 
             "And the repository has been initialized"
-                .x(() => A.CallTo(() => repository.LoadCalls()).Returns(new ISavedCall[0]));
+                .x(() => A.CallTo(() => repository.Load()).Returns(new ICallData[0]));
 
             "And a service factory"
                 .x(() => serviceFactory = A.Fake<Func<IService>>());
 
             "When I create a self-initializing fake"
-                .x(() => fake = SelfInitializingFake.For<IService>(serviceFactory, repository));
+                .x(() => fake = SelfInitializingFake<IService>.For(serviceFactory, repository));
 
             "Then the factory is not invoked"
                 .x(() => A.CallTo(serviceFactory).MustNotHaveHappened());
@@ -99,21 +102,21 @@
 
         [Scenario]
         public static void CreateFromUninitializedRepository(
-            ISavedCallRepository repository,
+            ICallDataRepository repository,
             Func<IService> serviceFactory,
-            IService fake)
+            SelfInitializingFake<IService> fake)
         {
             "Given a saved call repository"
-                .x(() => repository = A.Fake<ISavedCallRepository>());
+                .x(() => repository = A.Fake<ICallDataRepository>());
 
             "And the repository has not been initialized"
-                .x(() => A.CallTo(() => repository.LoadCalls()).Returns(null));
+                .x(() => A.CallTo(() => repository.Load()).Returns(null));
 
             "And a service factory"
                 .x(() => serviceFactory = A.Fake<Func<IService>>());
 
             "When I create a self-initializing fake"
-                .x(() => fake = SelfInitializingFake.For<IService>(serviceFactory, repository));
+                .x(() => fake = SelfInitializingFake<IService>.For(serviceFactory, repository));
 
             "Then the factory is invoked to create the service"
                 .x(() => A.CallTo(serviceFactory).MustHaveHappened());
@@ -121,21 +124,21 @@
 
         [Scenario]
         public static void CreateFromDerivedFactoryType(
-            ISavedCallRepository repository,
+            ICallDataRepository repository,
             Func<Service> serviceFactory,
-            IService fake)
+            SelfInitializingFake<IService> fake)
         {
             "Given a saved call repository"
-                .x(() => repository = A.Fake<ISavedCallRepository>());
+                .x(() => repository = A.Fake<ICallDataRepository>());
 
             "And the repository has not been initialized"
-                .x(() => A.CallTo(() => repository.LoadCalls()).Returns(null));
+                .x(() => A.CallTo(() => repository.Load()).Returns(null));
 
             "And a service factory that creates a derived type"
                 .x(() => serviceFactory = A.Fake<Func<Service>>());
 
             "When I create a self-initializing fake"
-                .x(() => fake = SelfInitializingFake.For<IService>(serviceFactory, repository));
+                .x(() => fake = SelfInitializingFake<IService>.For(serviceFactory, repository));
 
             "Then the factory is invoked to create the service"
                 .x(() => A.CallTo(serviceFactory).MustHaveHappened());
