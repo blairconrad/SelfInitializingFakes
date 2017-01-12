@@ -39,7 +39,7 @@
 
             "When I use a self-initializing fake in recording mode to get the counts for book 1, 2, and 1 again".x(() =>
             {
-                var fakeService = SelfInitializingFake<ILibraryService>.For(() => realServiceWhileRecording, inMemoryStorage);
+                var fakeService = SelfInitializingFake.For(() => realServiceWhileRecording, inMemoryStorage);
 
                 var fake = fakeService.Fake;
                 countsWhileRecording = new List<int>
@@ -55,7 +55,7 @@
             "And I use a self-initializing fake in playback mode to get the counts for book 1, 2, and 1 again"
                 .x(() =>
                 {
-                    var playbackFakeService = SelfInitializingFake<ILibraryService>.For(() => null, inMemoryStorage);
+                    var playbackFakeService = SelfInitializingFake.For<ILibraryService>(() => null, inMemoryStorage);
 
                     var fake = playbackFakeService.Fake;
                     countsDuringPlayback = new List<int>
