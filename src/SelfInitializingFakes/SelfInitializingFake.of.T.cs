@@ -5,6 +5,7 @@
     using System.Linq;
     using System.Reflection;
     using FakeItEasy;
+    using FakeItEasy.Core;
 
     /// <summary>
     /// A self-initializing fake that will delegate to an actual service when first
@@ -14,7 +15,8 @@
     public class SelfInitializingFake<TService>
     {
         private readonly ICallDataRepository repository;
-        private readonly IList<ICallData> savedCalls;
+        private readonly IList<ICallData> recordedCalls;
+        private readonly Queue<ICallData> expectedCalls;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SelfInitializingFake{TService}"/> class.
@@ -40,18 +42,16 @@
             {
                 var wrappedService = serviceFactory.Invoke();
                 this.Fake = A.Fake<TService>(options => options.Wrapping(wrappedService));
-                this.savedCalls = new List<ICallData>();
+                this.recordedCalls = new List<ICallData>();
                 this.AddRecordingRulesToFake(wrappedService);
             }
             else
             {
                 this.Fake = A.Fake<TService>();
-                foreach (var savedCall in callsFromRepository.Reverse())
-                {
-                    A.CallTo(this.Fake).WithNonVoidReturnType()
-                        .Where(call => Equals(call.Method, savedCall.Method))
-                        .Returns(savedCall.ReturnValue).Once();
-                }
+                this.expectedCalls = new Queue<ICallData>(callsFromRepository);
+
+                A.CallTo(this.Fake).Invokes(this.ConsumeNextExpectedCall);
+                A.CallTo(this.Fake).WithNonVoidReturnType().ReturnsLazily(this.ConsumeNextExpectedCallAndGetReturnValue);
             }
         }
 
@@ -61,7 +61,7 @@
         /// <value>The fake <typeparamref name="TService"/> to be used in the tests.</value>
         public TService Fake { get; }
 
-        private bool IsRecording => this.savedCalls != null;
+        private bool IsRecording => this.recordedCalls != null;
 
         /// <summary>
         /// Ends a recording or playback session. In recording mode, ensures that captured
@@ -72,8 +72,24 @@
         {
             if (this.IsRecording)
             {
-                this.repository.Save(this.savedCalls);
+                this.repository.Save(this.recordedCalls);
             }
+        }
+
+        private void ConsumeNextExpectedCall(IFakeObjectCall call)
+        {
+            this.ConsumeNextExpectedCallAndGetReturnValue(call);
+        }
+
+        private object ConsumeNextExpectedCallAndGetReturnValue(IFakeObjectCall call)
+        {
+            var expectedCall = this.expectedCalls.Dequeue();
+            if (expectedCall.Method != call.Method)
+            {
+                throw new PlaybackException($"expected a call to [{expectedCall.Method}], but found [{call.Method}]");
+            }
+
+            return expectedCall.ReturnValue;
         }
 
         private void AddRecordingRulesToFake<TClass>(TClass actual)
@@ -81,13 +97,13 @@
             A.CallTo(this.Fake).Invokes(call =>
             {
                 call.Method.Invoke(actual, call.Arguments.ToArray());
-                this.savedCalls.Add(new CallData { Method = call.Method });
+                this.recordedCalls.Add(new CallData { Method = call.Method });
             });
 
             A.CallTo(this.Fake).WithNonVoidReturnType().ReturnsLazily(call =>
             {
                 var result = call.Method.Invoke(actual, call.Arguments.ToArray());
-                this.savedCalls.Add(new CallData { Method = call.Method, ReturnValue = result });
+                this.recordedCalls.Add(new CallData { Method = call.Method, ReturnValue = result });
                 return result;
             });
         }
