@@ -83,6 +83,11 @@
 
         private object ConsumeNextExpectedCallAndGetReturnValue(IFakeObjectCall call)
         {
+            if (this.expectedCalls.Count == 0)
+            {
+                throw new PlaybackException($"expected no more calls, but found [{call.Method}]");
+            }
+
             var expectedCall = this.expectedCalls.Dequeue();
             if (expectedCall.Method != call.Method)
             {

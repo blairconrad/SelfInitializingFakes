@@ -207,7 +207,6 @@
         public static void SelfInitializingThrowsIfWrongCallEncountered(
             InMemoryStorage inMemoryStorage,
             ILibraryService realServiceWhileRecording,
-            ILibraryService realServiceDuringPlayback,
             Exception exception)
         {
             "Given a call storage object"
@@ -246,56 +245,55 @@
                 .x(() => exception.Should().BeOfType<PlaybackException>().Which.Message.Should().Be("expected a call to [Int32 GetCount(System.String)], but found [System.String GetTitle(System.String)]"));
         }
 
-////        [Scenario]
-////        public static void SelfInitializingThrowsIfTooManyCallsEncountered(
-////            InMemoryStorage inMemoryStorage,
-////            ILibraryService realServiceWhileRecording,
-////            ILibraryService realServiceDuringPlayback,
-////            Exception exception)
-////        {
-////            "Given a call storage object"
-////                .x(() => inMemoryStorage = new InMemoryStorage());
-////
-////            "And a real service to wrap while recording"
-////                .x(() => realServiceWhileRecording = A.Fake<ILibraryService>());
-////
-////            "And a real service to wrap while playing back"
-////                .x(() => realServiceDuringPlayback = A.Fake<ILibraryService>());
-////
-////            "When I use a self-initializing fake in recording mode to get the count and title for book 1"
-////                .x(() =>
-////                {
-////                    using (var recorder = new RecordingManager(inMemoryStorage))
-////                    {
-////                        var fakeService = A.Fake<ILibraryService>(options => options
-////                            .Wrapping(realServiceWhileRecording).RecordedBy(recorder));
-////
-////                        fakeService.GetCount("1");
-////                        fakeService.GetTitle("1");
-////                    }
-////                });
-////
-////            "And I use a self-initializing fake in playback mode to get the count and title and count for book 1"
-////                .x(() =>
-////                {
-////                    using (var recorder = new RecordingManager(inMemoryStorage))
-////                    {
-////                        var playbackFakeService = A.Fake<ILibraryService>(options => options
-////                            .Wrapping(realServiceDuringPlayback).RecordedBy(recorder));
-////
-////                        playbackFakeService.GetCount("1");
-////                        playbackFakeService.GetTitle("1");
-////                        exception = Record.Exception(() => playbackFakeService.GetCount("1"));
-////                    }
-////                });
-////
-////            // This result demonstrates that the self-initializing fake relies on a script
-////            // defined by which methods are called, and is completely inflexible with
-////            // regard to the number of repetitions of the calls.
-////            "Then the playback fake throws a recording exception"
-////                .x(() => exception.Should().BeAnExceptionOfType<RecordingException>());
-////        }
-////
+        [Scenario]
+        public static void SelfInitializingThrowsIfTooManyCallsEncountered(
+            InMemoryStorage inMemoryStorage,
+            ILibraryService realServiceWhileRecording,
+            Exception exception)
+        {
+            "Given a call storage object"
+                .x(() => inMemoryStorage = new InMemoryStorage());
+
+            "And a real service to wrap while recording"
+                .x(() => realServiceWhileRecording = A.Fake<ILibraryService>());
+
+            "When I use a self-initializing fake in recording mode to get the count and title for book 1"
+                .x(() =>
+                {
+                    var fakeService = SelfInitializingFake.For(() => realServiceWhileRecording, inMemoryStorage);
+                    var fake = fakeService.Fake;
+
+                    fake.GetCount("1");
+                    fake.GetTitle("1");
+
+                    fakeService.EndSession();
+                });
+
+            "And I use a self-initializing fake in playback mode to get the count and title and count for book 1"
+                .x(() =>
+                {
+                    var playbackFakeService = SelfInitializingFake.For<ILibraryService>(() => null, inMemoryStorage);
+                    var fake = playbackFakeService.Fake;
+
+                    fake.GetCount("1");
+                    fake.GetTitle("1");
+                    exception = Record.Exception(() => fake.GetCount("1"));
+
+                    playbackFakeService.EndSession();
+                });
+
+            // This result demonstrates that the self-initializing fake relies on a script
+            // defined by which methods are called, and is completely inflexible with
+            // regard to the number of repetitions of the calls.
+            "Then the playback fake throws a recording exception"
+                .x(
+                    () =>
+                        exception.Should()
+                            .BeOfType<PlaybackException>()
+                            .Which.Message.Should()
+                            .Be("expected no more calls, but found [Int32 GetCount(System.String)]"));
+        }
+
 ////        [Scenario]
 ////        public static void SelfInitializingExceptionWhileRecording(
 ////            InMemoryStorage inMemoryStorage,
