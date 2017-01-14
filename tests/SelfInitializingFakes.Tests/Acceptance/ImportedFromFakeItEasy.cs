@@ -241,8 +241,11 @@
             // This result demonstrates that the self-initializing fake relies on a script
             // defined by which methods are called, and is completely inflexible with
             // regard to the order of calls.
-            "Then the playback fake throws a recording exception"
-                .x(() => exception.Should().BeOfType<PlaybackException>().Which.Message.Should().Be("expected a call to [Int32 GetCount(System.String)], but found [System.String GetTitle(System.String)]"));
+            "Then the playback fake throws a playback exception"
+                .x(() => exception.Should()
+                    .BeOfType<PlaybackException>().Which.Message.Should()
+                    .Be(
+                        "expected a call to [Int32 GetCount(System.String)], but found [System.String GetTitle(System.String)]"));
         }
 
         [Scenario]
@@ -285,13 +288,10 @@
             // This result demonstrates that the self-initializing fake relies on a script
             // defined by which methods are called, and is completely inflexible with
             // regard to the number of repetitions of the calls.
-            "Then the playback fake throws a recording exception"
-                .x(
-                    () =>
-                        exception.Should()
-                            .BeOfType<PlaybackException>()
-                            .Which.Message.Should()
-                            .Be("expected no more calls, but found [Int32 GetCount(System.String)]"));
+            "Then the playback fake throws a playback exception"
+                .x(() => exception.Should()
+                    .BeOfType<PlaybackException>().Which.Message.Should()
+                    .Be("expected no more calls, but found [Int32 GetCount(System.String)]"));
         }
 
 ////        [Scenario]
