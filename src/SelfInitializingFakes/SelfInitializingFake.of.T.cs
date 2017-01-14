@@ -6,6 +6,7 @@
     using System.Reflection;
     using FakeItEasy;
     using FakeItEasy.Core;
+    using SelfInitializingFakes.Infrastructure;
 
     /// <summary>
     /// A self-initializing fake that will delegate to an actual service when first
@@ -17,6 +18,7 @@
         private readonly ICallDataRepository repository;
         private readonly IList<ICallData> recordedCalls;
         private readonly Queue<ICallData> expectedCalls;
+        private Exception recordingException;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SelfInitializingFake{TService}"/> class.
@@ -72,6 +74,13 @@
         {
             if (this.IsRecording)
             {
+                if (this.recordingException != null)
+                {
+                    throw new PlaybackException(
+                        "error encountered while recording actual service calls",
+                        this.recordingException);
+                }
+
                 this.repository.Save(this.recordedCalls);
             }
         }
@@ -107,9 +116,23 @@
 
             A.CallTo(this.Fake).WithNonVoidReturnType().ReturnsLazily(call =>
             {
-                var result = call.Method.Invoke(actual, call.Arguments.ToArray());
-                this.recordedCalls.Add(new CallData { Method = call.Method, ReturnValue = result });
-                return result;
+                try
+                {
+                    var result = call.Method.Invoke(actual, call.Arguments.ToArray());
+                    this.recordedCalls.Add(new CallData { Method = call.Method, ReturnValue = result });
+                    return result;
+                }
+                catch (Exception e)
+                {
+                    var serviceException = e.InnerException ?? e;
+                    if (this.recordingException == null)
+                    {
+                        this.recordingException = serviceException;
+                    }
+
+                    serviceException.Rethrow();
+                    return null; // to satisfy the compiler
+                }
             });
         }
 
