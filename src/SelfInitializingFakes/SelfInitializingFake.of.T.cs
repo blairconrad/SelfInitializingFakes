@@ -1,6 +1,7 @@
 ﻿namespace SelfInitializingFakes
 {
     using System;
+    using System.Collections.Concurrent;
     using System.Collections.Generic;
     using System.Linq;
     using System.Reflection;
@@ -15,6 +16,9 @@
     /// <typeparam name="TService">The type of the service to fake.</typeparam>
     public class SelfInitializingFake<TService>
     {
+        private static readonly ConcurrentDictionary<IFakeObjectCall, ICallData> CallDatas =
+            new ConcurrentDictionary<IFakeObjectCall, ICallData>();
+
         private readonly ICallDataRepository repository;
         private readonly IList<ICallData> recordedCalls;
         private readonly Queue<ICallData> expectedCalls;
@@ -52,8 +56,32 @@
                 this.Fake = A.Fake<TService>();
                 this.expectedCalls = new Queue<ICallData>(callsFromRepository);
 
-                A.CallTo(this.Fake).Invokes(this.ConsumeNextExpectedCall);
-                A.CallTo(this.Fake).WithNonVoidReturnType().ReturnsLazily(this.ConsumeNextExpectedCallAndGetReturnValue);
+                A.CallTo(this.Fake)
+                    .Invokes(call =>
+                    {
+                        ICallData callData = this.ConsumeNextExpectedCall(call);
+                        CallDatas[call] = callData;
+                    })
+                    .AssignsOutAndRefParametersLazily(call =>
+                    {
+                        ICallData callData;
+                        CallDatas.TryRemove(call, out callData);
+                        return callData.OutAndRefValues;
+                    });
+
+                A.CallTo(this.Fake).WithNonVoidReturnType()
+                    .ReturnsLazily(call =>
+                    {
+                        ICallData callData = this.ConsumeNextExpectedCall(call);
+                        CallDatas[call] = callData;
+                        return callData.ReturnValue;
+                    })
+                    .AssignsOutAndRefParametersLazily(call =>
+                    {
+                        ICallData callData;
+                        CallDatas.TryRemove(call, out callData);
+                        return callData.OutAndRefValues;
+                    });
             }
         }
 
@@ -85,12 +113,7 @@
             }
         }
 
-        private void ConsumeNextExpectedCall(IFakeObjectCall call)
-        {
-            this.ConsumeNextExpectedCallAndGetReturnValue(call);
-        }
-
-        private object ConsumeNextExpectedCallAndGetReturnValue(IFakeObjectCall call)
+        private ICallData ConsumeNextExpectedCall(IFakeObjectCall call)
         {
             if (this.expectedCalls.Count == 0)
             {
@@ -103,7 +126,7 @@
                 throw new PlaybackException($"expected a call to [{expectedCall.Method}], but found [{call.Method}]");
             }
 
-            return expectedCall.ReturnValue;
+            return expectedCall;
         }
 
         private void AddRecordingRulesToFake<TClass>(TClass actual)
@@ -114,12 +137,35 @@
                 this.recordedCalls.Add(new CallData { Method = call.Method });
             });
 
-            A.CallTo(this.Fake).WithNonVoidReturnType().ReturnsLazily(call =>
+            A.CallTo(this.Fake).WithNonVoidReturnType()
+                .ReturnsLazily(call =>
             {
                 try
                 {
-                    var result = call.Method.Invoke(actual, call.Arguments.ToArray());
-                    this.recordedCalls.Add(new CallData { Method = call.Method, ReturnValue = result });
+                    var arguments = call.Arguments.ToArray();
+                    var result = call.Method.Invoke(actual, arguments);
+
+                    var outAndRefValues = new List<object>();
+                    int index = 0;
+                    foreach (var parameter in call.Method.GetParameters())
+                    {
+                        if (parameter.ParameterType.IsByRef)
+                        {
+                            outAndRefValues.Add(arguments[index]);
+                        }
+
+                        ++index;
+                    }
+
+                    var callData = new CallData
+                    {
+                        Method = call.Method,
+                        ReturnValue = result,
+                        OutAndRefValues = outAndRefValues.ToArray(),
+                    };
+
+                    CallDatas[call] = callData;
+                    this.recordedCalls.Add(callData);
                     return result;
                 }
                 catch (Exception e)
@@ -133,7 +179,13 @@
                     serviceException.Rethrow();
                     return null; // to satisfy the compiler
                 }
-            });
+            })
+            .AssignsOutAndRefParametersLazily(call =>
+                {
+                    ICallData callData;
+                    CallDatas.TryRemove(call, out callData);
+                    return callData.OutAndRefValues;
+                });
         }
 
         private class CallData : ICallData
@@ -141,6 +193,8 @@
             public MethodInfo Method { get; set; }
 
             public object ReturnValue { get; set; }
+
+            public object[] OutAndRefValues { get; set; }
         }
     }
 }

@@ -81,66 +81,67 @@
                 .x(() => countsDuringPlayback.Should().Equal(0x1A, 0x2, 0x1B));
         }
 
-////        [Scenario]
-////        public static void SelfInitializingOutAndRef(
-////            InMemoryStorage inMemoryStorage,
-////            ILibraryService realServiceWhileRecording,
-////            ILibraryService realServiceDuringPlayback,
-////            int @out,
-////            int @ref)
-////        {
-////            "Given a call storage object"
-////                .x(() => inMemoryStorage = new InMemoryStorage());
-////
-////            "And a real service to wrap while recording"
-////                .x(() =>
-////                {
-////                    realServiceWhileRecording = A.Fake<ILibraryService>();
-////
-////                    int localOut;
-////                    int localRef = 0;
-////                    A.CallTo(() => realServiceWhileRecording.TryToSetSomeOutAndRefParameters(out localOut, ref localRef))
-////                        .WithAnyArguments()
-////                        .Returns(true)
-////                        .AssignsOutAndRefParameters(19, 8);
-////                });
-////
-////            "And a real service to wrap while playing back"
-////                .x(() => realServiceDuringPlayback = A.Fake<ILibraryService>());
-////
-////            "When I use a self-initializing fake in recording mode to try to set some out and ref parameters"
-////                .x(() =>
-////                {
-////                    using (var recorder = new RecordingManager(inMemoryStorage))
-////                    {
-////                        var fakeService = A.Fake<ILibraryService>(options => options
-////                            .Wrapping(realServiceWhileRecording).RecordedBy(recorder));
-////
-////                        int localOut;
-////                        int localRef = 0;
-////                        fakeService.TryToSetSomeOutAndRefParameters(out localOut, ref localRef);
-////                    }
-////                });
-////
-////            "And I use a self-initializing fake in playback mode to try to set some out and ref parameters"
-////                .x(() =>
-////                {
-////                    using (var recorder = new RecordingManager(inMemoryStorage))
-////                    {
-////                        var playbackFakeService = A.Fake<ILibraryService>(options => options
-////                            .Wrapping(realServiceDuringPlayback).RecordedBy(recorder));
-////
-////                        playbackFakeService.TryToSetSomeOutAndRefParameters(out @out, ref @ref);
-////                    }
-////                });
-////
-////            "Then the playback fake sets the out parameter to the value seen in recording mode"
-////                .x(() => @out.Should().Be(19));
-////
-////            "And it sets the ref parameter to the value seen in recording mode"
-////                .x(() => @ref.Should().Be(8));
-////        }
-////
+        [Scenario]
+        public static void SelfInitializingOutAndRef(
+            InMemoryStorage inMemoryStorage,
+            ILibraryService realServiceWhileRecording,
+            ILibraryService realServiceDuringPlayback,
+            int recordingOut,
+            int recordingRef,
+            int playbackOut,
+            int playbackRef)
+        {
+            "Given a call storage object"
+                .x(() => inMemoryStorage = new InMemoryStorage());
+
+            "And a real service to wrap while recording"
+                .x(() =>
+                {
+                    realServiceWhileRecording = A.Fake<ILibraryService>();
+
+                    int localOut;
+                    int localRef = 0;
+                    A.CallTo(() => realServiceWhileRecording.TryToSetSomeOutAndRefParameters(out localOut, ref localRef))
+                        .WithAnyArguments()
+                        .Returns(true)
+                        .AssignsOutAndRefParameters(19, 8);
+                });
+
+            "When I use a self-initializing fake in recording mode to try to set some out and ref parameters"
+                .x(() =>
+                {
+                    var fakeService = SelfInitializingFake.For(() => realServiceWhileRecording, inMemoryStorage);
+
+                    var fake = fakeService.Fake;
+                    fake.TryToSetSomeOutAndRefParameters(out recordingOut, ref recordingRef);
+
+                    fakeService.EndSession();
+                });
+
+            "And I use a self-initializing fake in playback mode to try to set some out and ref parameters"
+                .x(() =>
+                {
+                    var playbackFakeService = SelfInitializingFake.For<ILibraryService>(() => null, inMemoryStorage);
+
+                    var fake = playbackFakeService.Fake;
+                    fake.TryToSetSomeOutAndRefParameters(out playbackOut, ref playbackRef);
+
+                    playbackFakeService.EndSession();
+                });
+
+            "Then the recording fake sets the out parameter to the value set by the wrapped service"
+                .x(() => recordingOut.Should().Be(19));
+
+            "And it sets the ref parameter to the value set by the wrapped service"
+                .x(() => recordingRef.Should().Be(8));
+
+            "Then the playback fake sets the out parameter to the value seen in recording mode"
+                .x(() => playbackOut.Should().Be(19));
+
+            "And it sets the ref parameter to the value seen in recording mode"
+                .x(() => playbackRef.Should().Be(8));
+        }
+
         [Scenario]
         public static void SelfInitializingIgnoresParameterValues(
             InMemoryStorage inMemoryStorage,

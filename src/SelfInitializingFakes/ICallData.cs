@@ -14,5 +14,9 @@
         /// <summary>Gets the call's return value.</summary>
         /// <value>The call's return value.</value>
         object ReturnValue { get; }
+
+        /// <summary>Gets the call's out and ref values. An empty array if there are none.</summary>
+        /// <value>The call's out and ref values. An empty array if there are none.</value>
+        object[] OutAndRefValues { get; }
     }
 }
