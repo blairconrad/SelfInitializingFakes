@@ -55,33 +55,7 @@
             {
                 this.Fake = A.Fake<TService>();
                 this.expectedCalls = new Queue<ICallData>(callsFromRepository);
-
-                A.CallTo(this.Fake)
-                    .Invokes(call =>
-                    {
-                        ICallData callData = this.ConsumeNextExpectedCall(call);
-                        CallDatas[call] = callData;
-                    })
-                    .AssignsOutAndRefParametersLazily(call =>
-                    {
-                        ICallData callData;
-                        CallDatas.TryRemove(call, out callData);
-                        return callData.OutAndRefValues;
-                    });
-
-                A.CallTo(this.Fake).WithNonVoidReturnType()
-                    .ReturnsLazily(call =>
-                    {
-                        ICallData callData = this.ConsumeNextExpectedCall(call);
-                        CallDatas[call] = callData;
-                        return callData.ReturnValue;
-                    })
-                    .AssignsOutAndRefParametersLazily(call =>
-                    {
-                        ICallData callData;
-                        CallDatas.TryRemove(call, out callData);
-                        return callData.OutAndRefValues;
-                    });
+                this.AddPlaybackRulesToFake();
             }
         }
 
@@ -113,6 +87,39 @@
             }
         }
 
+        private static ICallData GetCallData(IFakeObjectCall call)
+        {
+            ICallData callData;
+            CallDatas.TryRemove(call, out callData);
+            return callData;
+        }
+
+        private static CallData BuildCallData<TClass>(IFakeObjectCall call, TClass target)
+        {
+            var arguments = call.Arguments.ToArray();
+            var result = call.Method.Invoke(target, arguments);
+
+            var outAndRefValues = new List<object>();
+            int index = 0;
+            foreach (var parameter in call.Method.GetParameters())
+            {
+                if (parameter.ParameterType.IsByRef)
+                {
+                    outAndRefValues.Add(arguments[index]);
+                }
+
+                ++index;
+            }
+
+            var callData = new CallData
+            {
+                Method = call.Method,
+                ReturnValue = result,
+                OutAndRefValues = outAndRefValues.ToArray(),
+            };
+            return callData;
+        }
+
         private ICallData ConsumeNextExpectedCall(IFakeObjectCall call)
         {
             if (this.expectedCalls.Count == 0)
@@ -129,11 +136,14 @@
             return expectedCall;
         }
 
-        private void AddRecordingRulesToFake<TClass>(TClass actual)
+        private void AddRecordingRulesToFake<TClass>(TClass target)
         {
+            // These rules rely on an undocumented FakeItEasy behavior: that
+            // the actions specified in AssignsOutAndRefParametersLazily will
+            // occur after Invokes or ReturnsLazily.
             A.CallTo(this.Fake).Invokes(call =>
             {
-                call.Method.Invoke(actual, call.Arguments.ToArray());
+                call.Method.Invoke(target, call.Arguments.ToArray());
                 this.recordedCalls.Add(new CallData { Method = call.Method });
             });
 
@@ -142,31 +152,10 @@
             {
                 try
                 {
-                    var arguments = call.Arguments.ToArray();
-                    var result = call.Method.Invoke(actual, arguments);
-
-                    var outAndRefValues = new List<object>();
-                    int index = 0;
-                    foreach (var parameter in call.Method.GetParameters())
-                    {
-                        if (parameter.ParameterType.IsByRef)
-                        {
-                            outAndRefValues.Add(arguments[index]);
-                        }
-
-                        ++index;
-                    }
-
-                    var callData = new CallData
-                    {
-                        Method = call.Method,
-                        ReturnValue = result,
-                        OutAndRefValues = outAndRefValues.ToArray(),
-                    };
-
+                    var callData = BuildCallData(call, target);
                     CallDatas[call] = callData;
                     this.recordedCalls.Add(callData);
-                    return result;
+                    return callData.ReturnValue;
                 }
                 catch (Exception e)
                 {
@@ -182,8 +171,38 @@
             })
             .AssignsOutAndRefParametersLazily(call =>
                 {
-                    ICallData callData;
-                    CallDatas.TryRemove(call, out callData);
+                    var callData = GetCallData(call);
+                    return callData.OutAndRefValues;
+                });
+        }
+
+        private void AddPlaybackRulesToFake()
+        {
+            // These rules rely on an undocumented FakeItEasy behavior: that
+            // the actions specified in AssignsOutAndRefParametersLazily will
+            // occur after Invokes or ReturnsLazily.
+            A.CallTo(this.Fake)
+                .Invokes(call =>
+                {
+                    ICallData callData = this.ConsumeNextExpectedCall(call);
+                    CallDatas[call] = callData;
+                })
+                .AssignsOutAndRefParametersLazily(call =>
+                {
+                    var callData = GetCallData(call);
+                    return callData.OutAndRefValues;
+                });
+
+            A.CallTo(this.Fake).WithNonVoidReturnType()
+                .ReturnsLazily(call =>
+                {
+                    ICallData callData = this.ConsumeNextExpectedCall(call);
+                    CallDatas[call] = callData;
+                    return callData.ReturnValue;
+                })
+                .AssignsOutAndRefParametersLazily(call =>
+                {
+                    var callData = GetCallData(call);
                     return callData.OutAndRefValues;
                 });
         }
