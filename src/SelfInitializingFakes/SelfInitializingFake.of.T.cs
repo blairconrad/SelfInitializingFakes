@@ -111,13 +111,12 @@
                 ++index;
             }
 
-            var callData = new CallData
+            return new CallData
             {
                 Method = call.Method,
                 ReturnValue = result,
                 OutAndRefValues = outAndRefValues.ToArray(),
             };
-            return callData;
         }
 
         private ICallData ConsumeNextExpectedCall(IFakeObjectCall call)
@@ -149,31 +148,27 @@
 
             A.CallTo(this.Fake).WithNonVoidReturnType()
                 .ReturnsLazily(call =>
-            {
-                try
                 {
-                    var callData = BuildCallData(call, target);
-                    CallDatas[call] = callData;
-                    this.recordedCalls.Add(callData);
-                    return callData.ReturnValue;
-                }
-                catch (Exception e)
-                {
-                    var serviceException = e.InnerException ?? e;
-                    if (this.recordingException == null)
+                    try
                     {
-                        this.recordingException = serviceException;
+                        var callData = BuildCallData(call, target);
+                        CallDatas[call] = callData;
+                        this.recordedCalls.Add(callData);
+                        return callData.ReturnValue;
                     }
+                    catch (Exception e)
+                    {
+                        var serviceException = e.InnerException ?? e;
+                        if (this.recordingException == null)
+                        {
+                            this.recordingException = serviceException;
+                        }
 
-                    serviceException.Rethrow();
-                    return null; // to satisfy the compiler
-                }
-            })
-            .AssignsOutAndRefParametersLazily(call =>
-                {
-                    var callData = GetCallData(call);
-                    return callData.OutAndRefValues;
-                });
+                        serviceException.Rethrow();
+                        return null; // to satisfy the compiler
+                    }
+                })
+                .AssignsOutAndRefParametersLazily(call => GetCallData(call).OutAndRefValues);
         }
 
         private void AddPlaybackRulesToFake()
@@ -200,11 +195,7 @@
                     CallDatas[call] = callData;
                     return callData.ReturnValue;
                 })
-                .AssignsOutAndRefParametersLazily(call =>
-                {
-                    var callData = GetCallData(call);
-                    return callData.OutAndRefValues;
-                });
+                .AssignsOutAndRefParametersLazily(call => GetCallData(call).OutAndRefValues);
         }
 
         private class CallData : ICallData

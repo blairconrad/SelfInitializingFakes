@@ -39,20 +39,21 @@
                         .Returns(0x2);
                 });
 
-            "When I use a self-initializing fake in recording mode to get the counts for book 1, 2, and 1 again".x(() =>
-            {
-                var fakeService = SelfInitializingFake.For(() => realServiceWhileRecording, inMemoryStorage);
-
-                var fake = fakeService.Fake;
-                countsWhileRecording = new List<int>
+            "When I use a self-initializing fake in recording mode to get the counts for book 1, 2, and 1 again"
+                .x(() =>
                 {
-                    fake.GetCount("1"),
-                    fake.GetCount("2"),
-                    fake.GetCount("1"),
-                };
+                    var fakeService = SelfInitializingFake.For(() => realServiceWhileRecording, inMemoryStorage);
 
-                fakeService.EndSession();
-            });
+                    var fake = fakeService.Fake;
+                    countsWhileRecording = new List<int>
+                    {
+                        fake.GetCount("1"),
+                        fake.GetCount("2"),
+                        fake.GetCount("1"),
+                    };
+
+                    fakeService.EndSession();
+                });
 
             "And I use a self-initializing fake in playback mode to get the counts for book 1, 2, and 1 again"
                 .x(() =>
