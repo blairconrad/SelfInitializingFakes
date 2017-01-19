@@ -24,13 +24,7 @@ var xunit = "./packages/xunit.runner.console.2.1.0/tools/xunit.console.exe";
 var frameworks = new[] { "net451", "netcoreapp1.0" };
 
 // version
-var versionSuffix = Environment.GetEnvironmentVariable("VERSION_SUFFIX") ?? "";
-var buildNumber = Environment.GetEnvironmentVariable("BUILD_NUMBER") ?? "000000";
-var buildNumberSuffix = versionSuffix == "" ? "" : "-build" + buildNumber;
-var version = "0.1.0";
-// File.ReadAllText("src/CommonAssemblyInfo.cs")
-//    .Split(new[] { "AssemblyInformationalVersion(\"" }, 2, StringSplitOptions.RemoveEmptyEntries)[1]
-//    .Split('\"').First() + versionSuffix + buildNumberSuffix;
+var version = "0.1.0-beta001";
 
 // targets
 var targets = new TargetDictionary();
@@ -41,9 +35,26 @@ targets.Add("logsDirectory", () => Directory.CreateDirectory(logsDirectory));
 
 targets.Add("testsDirectory", () => Directory.CreateDirectory(testsDirectory));
 
+targets.Add("versionInfoFile",
+    () =>
+    {
+        var assemblyVersion = version.Split('-')[0];
+        var assemblyFileVersion = assemblyVersion;
+        var assemblyInformationalVersion = version;
+        var versionContents =
+$@"using System.Reflection;
+
+[assembly: AssemblyVersion(""{assemblyVersion}"")]
+[assembly: AssemblyFileVersion(""{assemblyFileVersion}"")]
+[assembly: AssemblyInformationalVersion(""{assemblyInformationalVersion}"")]
+";
+
+        File.WriteAllText("src/VersionInfo.cs", versionContents, Encoding.UTF8);
+    });
+
 targets.Add(
     "build",
-    DependsOn("logsDirectory"),
+    DependsOn("versionInfoFile", "logsDirectory"),
     () => Cmd(
         msBuild,
         $"{solution} /p:Configuration=Release /nologo /m /v:m /nr:false " +

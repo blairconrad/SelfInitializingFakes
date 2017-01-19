@@ -1,6 +1,9 @@
 ﻿{
   "buildOptions": {
     "additionalArguments": [ "/ruleset:../../SelfInitializingFakes.ruleset" ],
+    "compile": {
+      "include": [ "../VersionInfo.cs" ]
+    },
     "warningsAsErrors": true,
     "xmlDoc": true
   },
