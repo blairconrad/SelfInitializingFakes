@@ -16,7 +16,11 @@
 
             string GetTitle(string internationalStandardBookNumber);
 
+            void Action();
+
             bool TryToSetSomeOutAndRefParameters(out int @out, ref int @ref);
+
+            void SetSomeOutAndRefParameters(out int @out, ref int @ref);
         }
 
         [Scenario]
@@ -89,8 +93,10 @@
             ILibraryService realServiceDuringPlayback,
             int recordingOut,
             int recordingRef,
+            bool recordingReturn,
             int playbackOut,
-            int playbackRef)
+            int playbackRef,
+            bool playbackReturn)
         {
             "Given a call storage object"
                 .x(() => inMemoryStorage = new InMemoryStorage());
@@ -114,7 +120,7 @@
                     var fakeService = SelfInitializingFake.For(() => realServiceWhileRecording, inMemoryStorage);
 
                     var fake = fakeService.Fake;
-                    fake.TryToSetSomeOutAndRefParameters(out recordingOut, ref recordingRef);
+                    recordingReturn = fake.TryToSetSomeOutAndRefParameters(out recordingOut, ref recordingRef);
 
                     fakeService.EndSession();
                 });
@@ -125,7 +131,7 @@
                     var playbackFakeService = SelfInitializingFake.For<ILibraryService>(() => null, inMemoryStorage);
 
                     var fake = playbackFakeService.Fake;
-                    fake.TryToSetSomeOutAndRefParameters(out playbackOut, ref playbackRef);
+                    playbackReturn = fake.TryToSetSomeOutAndRefParameters(out playbackOut, ref playbackRef);
 
                     playbackFakeService.EndSession();
                 });
@@ -136,11 +142,79 @@
             "And it sets the ref parameter to the value set by the wrapped service"
                 .x(() => recordingRef.Should().Be(8));
 
+            "And it returns the value that the wrapped service did"
+                .x(() => recordingReturn.Should().BeTrue());
+
             "Then the playback fake sets the out parameter to the value seen in recording mode"
                 .x(() => playbackOut.Should().Be(19));
 
             "And it sets the ref parameter to the value seen in recording mode"
                 .x(() => playbackRef.Should().Be(8));
+
+            "And it returns the value seen in recording mode"
+                .x(() => playbackReturn.Should().BeTrue());
+        }
+
+        [Scenario]
+        public static void SelfInitializingVoidOutAndRef(
+            InMemoryStorage inMemoryStorage,
+            ILibraryService realServiceWhileRecording,
+            ILibraryService realServiceDuringPlayback,
+            int recordingOut,
+            int recordingRef,
+            bool recordingReturn,
+            int playbackOut,
+            int playbackRef,
+            bool playbackReturn)
+        {
+            "Given a call storage object"
+                .x(() => inMemoryStorage = new InMemoryStorage());
+
+            "And a real service to wrap while recording"
+                .x(() =>
+                {
+                    realServiceWhileRecording = A.Fake<ILibraryService>();
+
+                    int localOut;
+                    int localRef = 0;
+                    A.CallTo(() => realServiceWhileRecording.SetSomeOutAndRefParameters(out localOut, ref localRef))
+                        .WithAnyArguments()
+                        .AssignsOutAndRefParameters(7, -14);
+                });
+
+            "When I use a self-initializing fake in recording mode to set some out and ref parameters"
+                .x(() =>
+                {
+                    var fakeService = SelfInitializingFake.For(() => realServiceWhileRecording, inMemoryStorage);
+
+                    var fake = fakeService.Fake;
+                    fake.SetSomeOutAndRefParameters(out recordingOut, ref recordingRef);
+
+                    fakeService.EndSession();
+                });
+
+            "And I use a self-initializing fake in playback mode to set some out and ref parameters"
+                .x(() =>
+                {
+                    var playbackFakeService = SelfInitializingFake.For<ILibraryService>(() => null, inMemoryStorage);
+
+                    var fake = playbackFakeService.Fake;
+                    fake.SetSomeOutAndRefParameters(out playbackOut, ref playbackRef);
+
+                    playbackFakeService.EndSession();
+                });
+
+            "Then the recording fake sets the out parameter to the value set by the wrapped service"
+                .x(() => recordingOut.Should().Be(7));
+
+            "And it sets the ref parameter to the value set by the wrapped service"
+                .x(() => recordingRef.Should().Be(-14));
+
+            "Then the playback fake sets the out parameter to the value seen in recording mode"
+                .x(() => playbackOut.Should().Be(7));
+
+            "And it sets the ref parameter to the value seen in recording mode"
+                .x(() => playbackRef.Should().Be(-14));
         }
 
         [Scenario]
@@ -297,7 +371,7 @@
         }
 
         [Scenario]
-        public static void SelfInitializingExceptionWhileRecording(
+        public static void SelfInitializingNonVoidThrowsExceptionWhileRecording(
             InMemoryStorage inMemoryStorage,
             ILibraryService realServiceWhileRecording,
             Exception originalException,
@@ -324,6 +398,49 @@
                     var fake = fakeService.Fake;
 
                     exceptionWhileRecording = Record.Exception(() => fake.GetTitle("1"));
+
+                    exceptionWhileEndingRecordingSession = Record.Exception(() => fakeService.EndSession());
+                });
+
+            "Then the recording fake throws the original exception"
+                .x(() => exceptionWhileRecording.Should().BeSameAs(originalException));
+
+            "But ending the recording session throws a playback exception"
+                .x(() => exceptionWhileEndingRecordingSession.Should().BeOfType<PlaybackException>()
+                .Which.Message.Should().Be("error encountered while recording actual service calls"));
+
+            "And the session-ending exception has the original exception as its inner exception"
+                .x(() => exceptionWhileEndingRecordingSession.InnerException.Should().BeSameAs(originalException));
+        }
+
+        [Scenario]
+        public static void SelfInitializingVoidThrowsExceptionWhileRecording(
+            InMemoryStorage inMemoryStorage,
+            ILibraryService realServiceWhileRecording,
+            Exception originalException,
+            Exception exceptionWhileRecording,
+            Exception exceptionWhileEndingRecordingSession)
+        {
+            "Given a call storage object"
+                .x(() => inMemoryStorage = new InMemoryStorage());
+
+            "And a real service to wrap while recording"
+                .x(() => realServiceWhileRecording = A.Fake<ILibraryService>());
+
+            "And the real service throws an exception when executing a void method"
+                .x(() =>
+                {
+                    A.CallTo(() => realServiceWhileRecording.Action())
+                        .Throws(originalException = new InvalidOperationException());
+                });
+
+            "When I use a self-initializing fake in recording mode to execute the method"
+                .x(() =>
+                {
+                    var fakeService = SelfInitializingFake.For(() => realServiceWhileRecording, inMemoryStorage);
+                    var fake = fakeService.Fake;
+
+                    exceptionWhileRecording = Record.Exception(() => fake.Action());
 
                     exceptionWhileEndingRecordingSession = Record.Exception(() => fakeService.EndSession());
                 });

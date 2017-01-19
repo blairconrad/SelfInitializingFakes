@@ -137,16 +137,35 @@
 
         private void AddRecordingRulesToFake<TClass>(TClass target)
         {
-            // These rules rely on an undocumented FakeItEasy behavior: that
-            // the actions specified in AssignsOutAndRefParametersLazily will
-            // occur after Invokes or ReturnsLazily.
-            A.CallTo(this.Fake).Invokes(call =>
+            A.CallTo(this.Fake).AssignsOutAndRefParametersLazily(call =>
             {
-                call.Method.Invoke(target, call.Arguments.ToArray());
-                this.recordedCalls.Add(new CallData { Method = call.Method });
+                try
+                {
+                    var callData = BuildCallData(call, target);
+                    this.recordedCalls.Add(callData);
+                    return callData.OutAndRefValues;
+                }
+                catch (Exception e)
+                {
+                    var serviceException = e.InnerException ?? e;
+                    if (this.recordingException == null)
+                    {
+                        this.recordingException = serviceException;
+                    }
+
+                    serviceException.Rethrow();
+                    return null; // to satisfy the compiler
+                }
             });
 
+            // This rule relies on an undocumented FakeItEasy behavior: that
+            // the actions specified in AssignsOutAndRefParametersLazily will
+            // occur after ReturnsLazily.
             A.CallTo(this.Fake).WithNonVoidReturnType()
+
+                // FakeItEasy 2.3.2 and below will intercept void methods even when WhenNonVoidReturnType is
+                // specified, so constrain the call by return type again.
+                .Where(call => call.Method.ReturnType != typeof(void))
                 .ReturnsLazily(call =>
                 {
                     try
@@ -173,21 +192,12 @@
 
         private void AddPlaybackRulesToFake()
         {
-            // These rules rely on an undocumented FakeItEasy behavior: that
-            // the actions specified in AssignsOutAndRefParametersLazily will
-            // occur after Invokes or ReturnsLazily.
             A.CallTo(this.Fake)
-                .Invokes(call =>
-                {
-                    ICallData callData = this.ConsumeNextExpectedCall(call);
-                    CallDatas[call] = callData;
-                })
-                .AssignsOutAndRefParametersLazily(call =>
-                {
-                    var callData = GetCallData(call);
-                    return callData.OutAndRefValues;
-                });
+                .AssignsOutAndRefParametersLazily(call => this.ConsumeNextExpectedCall(call).OutAndRefValues);
 
+            // These rule relies on an undocumented FakeItEasy behavior: that
+            // the actions specified in AssignsOutAndRefParametersLazily will
+            // occur after ReturnsLazily.
             A.CallTo(this.Fake).WithNonVoidReturnType()
                 .ReturnsLazily(call =>
                 {
