@@ -2,7 +2,7 @@
   "buildOptions": {
     "additionalArguments": [ "/ruleset:../../SelfInitializingFakes.ruleset" ],
     "compile": {
-      "include": [ "../VersionInfo.cs" ]
+      "include": [ "../CommonAssemblyInfo.cs", "../VersionInfo.cs" ]
     },
     "warningsAsErrors": true,
     "xmlDoc": true
