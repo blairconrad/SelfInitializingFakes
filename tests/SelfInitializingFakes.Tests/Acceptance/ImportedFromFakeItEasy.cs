@@ -2,9 +2,9 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.Linq;
     using FakeItEasy;
     using FluentAssertions;
+    using SelfInitializingFakes.Tests.Acceptance.Helpers;
     using Xbehave;
     using Xunit;
 
@@ -15,8 +15,6 @@
             int GetCount(string internationalStandardBookNumber);
 
             string GetTitle(string internationalStandardBookNumber);
-
-            void Action();
 
             bool TryToSetSomeOutAndRefParameters(out int @out, ref int @ref);
 
@@ -370,92 +368,6 @@
                     .Be("expected no more calls, but found [Int32 GetCount(System.String)]"));
         }
 
-        [Scenario]
-        public static void SelfInitializingNonVoidThrowsExceptionWhileRecording(
-            InMemoryStorage inMemoryStorage,
-            ILibraryService realServiceWhileRecording,
-            Exception originalException,
-            Exception exceptionWhileRecording,
-            Exception exceptionWhileEndingRecordingSession)
-        {
-            "Given a call storage object"
-                .x(() => inMemoryStorage = new InMemoryStorage());
-
-            "And a real service to wrap while recording"
-                .x(() => realServiceWhileRecording = A.Fake<ILibraryService>());
-
-            "And the real service throws an exception when getting the title for book 1"
-                .x(() =>
-                {
-                    A.CallTo(() => realServiceWhileRecording.GetTitle("1"))
-                        .Throws(originalException = new InvalidOperationException());
-                });
-
-            "When I use a self-initializing fake in recording mode to get the title for book 1"
-                .x(() =>
-                {
-                    var fakeService = SelfInitializingFake.For(() => realServiceWhileRecording, inMemoryStorage);
-                    var fake = fakeService.Fake;
-
-                    exceptionWhileRecording = Record.Exception(() => fake.GetTitle("1"));
-
-                    exceptionWhileEndingRecordingSession = Record.Exception(() => fakeService.EndSession());
-                });
-
-            "Then the recording fake throws the original exception"
-                .x(() => exceptionWhileRecording.Should().BeSameAs(originalException));
-
-            "But ending the recording session throws a playback exception"
-                .x(() => exceptionWhileEndingRecordingSession.Should().BeOfType<PlaybackException>()
-                .Which.Message.Should().Be("error encountered while recording actual service calls"));
-
-            "And the session-ending exception has the original exception as its inner exception"
-                .x(() => exceptionWhileEndingRecordingSession.InnerException.Should().BeSameAs(originalException));
-        }
-
-        [Scenario]
-        public static void SelfInitializingVoidThrowsExceptionWhileRecording(
-            InMemoryStorage inMemoryStorage,
-            ILibraryService realServiceWhileRecording,
-            Exception originalException,
-            Exception exceptionWhileRecording,
-            Exception exceptionWhileEndingRecordingSession)
-        {
-            "Given a call storage object"
-                .x(() => inMemoryStorage = new InMemoryStorage());
-
-            "And a real service to wrap while recording"
-                .x(() => realServiceWhileRecording = A.Fake<ILibraryService>());
-
-            "And the real service throws an exception when executing a void method"
-                .x(() =>
-                {
-                    A.CallTo(() => realServiceWhileRecording.Action())
-                        .Throws(originalException = new InvalidOperationException());
-                });
-
-            "When I use a self-initializing fake in recording mode to execute the method"
-                .x(() =>
-                {
-                    var fakeService = SelfInitializingFake.For(() => realServiceWhileRecording, inMemoryStorage);
-                    var fake = fakeService.Fake;
-
-                    exceptionWhileRecording = Record.Exception(() => fake.Action());
-
-                    exceptionWhileEndingRecordingSession = Record.Exception(() => fakeService.EndSession());
-                });
-
-            "Then the recording fake throws the original exception"
-                .x(() => exceptionWhileRecording.Should().BeSameAs(originalException));
-
-            "But ending the recording session throws a playback exception"
-                .x(() => exceptionWhileEndingRecordingSession.Should().BeOfType<PlaybackException>()
-                .Which.Message.Should().Be("error encountered while recording actual service calls"));
-
-            "And the session-ending exception has the original exception as its inner exception"
-                .x(() => exceptionWhileEndingRecordingSession.InnerException.Should().BeSameAs(originalException));
-        }
-
 ////        [Trait("explicit", "yes")]
 ////        [Scenario]
 ////        public static void SelfInitializingWithFileRecorder(
@@ -510,20 +422,5 @@
 ////            "And the playback fake returns the recorded result"
 ////                .x(() => countDuringPlayback.Should().Be(8));
 ////        }
-
-        public class InMemoryStorage : ICallDataRepository
-        {
-            private IEnumerable<ICallData> recordedCalls;
-
-            public IEnumerable<ICallData> Load()
-            {
-                return this.recordedCalls;
-            }
-
-            public void Save(IEnumerable<ICallData> calls)
-            {
-                this.recordedCalls = calls.ToList();
-            }
-        }
     }
 }
