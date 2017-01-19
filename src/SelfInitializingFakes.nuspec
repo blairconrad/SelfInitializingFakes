@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<package>
+  <metadata>
+    <id>SelfInitializingFakes</id>
+    <version>99.99.99</version>
+    <title>Self-Initializing Fakes</title>
+    <authors>Blair Conrad, SelfInitializingFakes contributors</authors>
+    <description>A library for creating Self-Initializing Fakes.</description>
+    <language>en-US</language>
+    <projectUrl>https://github.com/blairconrad/SelfInitializingFakes/</projectUrl>
+    <iconUrl>https://raw.github.com/blairconrad/SelfInitializingFakes/master/assets/selfinitializingfakes_128x128.png</iconUrl>
+    <licenseUrl>https://github.com/blairconrad/SelfInitializingFakes/blob/master/LICENSE.txt</licenseUrl>
+    <copyright>Copyright (c) SelfInitializingFakes contributors.</copyright>
+    <tags>mocks mocking fakes faking self-initializing</tags>
+    <dependencies>
+      <dependency id="FakeItEasy" version="[3.0.0-beta002-build000066,4)" />
+    </dependencies>
+  </metadata>
+  <files>
+    <file src="SelfInitializingFakes\bin\Release\net40\SelfInitializingFakes.dll" target="lib\net40" />
+    <file src="SelfInitializingFakes\bin\Release\net40\SelfInitializingFakes.pdb" target="lib\net40" />
+    <file src="SelfInitializingFakes\bin\Release\net40\SelfInitializingFakes.xml" target="lib\net40" />
+    <file src="SelfInitializingFakes\bin\Release\netstandard1.6\SelfInitializingFakes.dll" target="lib\netstandard1.6" />
+    <file src="SelfInitializingFakes\bin\Release\netstandard1.6\SelfInitializingFakes.pdb" target="lib\netstandard1.6" />
+    <file src="SelfInitializingFakes\bin\Release\netstandard1.6\SelfInitializingFakes.xml" target="lib\netstandard1.6" />
+  </files>
+</package>

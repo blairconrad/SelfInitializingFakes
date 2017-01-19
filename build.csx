@@ -11,7 +11,7 @@ using static SimpleTargets;
 var solutionName = "SelfInitializingFakes";
 
 // locations
-var nuspecs = new string[0];
+var nuspecs = new [] { "src/SelfInitializingFakes.nuspec" };
 var testProjectDirs = new[] { "tests/SelfInitializingFakes.Tests" };
 
 var solution = "./" + solutionName + ".sln";
