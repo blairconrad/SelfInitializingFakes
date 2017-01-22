@@ -18,7 +18,7 @@
         }
 
         [Scenario]
-        public static void SelfInitializing(
+        public static void ReplaysRecordedCalls(
             InMemoryStorage inMemoryStorage,
             ILibraryService realServiceWhileRecording,
             IEnumerable<int> countsWhileRecording,
@@ -81,7 +81,7 @@
         }
 
         [Scenario]
-        public static void SelfInitializingIgnoresParameterValues(
+        public static void IgnoresParameterValuesInRecordedCalls(
             InMemoryStorage inMemoryStorage,
             ILibraryService realServiceWhileRecording,
             ILibraryService realServiceDuringPlayback,
@@ -143,7 +143,7 @@
         }
 
         [Scenario]
-        public static void SelfInitializingThrowsIfWrongCallEncountered(
+        public static void ThrowsIfWrongCallEncountered(
             InMemoryStorage inMemoryStorage,
             ILibraryService realServiceWhileRecording,
             Exception exception)
@@ -188,7 +188,7 @@
         }
 
         [Scenario]
-        public static void SelfInitializingThrowsIfTooManyCallsEncountered(
+        public static void ThrowsIfTooManyCallsEncountered(
             InMemoryStorage inMemoryStorage,
             ILibraryService realServiceWhileRecording,
             Exception exception)
