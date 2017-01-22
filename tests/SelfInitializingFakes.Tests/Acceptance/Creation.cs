@@ -14,7 +14,7 @@
 
         [Scenario]
         public static void CreateFromNullServiceFactory(
-            ICallDataRepository repository,
+            IRecordedCallRepository repository,
             Func<IService> serviceFactory,
             Exception exception)
         {
@@ -22,7 +22,7 @@
                 .x(() => serviceFactory = null);
 
             "And a saved call repository"
-                .x(() => repository = A.Fake<ICallDataRepository>());
+                .x(() => repository = A.Fake<IRecordedCallRepository>());
 
             "When I create a self-initializing fake"
                 .x(() => exception = Record.Exception(() =>
@@ -36,7 +36,7 @@
 
         [Scenario]
         public static void CreateFromNullCallRepository(
-            ICallDataRepository repository,
+            IRecordedCallRepository repository,
             Func<IService> serviceFactory,
             Exception exception)
         {
@@ -58,12 +58,12 @@
 
         [Scenario]
         public static void CreateFromRepositoryAndServiceFactory(
-            ICallDataRepository repository,
+            IRecordedCallRepository repository,
             Func<IService> serviceFactory,
             SelfInitializingFake<IService> fake)
         {
             "Given a saved call repository"
-                .x(() => repository = A.Fake<ICallDataRepository>());
+                .x(() => repository = A.Fake<IRecordedCallRepository>());
 
             "And a service factory"
                 .x(() => serviceFactory = A.Fake<Func<IService>>());
@@ -80,15 +80,15 @@
 
         [Scenario]
         public static void CreateFromInitializedRepository(
-            ICallDataRepository repository,
+            IRecordedCallRepository repository,
             Func<IService> serviceFactory,
             SelfInitializingFake<IService> fake)
         {
             "Given a saved call repository"
-                .x(() => repository = A.Fake<ICallDataRepository>());
+                .x(() => repository = A.Fake<IRecordedCallRepository>());
 
             "And the repository has been initialized"
-                .x(() => A.CallTo(() => repository.Load()).Returns(new CallData[0]));
+                .x(() => A.CallTo(() => repository.Load()).Returns(new RecordedCall[0]));
 
             "And a service factory"
                 .x(() => serviceFactory = A.Fake<Func<IService>>());
@@ -102,12 +102,12 @@
 
         [Scenario]
         public static void CreateFromUninitializedRepository(
-            ICallDataRepository repository,
+            IRecordedCallRepository repository,
             Func<IService> serviceFactory,
             SelfInitializingFake<IService> fake)
         {
             "Given a saved call repository"
-                .x(() => repository = A.Fake<ICallDataRepository>());
+                .x(() => repository = A.Fake<IRecordedCallRepository>());
 
             "And the repository has not been initialized"
                 .x(() => A.CallTo(() => repository.Load()).Returns(null));
@@ -124,12 +124,12 @@
 
         [Scenario]
         public static void CreateFromDerivedFactoryType(
-            ICallDataRepository repository,
+            IRecordedCallRepository repository,
             Func<Service> serviceFactory,
             SelfInitializingFake<IService> fake)
         {
             "Given a saved call repository"
-                .x(() => repository = A.Fake<ICallDataRepository>());
+                .x(() => repository = A.Fake<IRecordedCallRepository>());
 
             "And the repository has not been initialized"
                 .x(() => A.CallTo(() => repository.Load()).Returns(null));

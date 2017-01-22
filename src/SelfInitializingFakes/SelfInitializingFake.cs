@@ -15,7 +15,7 @@
         /// <param name="serviceFactory">A factory that will create a concrete factory if needed.</param>
         /// <param name="repository">A source of saved call information, or sink for the same.</param>
         /// <returns>A new self-initializing fake <typeparamref name="TService"/>.</returns>
-        public static SelfInitializingFake<TService> For<TService>(Func<TService> serviceFactory, ICallDataRepository repository)
+        public static SelfInitializingFake<TService> For<TService>(Func<TService> serviceFactory, IRecordedCallRepository repository)
         {
             return new SelfInitializingFake<TService>(serviceFactory, repository);
         }

@@ -3,7 +3,7 @@
     /// <summary>
     /// A saved call to a self-initialized fake.
     /// </summary>
-    public class CallData
+    public class RecordedCall
     {
         /// <summary>Gets or sets the method that was called.</summary>
         /// <value>The string representation of the method that was called.</value>

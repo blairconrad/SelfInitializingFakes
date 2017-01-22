@@ -5,18 +5,18 @@
     /// <summary>
     /// Saves and loads recorded calls made to a service.
     /// </summary>
-    public interface ICallDataRepository
+    public interface IRecordedCallRepository
     {
         /// <summary>
         /// Saves recorded calls for later use.
         /// </summary>
         /// <param name="calls">The recorded calls to save.</param>
-        void Save(IEnumerable<CallData> calls);
+        void Save(IEnumerable<RecordedCall> calls);
 
         /// <summary>
         /// Loads and returns saved calls.
         /// </summary>
         /// <returns>The saved calls, or <c>null</c> if there are none.</returns>
-        IEnumerable<CallData> Load();
+        IEnumerable<RecordedCall> Load();
     }
 }

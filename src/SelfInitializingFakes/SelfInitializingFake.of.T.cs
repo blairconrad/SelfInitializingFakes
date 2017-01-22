@@ -16,12 +16,12 @@
     /// <typeparam name="TService">The type of the service to fake.</typeparam>
     public class SelfInitializingFake<TService> : IDisposable
     {
-        private static readonly ConcurrentDictionary<IFakeObjectCall, CallData> CallDatas =
-            new ConcurrentDictionary<IFakeObjectCall, CallData>();
+        private static readonly ConcurrentDictionary<IFakeObjectCall, RecordedCall> RecordedCalls =
+            new ConcurrentDictionary<IFakeObjectCall, RecordedCall>();
 
-        private readonly ICallDataRepository repository;
-        private readonly IList<CallData> recordedCalls;
-        private readonly Queue<CallData> expectedCalls;
+        private readonly IRecordedCallRepository repository;
+        private readonly IList<RecordedCall> recordedCalls;
+        private readonly Queue<RecordedCall> expectedCalls;
         private Exception recordingException;
 
         /// <summary>
@@ -29,7 +29,7 @@
         /// </summary>
         /// <param name="serviceFactory">A factory that will create a concrete factory if needed.</param>
         /// <param name="repository">A source of saved call information, or sink for the same.</param>
-        internal SelfInitializingFake(Func<TService> serviceFactory, ICallDataRepository repository)
+        internal SelfInitializingFake(Func<TService> serviceFactory, IRecordedCallRepository repository)
         {
             if (serviceFactory == null)
             {
@@ -48,13 +48,13 @@
             {
                 var wrappedService = serviceFactory.Invoke();
                 this.Fake = A.Fake<TService>(options => options.Wrapping(wrappedService));
-                this.recordedCalls = new List<CallData>();
+                this.recordedCalls = new List<RecordedCall>();
                 this.AddRecordingRulesToFake(wrappedService);
             }
             else
             {
                 this.Fake = A.Fake<TService>();
-                this.expectedCalls = new Queue<CallData>(callsFromRepository);
+                this.expectedCalls = new Queue<RecordedCall>(callsFromRepository);
                 this.AddPlaybackRulesToFake();
             }
         }
@@ -89,14 +89,14 @@
             this.AddDisposedRecordingRuleToFake();
         }
 
-        private static CallData GetCallData(IFakeObjectCall call)
+        private static RecordedCall GetRecordedCall(IFakeObjectCall call)
         {
-            CallData callData;
-            CallDatas.TryRemove(call, out callData);
-            return callData;
+            RecordedCall recordedCall;
+            RecordedCalls.TryRemove(call, out recordedCall);
+            return recordedCall;
         }
 
-        private static CallData BuildCallData<TClass>(IFakeObjectCall call, TClass target)
+        private static RecordedCall BuildRecordedCall<TClass>(IFakeObjectCall call, TClass target)
         {
             var arguments = call.Arguments.ToArray();
             var result = call.Method.Invoke(target, arguments);
@@ -113,7 +113,7 @@
                 ++index;
             }
 
-            return new CallData
+            return new RecordedCall
             {
                 Method = call.Method.ToString(),
                 ReturnValue = result,
@@ -121,7 +121,7 @@
             };
         }
 
-        private CallData ConsumeNextExpectedCall(IFakeObjectCall call)
+        private RecordedCall ConsumeNextExpectedCall(IFakeObjectCall call)
         {
             if (this.expectedCalls.Count == 0)
             {
@@ -143,9 +143,9 @@
             {
                 try
                 {
-                    var callData = BuildCallData(call, target);
-                    this.recordedCalls.Add(callData);
-                    return callData.OutAndRefValues;
+                    var recordedCall = BuildRecordedCall(call, target);
+                    this.recordedCalls.Add(recordedCall);
+                    return recordedCall.OutAndRefValues;
                 }
                 catch (Exception e)
                 {
@@ -172,10 +172,10 @@
                 {
                     try
                     {
-                        var callData = BuildCallData(call, target);
-                        CallDatas[call] = callData;
-                        this.recordedCalls.Add(callData);
-                        return callData.ReturnValue;
+                        var recordedCall = BuildRecordedCall(call, target);
+                        RecordedCalls[call] = recordedCall;
+                        this.recordedCalls.Add(recordedCall);
+                        return recordedCall.ReturnValue;
                     }
                     catch (Exception e)
                     {
@@ -189,7 +189,7 @@
                         return null; // to satisfy the compiler
                     }
                 })
-                .AssignsOutAndRefParametersLazily(call => GetCallData(call).OutAndRefValues);
+                .AssignsOutAndRefParametersLazily(call => GetRecordedCall(call).OutAndRefValues);
         }
 
         private void AddDisposedRecordingRuleToFake()
@@ -209,11 +209,11 @@
             A.CallTo(this.Fake).WithNonVoidReturnType()
                 .ReturnsLazily(call =>
                 {
-                    CallData callData = this.ConsumeNextExpectedCall(call);
-                    CallDatas[call] = callData;
-                    return callData.ReturnValue;
+                    RecordedCall recordedCall = this.ConsumeNextExpectedCall(call);
+                    RecordedCalls[call] = recordedCall;
+                    return recordedCall.ReturnValue;
                 })
-                .AssignsOutAndRefParametersLazily(call => GetCallData(call).OutAndRefValues);
+                .AssignsOutAndRefParametersLazily(call => GetRecordedCall(call).OutAndRefValues);
         }
     }
 }
