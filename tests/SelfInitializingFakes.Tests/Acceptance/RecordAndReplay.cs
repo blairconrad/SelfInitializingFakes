@@ -40,33 +40,31 @@
             "When I use a self-initializing fake in recording mode to get the counts for book 1, 2, and 1 again"
                 .x(() =>
                 {
-                    var fakeService = SelfInitializingFake.For(() => realServiceWhileRecording, inMemoryStorage);
-
-                    var fake = fakeService.Fake;
-                    countsWhileRecording = new List<int>
+                    using (var fakeService = SelfInitializingFake.For(() => realServiceWhileRecording, inMemoryStorage))
                     {
-                        fake.GetCount("1"),
-                        fake.GetCount("2"),
-                        fake.GetCount("1"),
-                    };
-
-                    fakeService.EndSession();
+                        var fake = fakeService.Fake;
+                        countsWhileRecording = new List<int>
+                        {
+                            fake.GetCount("1"),
+                            fake.GetCount("2"),
+                            fake.GetCount("1"),
+                        };
+                    }
                 });
 
             "And I use a self-initializing fake in playback mode to get the counts for book 1, 2, and 1 again"
                 .x(() =>
                 {
-                    var playbackFakeService = SelfInitializingFake.For<ILibraryService>(() => null, inMemoryStorage);
-
-                    var fake = playbackFakeService.Fake;
-                    countsDuringPlayback = new List<int>
+                    using (var playbackFakeService = SelfInitializingFake.For<ILibraryService>(() => null, inMemoryStorage))
                     {
-                        fake.GetCount("1"),
-                        fake.GetCount("2"),
-                        fake.GetCount("1"),
-                    };
-
-                    playbackFakeService.EndSession();
+                        var fake = playbackFakeService.Fake;
+                        countsDuringPlayback = new List<int>
+                        {
+                            fake.GetCount("1"),
+                            fake.GetCount("2"),
+                            fake.GetCount("1"),
+                        };
+                    }
                 });
 
             "Then the recording fake forwards calls to the wrapped service"
@@ -105,31 +103,31 @@
             "When I use a self-initializing fake in recording mode to get the counts for book 2 and 1"
                 .x(() =>
                 {
-                    var fakeService = SelfInitializingFake.For(() => realServiceWhileRecording, inMemoryStorage);
-                    var fake = fakeService.Fake;
-
-                    countsWhileRecording = new List<int>
+                    using (var fakeService = SelfInitializingFake.For(() => realServiceWhileRecording, inMemoryStorage))
                     {
-                        fake.GetCount("2"),
-                        fake.GetCount("1"),
-                    };
+                        var fake = fakeService.Fake;
 
-                    fakeService.EndSession();
+                        countsWhileRecording = new List<int>
+                        {
+                            fake.GetCount("2"),
+                            fake.GetCount("1"),
+                        };
+                    }
                 });
 
             "And I use a self-initializing fake in playback mode to get the counts for book 1 and 2"
                 .x(() =>
                 {
-                    var playbackFakeService = SelfInitializingFake.For<ILibraryService>(() => null, inMemoryStorage);
-                    var fake = playbackFakeService.Fake;
-
-                    countsDuringPlayback = new List<int>
+                    using (var playbackFakeService = SelfInitializingFake.For<ILibraryService>(() => null, inMemoryStorage))
                     {
-                        fake.GetCount("1"),
-                        fake.GetCount("2"),
-                    };
+                        var fake = playbackFakeService.Fake;
 
-                    playbackFakeService.EndSession();
+                        countsDuringPlayback = new List<int>
+                        {
+                            fake.GetCount("1"),
+                            fake.GetCount("2"),
+                        };
+                    }
                 });
 
             "Then the recording fake returns the wrapped service's results"
@@ -157,24 +155,24 @@
             "When I use a self-initializing fake in recording mode to get the count and title for book 1"
                 .x(() =>
                 {
-                    var fakeService = SelfInitializingFake.For(() => realServiceWhileRecording, inMemoryStorage);
-                    var fake = fakeService.Fake;
+                    using (var fakeService = SelfInitializingFake.For(() => realServiceWhileRecording, inMemoryStorage))
+                    {
+                        var fake = fakeService.Fake;
 
-                    fake.GetCount("1");
-                    fake.GetTitle("1");
-
-                    fakeService.EndSession();
+                        fake.GetCount("1");
+                        fake.GetTitle("1");
+                    }
                 });
 
             "And I use a self-initializing fake in playback mode to get the title for book 1"
                 .x(() =>
                 {
-                    var playbackFakeService = SelfInitializingFake.For<ILibraryService>(() => null, inMemoryStorage);
-                    var fake = playbackFakeService.Fake;
+                    using (var playbackFakeService = SelfInitializingFake.For<ILibraryService>(() => null, inMemoryStorage))
+                    {
+                        var fake = playbackFakeService.Fake;
 
-                    exception = Record.Exception(() => fake.GetTitle("1"));
-
-                    playbackFakeService.EndSession();
+                        exception = Record.Exception(() => fake.GetTitle("1"));
+                    }
                 });
 
             // This result demonstrates that the self-initializing fake relies on a script
@@ -202,26 +200,26 @@
             "When I use a self-initializing fake in recording mode to get the count and title for book 1"
                 .x(() =>
                 {
-                    var fakeService = SelfInitializingFake.For(() => realServiceWhileRecording, inMemoryStorage);
-                    var fake = fakeService.Fake;
+                    using (var fakeService = SelfInitializingFake.For(() => realServiceWhileRecording, inMemoryStorage))
+                    {
+                        var fake = fakeService.Fake;
 
-                    fake.GetCount("1");
-                    fake.GetTitle("1");
-
-                    fakeService.EndSession();
+                        fake.GetCount("1");
+                        fake.GetTitle("1");
+                    }
                 });
 
             "And I use a self-initializing fake in playback mode to get the count and title and count for book 1"
                 .x(() =>
                 {
-                    var playbackFakeService = SelfInitializingFake.For<ILibraryService>(() => null, inMemoryStorage);
-                    var fake = playbackFakeService.Fake;
+                    using (var playbackFakeService = SelfInitializingFake.For<ILibraryService>(() => null, inMemoryStorage))
+                    {
+                        var fake = playbackFakeService.Fake;
 
-                    fake.GetCount("1");
-                    fake.GetTitle("1");
-                    exception = Record.Exception(() => fake.GetCount("1"));
-
-                    playbackFakeService.EndSession();
+                        fake.GetCount("1");
+                        fake.GetTitle("1");
+                        exception = Record.Exception(() => fake.GetCount("1"));
+                    }
                 });
 
             // This result demonstrates that the self-initializing fake relies on a script

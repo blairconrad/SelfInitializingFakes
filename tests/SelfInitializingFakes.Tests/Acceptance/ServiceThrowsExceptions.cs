@@ -45,7 +45,7 @@
 
                     exceptionWhileRecording = Record.Exception(() => fake.Function());
 
-                    exceptionWhileEndingRecordingSession = Record.Exception(() => fakeService.EndSession());
+                    exceptionWhileEndingRecordingSession = Record.Exception(() => fakeService.Dispose());
                 });
 
             "Then the recording fake throws the original exception"
@@ -88,7 +88,7 @@
 
                     exceptionWhileRecording = Record.Exception(() => fake.Action());
 
-                    exceptionWhileEndingRecordingSession = Record.Exception(() => fakeService.EndSession());
+                    exceptionWhileEndingRecordingSession = Record.Exception(() => fakeService.Dispose());
                 });
 
             "Then the recording fake throws the original exception"

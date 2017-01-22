@@ -14,7 +14,7 @@
     /// used, and create a script that will be fulfilled by a fake object on subsequent uses.
     /// </summary>
     /// <typeparam name="TService">The type of the service to fake.</typeparam>
-    public class SelfInitializingFake<TService>
+    public class SelfInitializingFake<TService> : IDisposable
     {
         private static readonly ConcurrentDictionary<IFakeObjectCall, ICallData> CallDatas =
             new ConcurrentDictionary<IFakeObjectCall, ICallData>();
@@ -72,7 +72,7 @@
         /// calls are persisted for subsequent sessions. In playback mode, causes captured
         /// calls to be verified.
         /// </summary>
-        public void EndSession()
+        public void Dispose()
         {
             if (this.IsRecording)
             {

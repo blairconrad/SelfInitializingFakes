@@ -45,23 +45,21 @@
             "When I use a self-initializing fake in recording mode to try to set some out and ref parameters"
                 .x(() =>
                 {
-                    var fakeService = SelfInitializingFake.For(() => realServiceWhileRecording, inMemoryStorage);
-
-                    var fake = fakeService.Fake;
-                    recordingReturn = fake.TryToSetSomeOutAndRefParameters(out recordingOut, ref recordingRef);
-
-                    fakeService.EndSession();
+                    using (var fakeService = SelfInitializingFake.For(() => realServiceWhileRecording, inMemoryStorage))
+                    {
+                        var fake = fakeService.Fake;
+                        recordingReturn = fake.TryToSetSomeOutAndRefParameters(out recordingOut, ref recordingRef);
+                    }
                 });
 
             "And I use a self-initializing fake in playback mode to try to set some out and ref parameters"
                 .x(() =>
                 {
-                    var playbackFakeService = SelfInitializingFake.For<IService>(() => null, inMemoryStorage);
-
-                    var fake = playbackFakeService.Fake;
-                    playbackReturn = fake.TryToSetSomeOutAndRefParameters(out playbackOut, ref playbackRef);
-
-                    playbackFakeService.EndSession();
+                    using (var playbackFakeService = SelfInitializingFake.For<IService>(() => null, inMemoryStorage))
+                    {
+                        var fake = playbackFakeService.Fake;
+                        playbackReturn = fake.TryToSetSomeOutAndRefParameters(out playbackOut, ref playbackRef);
+                    }
                 });
 
             "Then the recording fake sets the out parameter to the value set by the wrapped service"
@@ -113,23 +111,21 @@
             "When I use a self-initializing fake in recording mode to set some out and ref parameters"
                 .x(() =>
                 {
-                    var fakeService = SelfInitializingFake.For(() => realServiceWhileRecording, inMemoryStorage);
-
-                    var fake = fakeService.Fake;
-                    fake.SetSomeOutAndRefParameters(out recordingOut, ref recordingRef);
-
-                    fakeService.EndSession();
+                    using (var fakeService = SelfInitializingFake.For(() => realServiceWhileRecording, inMemoryStorage))
+                    {
+                        var fake = fakeService.Fake;
+                        fake.SetSomeOutAndRefParameters(out recordingOut, ref recordingRef);
+                    }
                 });
 
             "And I use a self-initializing fake in playback mode to set some out and ref parameters"
                 .x(() =>
                 {
-                    var playbackFakeService = SelfInitializingFake.For<IService>(() => null, inMemoryStorage);
-
-                    var fake = playbackFakeService.Fake;
-                    fake.SetSomeOutAndRefParameters(out playbackOut, ref playbackRef);
-
-                    playbackFakeService.EndSession();
+                    using (var playbackFakeService = SelfInitializingFake.For<IService>(() => null, inMemoryStorage))
+                    {
+                        var fake = playbackFakeService.Fake;
+                        fake.SetSomeOutAndRefParameters(out playbackOut, ref playbackRef);
+                    }
                 });
 
             "Then the recording fake sets the out parameter to the value set by the wrapped service"
