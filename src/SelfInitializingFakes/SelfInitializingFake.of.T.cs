@@ -85,6 +85,8 @@
 
                 this.repository.Save(this.recordedCalls);
             }
+
+            this.AddDisposedRecordingRuleToFake();
         }
 
         private static ICallData GetCallData(IFakeObjectCall call)
@@ -188,6 +190,12 @@
                     }
                 })
                 .AssignsOutAndRefParametersLazily(call => GetCallData(call).OutAndRefValues);
+        }
+
+        private void AddDisposedRecordingRuleToFake()
+        {
+            A.CallTo(this.Fake)
+                .Throws(new RecordingException("The fake has been disposed and can record no more calls."));
         }
 
         private void AddPlaybackRulesToFake()
