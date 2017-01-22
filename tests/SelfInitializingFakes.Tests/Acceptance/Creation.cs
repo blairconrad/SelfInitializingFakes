@@ -88,7 +88,7 @@
                 .x(() => repository = A.Fake<ICallDataRepository>());
 
             "And the repository has been initialized"
-                .x(() => A.CallTo(() => repository.Load()).Returns(new ICallData[0]));
+                .x(() => A.CallTo(() => repository.Load()).Returns(new CallData[0]));
 
             "And a service factory"
                 .x(() => serviceFactory = A.Fake<Func<IService>>());

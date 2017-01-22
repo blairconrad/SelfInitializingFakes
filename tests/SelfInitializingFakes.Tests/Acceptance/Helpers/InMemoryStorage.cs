@@ -5,14 +5,14 @@
 
     public class InMemoryStorage : ICallDataRepository
     {
-        private IEnumerable<ICallData> recordedCalls;
+        private IEnumerable<CallData> recordedCalls;
 
-        public IEnumerable<ICallData> Load()
+        public IEnumerable<CallData> Load()
         {
             return this.recordedCalls;
         }
 
-        public void Save(IEnumerable<ICallData> calls)
+        public void Save(IEnumerable<CallData> calls)
         {
             this.recordedCalls = calls.ToList();
         }

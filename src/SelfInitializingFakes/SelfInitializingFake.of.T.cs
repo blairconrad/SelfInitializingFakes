@@ -16,12 +16,12 @@
     /// <typeparam name="TService">The type of the service to fake.</typeparam>
     public class SelfInitializingFake<TService> : IDisposable
     {
-        private static readonly ConcurrentDictionary<IFakeObjectCall, ICallData> CallDatas =
-            new ConcurrentDictionary<IFakeObjectCall, ICallData>();
+        private static readonly ConcurrentDictionary<IFakeObjectCall, CallData> CallDatas =
+            new ConcurrentDictionary<IFakeObjectCall, CallData>();
 
         private readonly ICallDataRepository repository;
-        private readonly IList<ICallData> recordedCalls;
-        private readonly Queue<ICallData> expectedCalls;
+        private readonly IList<CallData> recordedCalls;
+        private readonly Queue<CallData> expectedCalls;
         private Exception recordingException;
 
         /// <summary>
@@ -48,13 +48,13 @@
             {
                 var wrappedService = serviceFactory.Invoke();
                 this.Fake = A.Fake<TService>(options => options.Wrapping(wrappedService));
-                this.recordedCalls = new List<ICallData>();
+                this.recordedCalls = new List<CallData>();
                 this.AddRecordingRulesToFake(wrappedService);
             }
             else
             {
                 this.Fake = A.Fake<TService>();
-                this.expectedCalls = new Queue<ICallData>(callsFromRepository);
+                this.expectedCalls = new Queue<CallData>(callsFromRepository);
                 this.AddPlaybackRulesToFake();
             }
         }
@@ -89,9 +89,9 @@
             this.AddDisposedRecordingRuleToFake();
         }
 
-        private static ICallData GetCallData(IFakeObjectCall call)
+        private static CallData GetCallData(IFakeObjectCall call)
         {
-            ICallData callData;
+            CallData callData;
             CallDatas.TryRemove(call, out callData);
             return callData;
         }
@@ -121,7 +121,7 @@
             };
         }
 
-        private ICallData ConsumeNextExpectedCall(IFakeObjectCall call)
+        private CallData ConsumeNextExpectedCall(IFakeObjectCall call)
         {
             if (this.expectedCalls.Count == 0)
             {
@@ -209,20 +209,11 @@
             A.CallTo(this.Fake).WithNonVoidReturnType()
                 .ReturnsLazily(call =>
                 {
-                    ICallData callData = this.ConsumeNextExpectedCall(call);
+                    CallData callData = this.ConsumeNextExpectedCall(call);
                     CallDatas[call] = callData;
                     return callData.ReturnValue;
                 })
                 .AssignsOutAndRefParametersLazily(call => GetCallData(call).OutAndRefValues);
-        }
-
-        private class CallData : ICallData
-        {
-            public MethodInfo Method { get; set; }
-
-            public object ReturnValue { get; set; }
-
-            public object[] OutAndRefValues { get; set; }
         }
     }
 }
