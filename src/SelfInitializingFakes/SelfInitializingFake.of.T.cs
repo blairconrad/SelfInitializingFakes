@@ -115,7 +115,7 @@
 
             return new CallData
             {
-                Method = call.Method,
+                Method = call.Method.ToString(),
                 ReturnValue = result,
                 OutAndRefValues = outAndRefValues.ToArray(),
             };
@@ -129,7 +129,7 @@
             }
 
             var expectedCall = this.expectedCalls.Dequeue();
-            if (expectedCall.Method != call.Method)
+            if (expectedCall.Method != call.Method.ToString())
             {
                 throw new PlaybackException($"expected a call to [{expectedCall.Method}], but found [{call.Method}]");
             }
