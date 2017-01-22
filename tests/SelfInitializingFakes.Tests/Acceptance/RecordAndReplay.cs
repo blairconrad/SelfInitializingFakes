@@ -8,7 +8,7 @@
     using Xbehave;
     using Xunit;
 
-    public static class ImportedFromFakeItEasy
+    public static class RecordAndReplay
     {
         public interface ILibraryService
         {
