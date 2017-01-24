@@ -19,12 +19,12 @@
 
         [Scenario]
         public static void ReplaysRecordedCalls(
-            InMemoryStorage inMemoryStorage,
+            InMemoryRecordedCallRepository inMemoryRecordedCallRepository,
             ILibraryService realServiceWhileRecording,
             IEnumerable<int> countsWhileRecording,
             IEnumerable<int> countsDuringPlayback)
         {
-            "Given a call storage object".x(() => inMemoryStorage = new InMemoryStorage());
+            "Given a call storage object".x(() => inMemoryRecordedCallRepository = new InMemoryRecordedCallRepository());
 
             "And a real service to wrap while recording"
                 .x(() =>
@@ -40,7 +40,7 @@
             "When I use a self-initializing fake in recording mode to get the counts for book 1, 2, and 1 again"
                 .x(() =>
                 {
-                    using (var fakeService = SelfInitializingFake.For(() => realServiceWhileRecording, inMemoryStorage))
+                    using (var fakeService = SelfInitializingFake.For(() => realServiceWhileRecording, inMemoryRecordedCallRepository))
                     {
                         var fake = fakeService.Fake;
                         countsWhileRecording = new List<int>
@@ -55,7 +55,7 @@
             "And I use a self-initializing fake in playback mode to get the counts for book 1, 2, and 1 again"
                 .x(() =>
                 {
-                    using (var playbackFakeService = SelfInitializingFake.For<ILibraryService>(() => null, inMemoryStorage))
+                    using (var playbackFakeService = SelfInitializingFake.For<ILibraryService>(() => null, inMemoryRecordedCallRepository))
                     {
                         var fake = playbackFakeService.Fake;
                         countsDuringPlayback = new List<int>
@@ -80,14 +80,14 @@
 
         [Scenario]
         public static void IgnoresParameterValuesInRecordedCalls(
-            InMemoryStorage inMemoryStorage,
+            InMemoryRecordedCallRepository inMemoryRecordedCallRepository,
             ILibraryService realServiceWhileRecording,
             ILibraryService realServiceDuringPlayback,
             IEnumerable<int> countsWhileRecording,
             IEnumerable<int> countsDuringPlayback)
         {
             "Given a call storage object"
-                .x(() => inMemoryStorage = new InMemoryStorage());
+                .x(() => inMemoryRecordedCallRepository = new InMemoryRecordedCallRepository());
 
             "And a real service to wrap while recording"
                 .x(() =>
@@ -103,7 +103,7 @@
             "When I use a self-initializing fake in recording mode to get the counts for book 2 and 1"
                 .x(() =>
                 {
-                    using (var fakeService = SelfInitializingFake.For(() => realServiceWhileRecording, inMemoryStorage))
+                    using (var fakeService = SelfInitializingFake.For(() => realServiceWhileRecording, inMemoryRecordedCallRepository))
                     {
                         var fake = fakeService.Fake;
 
@@ -118,7 +118,7 @@
             "And I use a self-initializing fake in playback mode to get the counts for book 1 and 2"
                 .x(() =>
                 {
-                    using (var playbackFakeService = SelfInitializingFake.For<ILibraryService>(() => null, inMemoryStorage))
+                    using (var playbackFakeService = SelfInitializingFake.For<ILibraryService>(() => null, inMemoryRecordedCallRepository))
                     {
                         var fake = playbackFakeService.Fake;
 
@@ -142,12 +142,12 @@
 
         [Scenario]
         public static void ThrowsIfWrongCallEncountered(
-            InMemoryStorage inMemoryStorage,
+            InMemoryRecordedCallRepository inMemoryRecordedCallRepository,
             ILibraryService realServiceWhileRecording,
             Exception exception)
         {
             "Given a call storage object"
-                .x(() => inMemoryStorage = new InMemoryStorage());
+                .x(() => inMemoryRecordedCallRepository = new InMemoryRecordedCallRepository());
 
             "And a real service to wrap while recording"
                 .x(() => realServiceWhileRecording = A.Fake<ILibraryService>());
@@ -155,7 +155,7 @@
             "When I use a self-initializing fake in recording mode to get the count and title for book 1"
                 .x(() =>
                 {
-                    using (var fakeService = SelfInitializingFake.For(() => realServiceWhileRecording, inMemoryStorage))
+                    using (var fakeService = SelfInitializingFake.For(() => realServiceWhileRecording, inMemoryRecordedCallRepository))
                     {
                         var fake = fakeService.Fake;
 
@@ -167,7 +167,7 @@
             "And I use a self-initializing fake in playback mode to get the title for book 1"
                 .x(() =>
                 {
-                    using (var playbackFakeService = SelfInitializingFake.For<ILibraryService>(() => null, inMemoryStorage))
+                    using (var playbackFakeService = SelfInitializingFake.For<ILibraryService>(() => null, inMemoryRecordedCallRepository))
                     {
                         var fake = playbackFakeService.Fake;
 
@@ -187,12 +187,12 @@
 
         [Scenario]
         public static void ThrowsIfTooManyCallsEncountered(
-            InMemoryStorage inMemoryStorage,
+            InMemoryRecordedCallRepository inMemoryRecordedCallRepository,
             ILibraryService realServiceWhileRecording,
             Exception exception)
         {
             "Given a call storage object"
-                .x(() => inMemoryStorage = new InMemoryStorage());
+                .x(() => inMemoryRecordedCallRepository = new InMemoryRecordedCallRepository());
 
             "And a real service to wrap while recording"
                 .x(() => realServiceWhileRecording = A.Fake<ILibraryService>());
@@ -200,7 +200,7 @@
             "When I use a self-initializing fake in recording mode to get the count and title for book 1"
                 .x(() =>
                 {
-                    using (var fakeService = SelfInitializingFake.For(() => realServiceWhileRecording, inMemoryStorage))
+                    using (var fakeService = SelfInitializingFake.For(() => realServiceWhileRecording, inMemoryRecordedCallRepository))
                     {
                         var fake = fakeService.Fake;
 
@@ -212,7 +212,7 @@
             "And I use a self-initializing fake in playback mode to get the count and title and count for book 1"
                 .x(() =>
                 {
-                    using (var playbackFakeService = SelfInitializingFake.For<ILibraryService>(() => null, inMemoryStorage))
+                    using (var playbackFakeService = SelfInitializingFake.For<ILibraryService>(() => null, inMemoryRecordedCallRepository))
                     {
                         var fake = playbackFakeService.Fake;
 

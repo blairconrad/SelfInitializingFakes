@@ -16,7 +16,7 @@
 
         [Scenario]
         public static void NonVoidOutAndRef(
-            InMemoryStorage inMemoryStorage,
+            InMemoryRecordedCallRepository inMemoryRecordedCallRepository,
             IService realServiceWhileRecording,
             IService realServiceDuringPlayback,
             int recordingOut,
@@ -27,7 +27,7 @@
             bool playbackReturn)
         {
             "Given a call storage object"
-                .x(() => inMemoryStorage = new InMemoryStorage());
+                .x(() => inMemoryRecordedCallRepository = new InMemoryRecordedCallRepository());
 
             "And a real service to wrap while recording"
                 .x(() =>
@@ -45,7 +45,7 @@
             "When I use a self-initializing fake in recording mode to try to set some out and ref parameters"
                 .x(() =>
                 {
-                    using (var fakeService = SelfInitializingFake.For(() => realServiceWhileRecording, inMemoryStorage))
+                    using (var fakeService = SelfInitializingFake.For(() => realServiceWhileRecording, inMemoryRecordedCallRepository))
                     {
                         var fake = fakeService.Fake;
                         recordingReturn = fake.TryToSetSomeOutAndRefParameters(out recordingOut, ref recordingRef);
@@ -55,7 +55,7 @@
             "And I use a self-initializing fake in playback mode to try to set some out and ref parameters"
                 .x(() =>
                 {
-                    using (var playbackFakeService = SelfInitializingFake.For<IService>(() => null, inMemoryStorage))
+                    using (var playbackFakeService = SelfInitializingFake.For<IService>(() => null, inMemoryRecordedCallRepository))
                     {
                         var fake = playbackFakeService.Fake;
                         playbackReturn = fake.TryToSetSomeOutAndRefParameters(out playbackOut, ref playbackRef);
@@ -83,7 +83,7 @@
 
         [Scenario]
         public static void VoidOutAndRef(
-            InMemoryStorage inMemoryStorage,
+            InMemoryRecordedCallRepository inMemoryRecordedCallRepository,
             IService realServiceWhileRecording,
             IService realServiceDuringPlayback,
             int recordingOut,
@@ -94,7 +94,7 @@
             bool playbackReturn)
         {
             "Given a call storage object"
-                .x(() => inMemoryStorage = new InMemoryStorage());
+                .x(() => inMemoryRecordedCallRepository = new InMemoryRecordedCallRepository());
 
             "And a real service to wrap while recording"
                 .x(() =>
@@ -111,7 +111,7 @@
             "When I use a self-initializing fake in recording mode to set some out and ref parameters"
                 .x(() =>
                 {
-                    using (var fakeService = SelfInitializingFake.For(() => realServiceWhileRecording, inMemoryStorage))
+                    using (var fakeService = SelfInitializingFake.For(() => realServiceWhileRecording, inMemoryRecordedCallRepository))
                     {
                         var fake = fakeService.Fake;
                         fake.SetSomeOutAndRefParameters(out recordingOut, ref recordingRef);
@@ -121,7 +121,7 @@
             "And I use a self-initializing fake in playback mode to set some out and ref parameters"
                 .x(() =>
                 {
-                    using (var playbackFakeService = SelfInitializingFake.For<IService>(() => null, inMemoryStorage))
+                    using (var playbackFakeService = SelfInitializingFake.For<IService>(() => null, inMemoryRecordedCallRepository))
                     {
                         var fake = playbackFakeService.Fake;
                         fake.SetSomeOutAndRefParameters(out playbackOut, ref playbackRef);

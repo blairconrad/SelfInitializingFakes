@@ -3,7 +3,7 @@
     using System.Collections.Generic;
     using System.Linq;
 
-    public class InMemoryStorage : IRecordedCallRepository
+    public class InMemoryRecordedCallRepository : IRecordedCallRepository
     {
         private IEnumerable<RecordedCall> recordedCalls;
 

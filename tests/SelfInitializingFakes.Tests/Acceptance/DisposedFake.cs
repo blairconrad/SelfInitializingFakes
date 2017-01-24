@@ -19,7 +19,7 @@
 
         [Scenario]
         public static void CannotRecordVoidMethodAfterDisposing(
-            InMemoryStorage inMemoryStorage,
+            InMemoryRecordedCallRepository inMemoryRecordedCallRepository,
             IService realServiceWhileRecording,
             IEnumerable<int> countsWhileRecording,
             IEnumerable<int> countsDuringPlayback,
@@ -27,13 +27,13 @@
             Exception exception)
         {
             "Given a call storage object"
-                .x(() => inMemoryStorage = new InMemoryStorage());
+                .x(() => inMemoryRecordedCallRepository = new InMemoryRecordedCallRepository());
 
             "And a real service to wrap while recording"
                 .x(() => realServiceWhileRecording = A.Fake<IService>());
 
             "And a self-initializing fake wrapping the service"
-                .x(() => fakeService = SelfInitializingFake.For(() => realServiceWhileRecording, inMemoryStorage));
+                .x(() => fakeService = SelfInitializingFake.For(() => realServiceWhileRecording, inMemoryRecordedCallRepository));
 
             "And the fake is disposed"
                 .x(() => fakeService.Dispose());
@@ -49,7 +49,7 @@
 
         [Scenario]
         public static void CannotRecordNonVoidAfterDisposing(
-            InMemoryStorage inMemoryStorage,
+            InMemoryRecordedCallRepository inMemoryRecordedCallRepository,
             IService realServiceWhileRecording,
             IEnumerable<int> countsWhileRecording,
             IEnumerable<int> countsDuringPlayback,
@@ -57,13 +57,13 @@
             Exception exception)
         {
             "Given a call storage object"
-                .x(() => inMemoryStorage = new InMemoryStorage());
+                .x(() => inMemoryRecordedCallRepository = new InMemoryRecordedCallRepository());
 
             "And a real service to wrap while recording"
                 .x(() => realServiceWhileRecording = A.Fake<IService>());
 
             "And a self-initializing fake wrapping the service"
-                .x(() => fakeService = SelfInitializingFake.For(() => realServiceWhileRecording, inMemoryStorage));
+                .x(() => fakeService = SelfInitializingFake.For(() => realServiceWhileRecording, inMemoryRecordedCallRepository));
 
             "And the fake is disposed"
                 .x(() => fakeService.Dispose());

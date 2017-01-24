@@ -18,14 +18,14 @@
 
         [Scenario]
         public static void NonVoidMethodThrowsExceptionWhileRecording(
-            InMemoryStorage inMemoryStorage,
+            InMemoryRecordedCallRepository inMemoryRecordedCallRepository,
             IService realServiceWhileRecording,
             Exception originalException,
             Exception exceptionWhileRecording,
             Exception exceptionWhileEndingRecordingSession)
         {
             "Given a call storage object"
-                .x(() => inMemoryStorage = new InMemoryStorage());
+                .x(() => inMemoryRecordedCallRepository = new InMemoryRecordedCallRepository());
 
             "And a real service to wrap while recording"
                 .x(() => realServiceWhileRecording = A.Fake<IService>());
@@ -40,7 +40,7 @@
             "When I use a self-initializing fake in recording mode to execute the method"
                 .x(() =>
                 {
-                    var fakeService = SelfInitializingFake.For(() => realServiceWhileRecording, inMemoryStorage);
+                    var fakeService = SelfInitializingFake.For(() => realServiceWhileRecording, inMemoryRecordedCallRepository);
                     var fake = fakeService.Fake;
 
                     exceptionWhileRecording = Record.Exception(() => fake.Function());
@@ -61,14 +61,14 @@
 
         [Scenario]
         public static void VoidMethodThrowsExceptionWhileRecording(
-            InMemoryStorage inMemoryStorage,
+            InMemoryRecordedCallRepository inMemoryRecordedCallRepository,
             IService realServiceWhileRecording,
             Exception originalException,
             Exception exceptionWhileRecording,
             Exception exceptionWhileEndingRecordingSession)
         {
             "Given a call storage object"
-                .x(() => inMemoryStorage = new InMemoryStorage());
+                .x(() => inMemoryRecordedCallRepository = new InMemoryRecordedCallRepository());
 
             "And a real service to wrap while recording"
                 .x(() => realServiceWhileRecording = A.Fake<IService>());
@@ -83,7 +83,7 @@
             "When I use a self-initializing fake in recording mode to execute the method"
                 .x(() =>
                 {
-                    var fakeService = SelfInitializingFake.For(() => realServiceWhileRecording, inMemoryStorage);
+                    var fakeService = SelfInitializingFake.For(() => realServiceWhileRecording, inMemoryRecordedCallRepository);
                     var fake = fakeService.Fake;
 
                     exceptionWhileRecording = Record.Exception(() => fake.Action());
