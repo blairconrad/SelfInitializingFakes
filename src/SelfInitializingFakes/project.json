@@ -15,10 +15,16 @@
 
   "frameworks": {
     "net40": {
+      "buildOptions": {
+        "define": [ "FEATURE_BINARY_SERIALIZATION" ]
+      }
     },
     "netstandard1.6": {
       "buildOptions": {
-        "define": [ "FRAMEWORK_EXCEPTION_DISPATCH_INFO" ]
+        "define": [ "FRAMEWORK_EXCEPTION_DISPATCH_INFO" ],
+        "compile": {
+          "exclude": [ "BinaryFileRecordedCallRepository.cs" ]
+        }
       }
     }
   }

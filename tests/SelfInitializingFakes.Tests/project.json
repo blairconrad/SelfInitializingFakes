@@ -21,6 +21,11 @@
     "net451": {
     },
     "netcoreapp1.0": {
+      "buildOptions": {
+        "compile": {
+          "exclude": [ "Acceptance/BinarySerialization.cs" ]
+        }
+      },
       "dependencies": {
         "Microsoft.NETCore.App": {
           "type": "platform",

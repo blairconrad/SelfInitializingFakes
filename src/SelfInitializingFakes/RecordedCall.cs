@@ -1,8 +1,13 @@
 ﻿namespace SelfInitializingFakes
 {
+    using System;
+
     /// <summary>
     /// A saved call to a self-initialized fake.
     /// </summary>
+#if FEATURE_BINARY_SERIALIZATION
+    [Serializable]
+#endif
     public class RecordedCall
     {
         /// <summary>Gets or sets the method that was called.</summary>
