@@ -1,4 +1,4 @@
-﻿{
+{
   "buildOptions": {
     "additionalArguments": [ "/ruleset:../../SelfInitializingFakes.ruleset" ],
     "compile": {
@@ -17,13 +17,19 @@
     "net40": {
       "buildOptions": {
         "define": [ "FEATURE_BINARY_SERIALIZATION" ]
+      },
+      "frameworkAssemblies": {
+        "System.Xml": "4.0.0.0"
       }
     },
     "netstandard1.6": {
       "buildOptions": {
-        "define": [ "FRAMEWORK_EXCEPTION_DISPATCH_INFO" ],
+        "define": [ "NETFX_CORE", "FRAMEWORK_EXCEPTION_DISPATCH_INFO" ],
         "compile": {
           "exclude": [ "BinaryFileRecordedCallRepository.cs" ]
+        },
+        "dependencies": {
+          "System.Xml.XmlSerializer": "4.3.0"
         }
       }
     }
