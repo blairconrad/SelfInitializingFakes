@@ -9,27 +9,31 @@ using static SimpleTargets;
 
 // options
 var solutionName = "SelfInitializingFakes";
+var frameworks = new[] { "net451", "netcoreapp1.0" };
+var version = "0.1.0-beta001";
 
-// locations
+// solution file locations
 var nuspecs = new [] { "src/SelfInitializingFakes.nuspec" };
 var testProjectDirs = new[] { "tests/SelfInitializingFakes.Tests" };
-
 var solution = "./" + solutionName + ".sln";
-var logsDirectory = "./artifacts/logs";
-var msBuild = $"{Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86)}/MSBuild/14.0/Bin/msbuild.exe";
-var output = "./artifacts/output";
-var nuget = "./.nuget/NuGet.exe";
-var testsDirectory = "./artifacts/tests";
-var xunit = "./packages/xunit.runner.console.2.1.0/tools/xunit.console.exe";
-var frameworks = new[] { "net451", "netcoreapp1.0" };
 
-// version
-var version = "0.1.0-beta001";
+// tool locations
+var msBuild = $"{Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86)}/MSBuild/14.0/Bin/msbuild.exe";
+var nuget = "./.nuget/NuGet.exe";
+var xunit = "./packages/xunit.runner.console.2.1.0/tools/xunit.console.exe";
+
+// artifact locations
+var logsDirectory = "./artifacts/logs";
+var outputDirectory = "./artifacts/output";
+var testsDirectory = "./artifacts/tests";
+
 
 // targets
 var targets = new TargetDictionary();
 
 targets.Add("default", DependsOn("pack", "test"));
+
+targets.Add("outputDirectory", () => Directory.CreateDirectory(outputDirectory));
 
 targets.Add("logsDirectory", () => Directory.CreateDirectory(logsDirectory));
 
@@ -60,11 +64,9 @@ targets.Add(
         $"{solution} /p:Configuration=Release /nologo /m /v:m /nr:false " +
             $"/fl /flp:LogFile={logsDirectory}/msbuild.log;Verbosity=Detailed;PerformanceSummary"));
 
-targets.Add("output", () => Directory.CreateDirectory(output));
-
 targets.Add(
     "pack",
-    DependsOn("build", "output"),
+    DependsOn("build", "outputDirectory"),
     () =>
     {
         foreach (var nuspec in nuspecs)
@@ -76,7 +78,7 @@ targets.Add(
             File.WriteAllText(nuspec, content);
             try
             {
-                Cmd(nuget, $"pack {nuspec} -Version {version} -OutputDirectory {output} -NoPackageAnalysis");
+                Cmd(nuget, $"pack {nuspec} -Version {version} -OutputDirectory {outputDirectory} -NoPackageAnalysis");
             }
             finally
             {

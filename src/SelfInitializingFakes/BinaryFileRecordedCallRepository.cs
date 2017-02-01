@@ -6,25 +6,25 @@
     using System.Runtime.Serialization.Formatters.Binary;
 
     /// <summary>
-    /// Saves and loads recorded calls made to a service. The calls will be saved to a fileStream,
-    /// serialized using the .NET Framework's built-in object serializer.
+    /// Saves and loads recorded calls made to a service. The calls will be saved to a file,
+    /// via a supplied <see cref="FileStream"/>, serialized using the .NET Framework's built-in object serializer.
     /// </summary>
     public class BinaryFileRecordedCallRepository : FileBasedRecordedCallRepository
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="BinaryFileRecordedCallRepository"/> class.
         /// </summary>
-        /// <param name="path">The fileStream to save calls to, or load them from.</param>
+        /// <param name="path">The location to save calls to, or load them from.</param>
         public BinaryFileRecordedCallRepository(string path)
             : base(path)
         {
         }
 
         /// <summary>
-        /// Writes calls to a file stream.
+        /// Writes calls to a file.
         /// </summary>
         /// <param name="calls">The calls.</param>
-        /// <param name="fileStream">The stream</param>
+        /// <param name="fileStream">The stream that writes to the file.</param>
         protected override void WriteToStream(IEnumerable<RecordedCall> calls, FileStream fileStream)
         {
             var formatter = new BinaryFormatter();
@@ -32,9 +32,9 @@
         }
 
         /// <summary>
-        /// Reads calls from a file stream.
+        /// Reads calls from a file.
         /// </summary>
-        /// <param name="fileStream">The stream</param>
+        /// <param name="fileStream">The stream that reads from the file.</param>
         /// <returns>The deserialized calls.</returns>
         protected override IEnumerable<RecordedCall> ReadFromStream(FileStream fileStream)
         {

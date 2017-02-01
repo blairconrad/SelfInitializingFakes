@@ -4,7 +4,7 @@
 
     /// <summary>
     /// An exception thrown when an error is encountered while
-    /// using a <see cref="SelfInitializingFake{T}"/> in recording
+    /// using a <see cref="SelfInitializingFake{T}"/> in playback
     /// mode.
     /// </summary>
     public class PlaybackException : Exception

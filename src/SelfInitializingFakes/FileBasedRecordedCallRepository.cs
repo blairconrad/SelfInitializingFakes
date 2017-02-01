@@ -49,16 +49,16 @@
         }
 
         /// <summary>
-        /// Writes calls to a file stream.
+        /// Writes calls to a file.
         /// </summary>
         /// <param name="calls">The calls.</param>
-        /// <param name="fileStream">The stream</param>
+        /// <param name="fileStream">The stream that writes to the file.</param>
         protected abstract void WriteToStream(IEnumerable<RecordedCall> calls, FileStream fileStream);
 
         /// <summary>
-        /// Reads calls from a file stream.
+        /// Reads calls from a file.
         /// </summary>
-        /// <param name="fileStream">The stream</param>
+        /// <param name="fileStream">The stream that reads from the file.</param>
         /// <returns>The deserialized calls.</returns>
         protected abstract IEnumerable<RecordedCall> ReadFromStream(FileStream fileStream);
     }

@@ -4,7 +4,6 @@
     using System.Collections.Concurrent;
     using System.Collections.Generic;
     using System.Linq;
-    using System.Reflection;
     using FakeItEasy;
     using FakeItEasy.Core;
     using SelfInitializingFakes.Infrastructure;
@@ -16,8 +15,14 @@
     /// <typeparam name="TService">The type of the service to fake.</typeparam>
     public class SelfInitializingFake<TService> : IDisposable
     {
-        private static readonly ConcurrentDictionary<IFakeObjectCall, RecordedCall> RecordedCalls =
-            new ConcurrentDictionary<IFakeObjectCall, RecordedCall>();
+        // FakeItEasy provides one path for setting the return value of a fake call, and one for
+        // setting the out and ref values to be applied, with no way to link them up and configure
+        // the call in one step. In recording mode, we'll be figuring out the return value and out
+        // and ref values from a single call to the wrapped service, so we'll use this cache to
+        // (very) temporarily store the out and ref values so they can be applied to the call.
+        // The same thing is done during playback.
+        private static readonly ConcurrentDictionary<IFakeObjectCall, object[]> OutAndRefValuesCache =
+            new ConcurrentDictionary<IFakeObjectCall, object[]>();
 
         private readonly IRecordedCallRepository repository;
         private readonly IList<RecordedCall> recordedCalls;
@@ -27,7 +32,7 @@
         /// <summary>
         /// Initializes a new instance of the <see cref="SelfInitializingFake{TService}"/> class.
         /// </summary>
-        /// <param name="serviceFactory">A factory that will create a concrete factory if needed.</param>
+        /// <param name="serviceFactory">A factory that will create a concrete service if needed.</param>
         /// <param name="repository">A source of saved call information, or sink for the same.</param>
         internal SelfInitializingFake(Func<TService> serviceFactory, IRecordedCallRepository repository)
         {
@@ -60,17 +65,17 @@
         }
 
         /// <summary>
-        /// Gets the fake <typeparamref name="TService"/> to be used in the tests.
+        /// Gets the fake <typeparamref name="TService"/> to be used in tests.
         /// </summary>
-        /// <value>The fake <typeparamref name="TService"/> to be used in the tests.</value>
+        /// <value>The fake <typeparamref name="TService"/> to be used in tests.</value>
         public TService Fake { get; }
 
         private bool IsRecording => this.recordedCalls != null;
 
         /// <summary>
-        /// Ends a recording or playback session. In recording mode, ensures that captured
-        /// calls are persisted for subsequent sessions. In playback mode, causes captured
-        /// calls to be verified.
+        /// Ends a recording or playback session.
+        /// In recording mode, ensures that captured calls are persisted for subsequent sessions.
+        /// In playback mode, causes captured calls to be verified.
         /// </summary>
         public void Dispose()
         {
@@ -89,11 +94,11 @@
             this.AddDisposedRecordingRuleToFake();
         }
 
-        private static RecordedCall GetRecordedCall(IFakeObjectCall call)
+        private static object[] GetOutAndRefValues(IFakeObjectCall call)
         {
-            RecordedCall recordedCall;
-            RecordedCalls.TryRemove(call, out recordedCall);
-            return recordedCall;
+            object[] outAndRefValues;
+            OutAndRefValuesCache.TryRemove(call, out outAndRefValues);
+            return outAndRefValues;
         }
 
         private static RecordedCall BuildRecordedCall<TClass>(IFakeObjectCall call, TClass target)
@@ -139,6 +144,8 @@
 
         private void AddRecordingRulesToFake<TClass>(TClass target)
         {
+            // This rule applies to all calls to the fake, but is
+            // overridden for calls with return values belowe.
             A.CallTo(this.Fake).AssignsOutAndRefParametersLazily(call =>
             {
                 try
@@ -162,18 +169,18 @@
 
             // This rule relies on an undocumented FakeItEasy behavior: that
             // the actions specified in AssignsOutAndRefParametersLazily will
-            // occur after ReturnsLazily.
+            // be invoked after ReturnsLazily.
             A.CallTo(this.Fake).WithNonVoidReturnType()
 
-                // FakeItEasy 2.3.2 and below will intercept void methods even when WhenNonVoidReturnType is
-                // specified, so constrain the call by return type again.
+                // FakeItEasy 2.3.2 and below (and several 3.0.0 pre-releases) will intercept void methods even when
+                // WhenNonVoidReturnType is specified, so constrain the call by return type again.
                 .Where(call => call.Method.ReturnType != typeof(void))
                 .ReturnsLazily(call =>
                 {
                     try
                     {
                         var recordedCall = BuildRecordedCall(call, target);
-                        RecordedCalls[call] = recordedCall;
+                        OutAndRefValuesCache[call] = recordedCall.OutAndRefValues;
                         this.recordedCalls.Add(recordedCall);
                         return recordedCall.ReturnValue;
                     }
@@ -189,7 +196,7 @@
                         return null; // to satisfy the compiler
                     }
                 })
-                .AssignsOutAndRefParametersLazily(call => GetRecordedCall(call).OutAndRefValues);
+                .AssignsOutAndRefParametersLazily(GetOutAndRefValues);
         }
 
         private void AddDisposedRecordingRuleToFake()
@@ -203,17 +210,17 @@
             A.CallTo(this.Fake)
                 .AssignsOutAndRefParametersLazily(call => this.ConsumeNextExpectedCall(call).OutAndRefValues);
 
-            // These rule relies on an undocumented FakeItEasy behavior: that
+            // This rule relies on an undocumented FakeItEasy behavior: that
             // the actions specified in AssignsOutAndRefParametersLazily will
-            // occur after ReturnsLazily.
+            // be invoked after ReturnsLazily.
             A.CallTo(this.Fake).WithNonVoidReturnType()
                 .ReturnsLazily(call =>
                 {
                     RecordedCall recordedCall = this.ConsumeNextExpectedCall(call);
-                    RecordedCalls[call] = recordedCall;
+                    OutAndRefValuesCache[call] = recordedCall.OutAndRefValues;
                     return recordedCall.ReturnValue;
                 })
-                .AssignsOutAndRefParametersLazily(call => GetRecordedCall(call).OutAndRefValues);
+                .AssignsOutAndRefParametersLazily(GetOutAndRefValues);
         }
     }
 }

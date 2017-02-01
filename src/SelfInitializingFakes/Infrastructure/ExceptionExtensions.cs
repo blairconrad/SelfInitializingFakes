@@ -4,7 +4,6 @@
 #if FRAMEWORK_EXCEPTION_DISPATCH_INFO
     using System.Runtime.ExceptionServices;
 #else
-    using System.Diagnostics.CodeAnalysis;
     using System.Reflection;
 #endif
 
