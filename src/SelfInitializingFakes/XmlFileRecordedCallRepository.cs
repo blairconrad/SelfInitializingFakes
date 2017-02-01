@@ -9,48 +9,37 @@
     /// Saves and loads recorded calls made to a service. The calls will be saved to a file,
     /// serialized as XML.
     /// </summary>
-    public class XmlFileRecordedCallRepository : IRecordedCallRepository
+    public class XmlFileRecordedCallRepository : FileBasedRecordedCallRepository
     {
         private static readonly XmlSerializer Serializer = new XmlSerializer(typeof(RecordedCall[]));
-
-        private readonly string path;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="XmlFileRecordedCallRepository"/> class.
         /// </summary>
         /// <param name="path">The file to save calls to, or load them from.</param>
         public XmlFileRecordedCallRepository(string path)
+            : base(path)
         {
-            this.path = path;
         }
 
         /// <summary>
-        /// Saves recorded calls for later use.
+        /// Writes calls to a file stream.
         /// </summary>
-        /// <param name="calls">The recorded calls to save.</param>
-        public void Save(IEnumerable<RecordedCall> calls)
+        /// <param name="calls">The calls.</param>
+        /// <param name="fileStream">The stream</param>
+        protected override void WriteToStream(IEnumerable<RecordedCall> calls, FileStream fileStream)
         {
-            using (var fileStream = File.Create(this.path))
-            {
-                Serializer.Serialize(fileStream, calls.ToArray());
-            }
+            Serializer.Serialize(fileStream, calls.ToArray());
         }
 
         /// <summary>
-        /// Loads and returns saved calls.
+        /// Reads calls from a file stream.
         /// </summary>
-        /// <returns>The saved calls, or <c>null</c> if there are none.</returns>
-        public IEnumerable<RecordedCall> Load()
+        /// <param name="fileStream">The stream</param>
+        /// <returns>The deserialized calls.</returns>
+        protected override IEnumerable<RecordedCall> ReadFromStream(FileStream fileStream)
         {
-            if (!File.Exists(this.path))
-            {
-                return null;
-            }
-
-            using (var fileStream = File.OpenRead(this.path))
-            {
-                return (IEnumerable<RecordedCall>)Serializer.Deserialize(fileStream);
-            }
+            return (IEnumerable<RecordedCall>)Serializer.Deserialize(fileStream);
         }
     }
 }

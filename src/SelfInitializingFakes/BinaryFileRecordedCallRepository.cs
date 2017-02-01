@@ -6,51 +6,40 @@
     using System.Runtime.Serialization.Formatters.Binary;
 
     /// <summary>
-    /// Saves and loads recorded calls made to a service. The calls will be saved to a file,
+    /// Saves and loads recorded calls made to a service. The calls will be saved to a fileStream,
     /// serialized using the .NET Framework's built-in object serializer.
     /// </summary>
-    public class BinaryFileRecordedCallRepository : IRecordedCallRepository
+    public class BinaryFileRecordedCallRepository : FileBasedRecordedCallRepository
     {
-        private readonly string path;
-
         /// <summary>
         /// Initializes a new instance of the <see cref="BinaryFileRecordedCallRepository"/> class.
         /// </summary>
-        /// <param name="path">The file to save calls to, or load them from.</param>
+        /// <param name="path">The fileStream to save calls to, or load them from.</param>
         public BinaryFileRecordedCallRepository(string path)
+            : base(path)
         {
-            this.path = path;
         }
 
         /// <summary>
-        /// Saves recorded calls for later use.
+        /// Writes calls to a file stream.
         /// </summary>
-        /// <param name="calls">The recorded calls to save.</param>
-        public void Save(IEnumerable<RecordedCall> calls)
+        /// <param name="calls">The calls.</param>
+        /// <param name="fileStream">The stream</param>
+        protected override void WriteToStream(IEnumerable<RecordedCall> calls, FileStream fileStream)
         {
             var formatter = new BinaryFormatter();
-            using (var file = File.Open(this.path, FileMode.Create))
-            {
-                formatter.Serialize(file, calls.ToArray());
-            }
+            formatter.Serialize(fileStream, calls.ToArray());
         }
 
         /// <summary>
-        /// Loads and returns saved calls.
+        /// Reads calls from a file stream.
         /// </summary>
-        /// <returns>The saved calls, or <c>null</c> if there are none.</returns>
-        public IEnumerable<RecordedCall> Load()
+        /// <param name="fileStream">The stream</param>
+        /// <returns>The deserialized calls.</returns>
+        protected override IEnumerable<RecordedCall> ReadFromStream(FileStream fileStream)
         {
-            if (!File.Exists(this.path))
-            {
-                return null;
-            }
-
             var formatter = new BinaryFormatter();
-            using (var file = File.OpenRead(this.path))
-            {
-                return (IEnumerable<RecordedCall>)formatter.Deserialize(file);
-            }
+            return (IEnumerable<RecordedCall>)formatter.Deserialize(fileStream);
         }
     }
 }
