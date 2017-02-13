@@ -171,10 +171,6 @@
             // the actions specified in AssignsOutAndRefParametersLazily will
             // be invoked after ReturnsLazily.
             A.CallTo(this.Fake).WithNonVoidReturnType()
-
-                // FakeItEasy 2.3.2 and below (and several 3.0.0 pre-releases) will intercept void methods even when
-                // WhenNonVoidReturnType is specified, so constrain the call by return type again.
-                .Where(call => call.Method.ReturnType != typeof(void))
                 .ReturnsLazily(call =>
                 {
                     try
