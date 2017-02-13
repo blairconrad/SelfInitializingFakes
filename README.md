@@ -19,5 +19,5 @@ Features:
 * user-supplied serializers provide flexible storage
 
 ----
-Logo: [Self Obsession](https://thenounproject.com/search/?q=self+objsession&i=54849])
+Logo: [Self Obsession](https://thenounproject.com/search/?q=self+obsession&i=54849])
 by [Michael A. Salter](https://thenounproject.com/michael.salter.73/) from the Noun Project.
