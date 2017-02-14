@@ -5,7 +5,7 @@ $SolutionFile = "SelfInitializingFakes.sln"
 
 #####
 
-$NuGetUrl = 'https://dist.nuget.org/win-x86-commandline/$NuGetVersion/NuGet.exe'
+$NuGetUrl = "https://dist.nuget.org/win-x86-commandline/$NuGetVersion/NuGet.exe"
 
 $ScriptDir = Split-Path $script:MyInvocation.MyCommand.Path
 
