@@ -71,20 +71,7 @@ targets.Add(
     {
         foreach (var nuspec in nuspecs)
         {
-            var originalNuspec = $"{nuspec}.original";
-            File.Move(nuspec, originalNuspec);
-            var originalContent = File.ReadAllText(originalNuspec);
-            var content = originalContent.Replace("[99.99.99-dev]", $"[{version}]");
-            File.WriteAllText(nuspec, content);
-            try
-            {
-                Cmd(nuget, $"pack {nuspec} -Version {version} -OutputDirectory {outputDirectory} -NoPackageAnalysis");
-            }
-            finally
-            {
-                File.Delete(nuspec);
-                File.Move(originalNuspec, nuspec);
-            }
+            Cmd(nuget, $"pack {nuspec} -Version {version} -OutputDirectory {outputDirectory} -NoPackageAnalysis");
         }
     });
 
