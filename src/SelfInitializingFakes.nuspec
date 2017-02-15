@@ -13,7 +13,7 @@
     <copyright>Copyright (c) SelfInitializingFakes contributors.</copyright>
     <tags>mocks mocking fakes faking self-initializing</tags>
     <dependencies>
-      <dependency id="FakeItEasy" version="[3.0.0-beta002-build000066,4)" />
+      <dependency id="FakeItEasy" version="[$FakeItEasyVersion$,4)" />
     </dependencies>
   </metadata>
   <files>

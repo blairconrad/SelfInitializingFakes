@@ -1,10 +1,11 @@
 #load "packages/simple-targets-csharp.4.0.0/simple-targets-csharp.csx"
 
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
-using System.Linq;
+#r "System.Runtime.Serialization"
+#r "System.Xml.Linq"
+
+using System.Runtime.Serialization.Json;
+using System.Xml;
+using System.Xml.Linq;
 using static SimpleTargets;
 
 // options
@@ -15,6 +16,7 @@ var version = "0.1.0-beta001";
 // solution file locations
 var nuspecs = new [] { "src/SelfInitializingFakes.nuspec" };
 var testProjectDirs = new[] { "tests/SelfInitializingFakes.Tests" };
+var mainProjectPath = "src/SelfInitializingFakes/project.json";
 var solution = "./" + solutionName + ".sln";
 
 // tool locations
@@ -69,9 +71,10 @@ targets.Add(
     DependsOn("build", "outputDirectory"),
     () =>
     {
+        var fakeItEasyVersion = GetDependencyVersion("FakeItEasy");
         foreach (var nuspec in nuspecs)
         {
-            Cmd(nuget, $"pack {nuspec} -Version {version} -OutputDirectory {outputDirectory} -NoPackageAnalysis");
+            Cmd(nuget, $"pack {nuspec} -Version {version} -OutputDirectory {outputDirectory} -NoPackageAnalysis -Properties FakeItEasyVersion={fakeItEasyVersion}");
         }
     });
 
@@ -129,4 +132,13 @@ public static void RunDotNet(string workingDirectory, string command, string arg
             throw new InvalidOperationException($"The command exited with code {process.ExitCode}.");
         }
     }
+}
+
+public string GetDependencyVersion(string packageName)
+{
+    byte[] buffer = File.ReadAllBytes(mainProjectPath);
+    XmlReader reader = JsonReaderWriterFactory.CreateJsonReader(buffer, new XmlDictionaryReaderQuotas());
+
+    XElement root = XElement.Load(reader);
+    return root.Element("dependencies").Element(packageName).Value;
 }
