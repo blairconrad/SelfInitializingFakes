@@ -18,7 +18,6 @@ recently deprecated from the .NET 4.0 version of the library and do not exist at
 ## Highlights
 
 * only requires a "real" service to exist when recording
-* persist call data to files via built-in serializers, or
 * built-in binary (.NET Framework only) and XML serializers
 * user-supplied serializers can provide flexible storage
 
@@ -30,8 +29,8 @@ Assuming a class `Service` that implements `IService`, a self-initializing fake 
 var callRepository = new XmlFileRecordedCallRepository("calls.xml");
 using (var selfInitializingService = SelfInitializingFake.For<IService>(() => new Service(), callRepository))
 {
-    var systemUnderTest = new SystemUnderTest( selfInitializingService.Fake);
-    systemUnderTest.DoSomething(); // internally exercises fakeService.Fake
+    var systemUnderTest = new SystemUnderTest(selfInitializingService.Fake);
+    systemUnderTest.DoSomething(); // internally exercises selfInitializingService.Fake
 }
 ```
 
