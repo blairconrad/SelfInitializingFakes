@@ -9,7 +9,7 @@
   },
 
   "dependencies": {
-    "FakeItEasy": "3.0.0-rc001-build000097",
+    "FakeItEasy": "3.0.0",
     "StyleCop.Analyzers": "1.1.0-beta001"
   },
 
