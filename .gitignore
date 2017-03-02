@@ -1,8 +1,9 @@
-.vs
+/.nuget
+/.vs
+/artifacts
+/packages
 [Oo]bj
 [Bb]in
-artifacts
-packages
 
 *.*proj.user
 *.[Cc]ache
@@ -15,6 +16,5 @@ packages
 *.received.txt
 *.suo
 *[Rr][Ee][Ss][Hh][Aa][Rr][Pp][Ee][Rr]*
-.nuget/[Nn]u[Gg]et.exe
 /src/VersionInfo.cs
 Thumbs.db

@@ -1,7 +1,5 @@
 
-$NuGetVersion = 'v3.5.0-rc1'
-
-$SolutionFile = "SelfInitializingFakes.sln"
+$NuGetVersion = 'v3.5.0'
 
 #####
 
@@ -31,7 +29,9 @@ if ( ! ( Test-Path .nuget\NuGet.exe ) ) {
 }
 
 # restore packages
-.nuget\NuGet.exe restore $SolutionFile -MSBuildVersion 14
+.nuget\NuGet.exe restore .\packages.config -PackagesDirectory .\packages -Verbosity quiet
 
 # run script
 & "${env:ProgramFiles(x86)}\MSBuild\14.0\Bin\csi.exe" .\build.csx $args
+
+Pop-Location
