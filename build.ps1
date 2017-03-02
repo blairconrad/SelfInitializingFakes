@@ -24,11 +24,19 @@ if ( ! ( Test-Path $NuGetExecutable ) ) {
     Invoke-WebRequest $NuGetUrl -OutFile "$NuGetExecutable"
 }
 
+if ( ! ( Test-Path .nuget ) )
+{
+    Write-Output "Creating .nuget directory"
+    New-Item -ItemType Directory .nuget > $nul
+}
+
 if ( ! ( Test-Path .nuget\NuGet.exe ) ) {
+    Write-Output "Copying NuGet.exe into .nuget directory"
     Copy-Item $NuGetExecutable .nuget\NuGet.exe
 }
 
 # restore packages
+Write-Output "Restoring essential NuGet packages"
 .nuget\NuGet.exe restore .\packages.config -PackagesDirectory .\packages -Verbosity quiet
 
 # run script
