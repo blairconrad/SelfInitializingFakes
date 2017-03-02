@@ -14,10 +14,11 @@ var frameworks = new[] { "net451", "netcoreapp1.0" };
 var version = "0.1.0-beta001";
 
 // solution file locations
-var nuspecs = new [] { "src/SelfInitializingFakes.nuspec" };
-var testProjectDirs = new[] { "tests/SelfInitializingFakes.Tests" };
-var mainProjectPath = "src/SelfInitializingFakes/project.json";
-var solution = "./" + solutionName + ".sln";
+var nuspecFiles = new [] { "src/SelfInitializingFakes.nuspec" };
+var testProjectDirectories = new[] { "tests/SelfInitializingFakes.Tests" };
+var mainProjectFile = "src/SelfInitializingFakes/project.json";
+var solutionFile = "./" + solutionName + ".sln";
+var versionInfoFile = "./src/VersionInfo.cs";
 
 // tool locations
 var msBuild = $"{Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86)}/MSBuild/14.0/Bin/msbuild.exe";
@@ -28,7 +29,6 @@ var xunit = "./packages/xunit.runner.console.2.1.0/tools/xunit.console.exe";
 var logsDirectory = "./artifacts/logs";
 var outputDirectory = "./artifacts/output";
 var testsDirectory = "./artifacts/tests";
-
 
 // targets
 var targets = new TargetDictionary();
@@ -54,13 +54,15 @@ $@"using System.Reflection;
 [assembly: AssemblyFileVersion(""{assemblyFileVersion}"")]
 [assembly: AssemblyInformationalVersion(""{assemblyInformationalVersion}"")]
 ";
-
-        File.WriteAllText("src/VersionInfo.cs", versionContents, Encoding.UTF8);
+        if (!File.Exists(versionInfoFile) || versionContents != File.ReadAllText(versionInfoFile, Encoding.UTF8))
+        {
+            File.WriteAllText(versionInfoFile, versionContents, Encoding.UTF8);
+        }
     });
 
 targets.Add(
     "restore",
-    () => Cmd(nuget, $"restore {solution} -MSBuildVersion 14 -Verbosity quiet"));
+    () => Cmd(nuget, $"restore {solutionFile} -MSBuildVersion 14 -Verbosity quiet"));
 
 
 targets.Add(
@@ -68,7 +70,7 @@ targets.Add(
     DependsOn("restore", "versionInfoFile", "logsDirectory"),
     () => Cmd(
         msBuild,
-        $"{solution} /p:Configuration=Release /nologo /m /v:m /nr:false " +
+        $"{solutionFile} /p:Configuration=Release /nologo /m /v:m /nr:false " +
             $"/fl /flp:LogFile={logsDirectory}/msbuild.log;Verbosity=Detailed;PerformanceSummary"));
 
 targets.Add(
@@ -77,9 +79,9 @@ targets.Add(
     () =>
     {
         var fakeItEasyVersion = GetDependencyVersion("FakeItEasy");
-        foreach (var nuspec in nuspecs)
+        foreach (var nuspecFile in nuspecFiles)
         {
-            Cmd(nuget, $"pack {nuspec} -Version {version} -OutputDirectory {outputDirectory} -NoPackageAnalysis -Properties FakeItEasyVersion={fakeItEasyVersion}");
+            Cmd(nuget, $"pack {nuspecFile} -Version {version} -OutputDirectory {outputDirectory} -NoPackageAnalysis -Properties FakeItEasyVersion={fakeItEasyVersion}");
         }
     });
 
@@ -88,13 +90,13 @@ targets.Add(
     DependsOn("build", "testsDirectory"),
     () =>
     {
-        foreach (var testDir in testProjectDirs)
+        foreach (var testProjectDirectory in testProjectDirectories)
         {
-            var outputBase = Path.GetFullPath(Path.Combine(testsDirectory, Path.GetFileName(testDir)));
+            var outputBase = Path.GetFullPath(Path.Combine(testsDirectory, Path.GetFileName(testProjectDirectory)));
 
             foreach (var framework in frameworks)
             {
-                Cmd(testDir, "dotnet", $"test -c Release -f {framework} -nologo -xml {outputBase}-{framework}.xml");
+                Cmd(testProjectDirectory, "dotnet", $"test -c Release -f {framework} -nologo -xml {outputBase}-{framework}.xml");
             }
         }
     });
@@ -132,7 +134,7 @@ public void Cmd(string workingDirectory, string fileName, string args)
 
 public string GetDependencyVersion(string packageName)
 {
-    byte[] buffer = File.ReadAllBytes(mainProjectPath);
+    byte[] buffer = File.ReadAllBytes(mainProjectFile);
     XmlReader reader = JsonReaderWriterFactory.CreateJsonReader(buffer, new XmlDictionaryReaderQuotas());
 
     XElement root = XElement.Load(reader);
