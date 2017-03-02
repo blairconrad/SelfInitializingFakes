@@ -54,7 +54,10 @@ $@"using System.Reflection;
 [assembly: AssemblyFileVersion(""{assemblyFileVersion}"")]
 [assembly: AssemblyInformationalVersion(""{assemblyInformationalVersion}"")]
 ";
-        File.WriteAllText(versionInfoFile, versionContents, Encoding.UTF8);
+        if (!File.Exists(versionInfoFile) || versionContents != File.ReadAllText(versionInfoFile, Encoding.UTF8))
+        {
+            File.WriteAllText(versionInfoFile, versionContents, Encoding.UTF8);
+        }
     });
 
 targets.Add(
