@@ -11,12 +11,12 @@ using static SimpleTargets;
 // options
 var solutionName = "SelfInitializingFakes";
 var frameworks = new[] { "net451", "netcoreapp1.0" };
-var version = "0.1.0-beta001";
 
 // solution file locations
 var nuspecFiles = new [] { "src/SelfInitializingFakes.nuspec" };
 var testProjectDirectories = new[] { "tests/SelfInitializingFakes.Tests" };
 var mainProjectFile = "src/SelfInitializingFakes/project.json";
+var releaseNotesFile = "./release_notes.md";
 var solutionFile = "./" + solutionName + ".sln";
 var versionInfoFile = "./src/VersionInfo.cs";
 
@@ -30,6 +30,8 @@ var logsDirectory = "./artifacts/logs";
 var outputDirectory = "./artifacts/output";
 var testsDirectory = "./artifacts/tests";
 
+string version;
+
 // targets
 var targets = new TargetDictionary();
 
@@ -42,6 +44,7 @@ targets.Add("logsDirectory", () => Directory.CreateDirectory(logsDirectory));
 targets.Add("testsDirectory", () => Directory.CreateDirectory(testsDirectory));
 
 targets.Add("versionInfoFile",
+    DependsOn("readVersion"),
     () =>
     {
         var assemblyVersion = version.Split('-')[0];
@@ -75,7 +78,7 @@ targets.Add(
 
 targets.Add(
     "pack",
-    DependsOn("build", "outputDirectory"),
+    DependsOn("build", "outputDirectory", "readVersion"),
     () =>
     {
         var fakeItEasyVersion = GetDependencyVersion("FakeItEasy");
@@ -100,6 +103,10 @@ targets.Add(
             }
         }
     });
+
+targets.Add(
+    "readVersion", () => version = File.ReadLines(releaseNotesFile, Encoding.UTF8)
+        .First(line => line.StartsWith("## ")).Substring(3).Trim());
 
 Run(Args, targets);
 
