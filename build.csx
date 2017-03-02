@@ -1,4 +1,4 @@
-#load "packages/simple-targets-csharp.4.0.0/simple-targets-csharp.csx"
+#load "packages/simple-targets-csx.5.2.0/simple-targets.csx"
 
 #r "System.Runtime.Serialization"
 #r "System.Xml.Linq"
@@ -59,8 +59,13 @@ $@"using System.Reflection;
     });
 
 targets.Add(
+    "restore",
+    () => Cmd(nuget, $"restore {solution} -MSBuildVersion 14 -Verbosity quiet"));
+
+
+targets.Add(
     "build",
-    DependsOn("versionInfoFile", "logsDirectory"),
+    DependsOn("restore", "versionInfoFile", "logsDirectory"),
     () => Cmd(
         msBuild,
         $"{solution} /p:Configuration=Release /nologo /m /v:m /nr:false " +
@@ -89,7 +94,7 @@ targets.Add(
 
             foreach (var framework in frameworks)
             {
-                RunDotNet(testDir, "test", $"-c Release -f {framework} -nologo -xml {outputBase}-{framework}.xml");
+                Cmd(testDir, "dotnet", $"test -c Release -f {framework} -nologo -xml {outputBase}-{framework}.xml");
             }
         }
     });
@@ -97,34 +102,25 @@ targets.Add(
 Run(Args, targets);
 
 // helpers
-public static void Cmd(string fileName, string args)
+public void Cmd(string fileName, string args)
 {
-    using (var process = new Process())
-    {
-        process.StartInfo = new ProcessStartInfo { FileName = $"\"{fileName}\"", Arguments = args, UseShellExecute = false, };
-        Console.WriteLine($"Running '{process.StartInfo.FileName} {process.StartInfo.Arguments}'...");
-        process.Start();
-        process.WaitForExit();
-        if (process.ExitCode != 0)
-        {
-            throw new InvalidOperationException($"The command exited with code {process.ExitCode}.");
-        }
-    }
+    Cmd(".", fileName, args);
 }
 
-public static void RunDotNet(string workingDirectory, string command, string args="")
+public void Cmd(string workingDirectory, string fileName, string args)
 {
     using (var process = new Process())
     {
         process.StartInfo = new ProcessStartInfo
         {
-            FileName = "dotnet",
-            Arguments = command + " " + args,
+            FileName = $"\"{fileName}\"",
+            Arguments = args,
             WorkingDirectory = workingDirectory,
-            UseShellExecute = false
+            UseShellExecute = false,
         };
 
-        Console.WriteLine($"Running '{process.StartInfo.FileName} {process.StartInfo.Arguments}' in '{process.StartInfo.WorkingDirectory}'...");
+        var workingDirectoryMessage = workingDirectory == "." ? "" : $" in '{process.StartInfo.WorkingDirectory}'";
+        Console.WriteLine($"Running '{process.StartInfo.FileName} {process.StartInfo.Arguments}'{workingDirectoryMessage}...");
         process.Start();
         process.WaitForExit();
         if (process.ExitCode != 0)
