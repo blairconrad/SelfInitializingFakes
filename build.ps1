@@ -36,7 +36,7 @@ if ( ! ( Test-Path .nuget\NuGet.exe ) ) {
 }
 
 # restore packages
-Write-Output "Restoring essential NuGet packages"
+Write-Output "Restoring NuGet packages for build script"
 .nuget\NuGet.exe restore .\packages.config -PackagesDirectory .\packages -Verbosity quiet
 
 # run script
