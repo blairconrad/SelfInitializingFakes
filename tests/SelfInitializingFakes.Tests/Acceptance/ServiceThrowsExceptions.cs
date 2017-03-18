@@ -41,7 +41,7 @@
                 .x(() =>
                 {
                     var fakeService = SelfInitializingFake.For(() => realServiceWhileRecording, inMemoryRecordedCallRepository);
-                    var fake = fakeService.Fake;
+                    var fake = fakeService.Object;
 
                     exceptionWhileRecording = Record.Exception(() => fake.Function());
 
@@ -84,7 +84,7 @@
                 .x(() =>
                 {
                     var fakeService = SelfInitializingFake.For(() => realServiceWhileRecording, inMemoryRecordedCallRepository);
-                    var fake = fakeService.Fake;
+                    var fake = fakeService.Object;
 
                     exceptionWhileRecording = Record.Exception(() => fake.Action());
 

@@ -49,7 +49,7 @@
                 {
                     using (var fakeService = SelfInitializingFake.For(() => realServiceWhileRecording, repository))
                     {
-                        var fake = fakeService.Fake;
+                        var fake = fakeService.Object;
                         fake.VoidMethod("firstCallKey", out voidMethodOutInteger, ref voidMethodRefDateTime);
                         nonVoidMethodResult = fake.NonVoidMethod();
                     }
@@ -60,7 +60,7 @@
                 {
                     using (var playbackFakeService = SelfInitializingFake.For<IService>(() => null, repository))
                     {
-                        var fake = playbackFakeService.Fake;
+                        var fake = playbackFakeService.Object;
                         int i;
                         DateTime dt = DateTime.MinValue;
                         fake.VoidMethod("blah", out i, ref dt);
