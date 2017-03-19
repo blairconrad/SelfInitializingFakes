@@ -1,6 +1,5 @@
 {
   "buildOptions": {
-    "additionalArguments": [ "/ruleset:../../SelfInitializingFakes.ruleset" ],
     "warningsAsErrors": true,
     "xmlDoc": false
   },
@@ -11,7 +10,6 @@
     "SelfInitializingFakes": {
       "target": "project"
     },
-    "StyleCop.Analyzers": "1.1.0-beta001",
     "Xbehave.Core": "2.2.0-beta0003-build685"
   },
 

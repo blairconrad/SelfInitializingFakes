@@ -1,6 +1,5 @@
 {
   "buildOptions": {
-    "additionalArguments": [ "/ruleset:../../SelfInitializingFakes.ruleset" ],
     "compile": {
       "include": [ "../CommonAssemblyInfo.cs", "../VersionInfo.cs" ]
     },
@@ -9,8 +8,7 @@
   },
 
   "dependencies": {
-    "FakeItEasy": "3.0.0",
-    "StyleCop.Analyzers": "1.1.0-beta001"
+    "FakeItEasy": "3.0.0"
   },
 
   "frameworks": {
