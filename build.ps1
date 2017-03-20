@@ -1,5 +1,7 @@
 
 $NuGetVersion = 'v3.5.0'
+$VisualStudioVersion = '15.0'
+$VSWhereVersion = '1.0.58'
 
 #####
 
@@ -39,7 +41,12 @@ if ( ! ( Test-Path .nuget\NuGet.exe ) ) {
 Write-Output "Restoring NuGet packages for build script"
 .nuget\NuGet.exe restore .\packages.config -PackagesDirectory .\packages -Verbosity quiet
 
-# run script
-& "${env:ProgramFiles(x86)}\MSBuild\14.0\Bin\csi.exe" .\build.csx $args
+$VSDir = & ".\packages\vswhere.$VSWhereVersion\tools\vswhere.exe" -version $VisualStudioVersion -products * -requires Microsoft.Component.MSBuild -property installationPath
+if ($VSDir) {
+  $CSIPath = join-path $VSDir "MSBuild\$VisualStudioVersion\Bin\Roslyn\csi.exe"
+  if (test-path $CSIPath) {
+      & $CSIPath .\build.csx $args
+  }
+}
 
 Pop-Location

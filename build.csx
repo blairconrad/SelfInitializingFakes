@@ -15,15 +15,13 @@ var frameworks = new[] { "net451", "netcoreapp1.0" };
 // solution file locations
 var nuspecFiles = new [] { "src/SelfInitializingFakes.nuspec" };
 var testProjectDirectories = new[] { "tests/SelfInitializingFakes.Tests" };
-var mainProjectFile = "src/SelfInitializingFakes/project.json";
+var mainProjectFile = "src/SelfInitializingFakes/SelfInitializingFakes.csproj";
 var releaseNotesFile = "./release_notes.md";
 var solutionFile = "./" + solutionName + ".sln";
 var versionInfoFile = "./src/VersionInfo.cs";
 
 // tool locations
-var msBuild = $"{Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86)}/MSBuild/14.0/Bin/msbuild.exe";
 var nuget = "./.nuget/NuGet.exe";
-var xunit = "./packages/xunit.runner.console.2.1.0/tools/xunit.console.exe";
 
 // artifact locations
 var logsDirectory = "./artifacts/logs";
@@ -65,16 +63,15 @@ $@"using System.Reflection;
 
 targets.Add(
     "restore",
-    () => Cmd(nuget, $"restore {solutionFile} -MSBuildVersion 14 -Verbosity quiet"));
-
+    () => Cmd("dotnet", $"restore {solutionFile} --packages packages"));
 
 targets.Add(
     "build",
     DependsOn("restore", "versionInfoFile", "logsDirectory"),
     () => Cmd(
-        msBuild,
-        $"{solutionFile} /p:Configuration=Release /nologo /m /v:m /nr:false " +
-            $"/fl /flp:LogFile={logsDirectory}/msbuild.log;Verbosity=Detailed;PerformanceSummary"));
+        "dotnet",
+        $"build {solutionFile} /p:Configuration=Release /nologo /m /v:m " +
+            $"/fl /flp:LogFile={logsDirectory}/build.log;Verbosity=Detailed;PerformanceSummary"));
 
 targets.Add(
     "pack",
@@ -99,7 +96,7 @@ targets.Add(
 
             foreach (var framework in frameworks)
             {
-                Cmd(testProjectDirectory, "dotnet", $"test -c Release -f {framework} -nologo -xml {outputBase}-{framework}.xml");
+                Cmd(testProjectDirectory, "dotnet", $"test -c Release -f {framework} -nologo");
             }
         }
     });
@@ -141,9 +138,12 @@ public void Cmd(string workingDirectory, string fileName, string args)
 
 public string GetDependencyVersion(string packageName)
 {
-    byte[] buffer = File.ReadAllBytes(mainProjectFile);
-    XmlReader reader = JsonReaderWriterFactory.CreateJsonReader(buffer, new XmlDictionaryReaderQuotas());
+    var xml = XDocument.Load(mainProjectFile);
 
-    XElement root = XElement.Load(reader);
-    return root.Element("dependencies").Element(packageName).Value;
+    return  xml.Root.Elements("ItemGroup")
+                .SelectMany(i=>i.Elements("PackageReference"))
+                .Where(pr=>pr.Attribute("Include").Value == packageName)
+                .Single()
+                .Attribute("Version")
+                .Value;
 }
