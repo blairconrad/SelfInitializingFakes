@@ -1,7 +1,7 @@
-﻿
+
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25420.1
+# Visual Studio 15
+VisualStudioVersion = 15.0.26114.2
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{3B5ADEC3-FC98-4938-B52C-52F421B3DBEB}"
 	ProjectSection(SolutionItems) = preProject
@@ -10,12 +10,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		.gitignore = .gitignore
 		build.csx = build.csx
 		build.ps1 = build.ps1
-		global.json = global.json
 		how_to_build.md = how_to_build.md
 		License.txt = License.txt
 		README.md = README.md
-		SelfInitializingFakes.Dictionary.xml = SelfInitializingFakes.Dictionary.xml
-		SelfInitializingFakes.ruleset = SelfInitializingFakes.ruleset
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{E5449372-918E-45FB-BD55-7A1BCC98FF1C}"
@@ -25,11 +22,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{E5449372-918
 		SelfInitializingFakes.ruleset = SelfInitializingFakes.ruleset
 	EndProjectSection
 EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "SelfInitializingFakes", "src\SelfInitializingFakes\SelfInitializingFakes.xproj", "{08462E29-25C0-4A1F-9275-23B7898E95F0}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SelfInitializingFakes", "src\SelfInitializingFakes\SelfInitializingFakes.csproj", "{08462E29-25C0-4A1F-9275-23B7898E95F0}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{71C0B811-4069-4D47-8D81-1F4EC66E21BF}"
 EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "SelfInitializingFakes.Tests", "tests\SelfInitializingFakes.Tests\SelfInitializingFakes.Tests.xproj", "{8DFB8024-894F-46B3-B62D-B6E21F0B8945}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SelfInitializingFakes.Tests", "tests\SelfInitializingFakes.Tests\SelfInitializingFakes.Tests.csproj", "{8DFB8024-894F-46B3-B62D-B6E21F0B8945}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
