@@ -10,7 +10,7 @@ using static SimpleTargets;
 
 // options
 var solutionName = "SelfInitializingFakes";
-var frameworks = new[] { "net451", "netcoreapp1.0" };
+var frameworks = new[] { "net452", "netcoreapp1.0" };
 
 // solution file locations
 var nuspecFiles = new [] { "src/SelfInitializingFakes.nuspec" };
