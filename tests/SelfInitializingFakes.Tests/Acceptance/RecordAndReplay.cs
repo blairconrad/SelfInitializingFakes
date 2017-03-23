@@ -42,7 +42,7 @@
                 {
                     using (var fakeService = SelfInitializingFake.For(() => realServiceWhileRecording, inMemoryRecordedCallRepository))
                     {
-                        var fake = fakeService.Fake;
+                        var fake = fakeService.Object;
                         countsWhileRecording = new List<int>
                         {
                             fake.GetCount("1"),
@@ -57,7 +57,7 @@
                 {
                     using (var playbackFakeService = SelfInitializingFake.For<ILibraryService>(() => null, inMemoryRecordedCallRepository))
                     {
-                        var fake = playbackFakeService.Fake;
+                        var fake = playbackFakeService.Object;
                         countsDuringPlayback = new List<int>
                         {
                             fake.GetCount("1"),
@@ -105,7 +105,7 @@
                 {
                     using (var fakeService = SelfInitializingFake.For(() => realServiceWhileRecording, inMemoryRecordedCallRepository))
                     {
-                        var fake = fakeService.Fake;
+                        var fake = fakeService.Object;
 
                         countsWhileRecording = new List<int>
                         {
@@ -120,7 +120,7 @@
                 {
                     using (var playbackFakeService = SelfInitializingFake.For<ILibraryService>(() => null, inMemoryRecordedCallRepository))
                     {
-                        var fake = playbackFakeService.Fake;
+                        var fake = playbackFakeService.Object;
 
                         countsDuringPlayback = new List<int>
                         {
@@ -157,7 +157,7 @@
                 {
                     using (var fakeService = SelfInitializingFake.For(() => realServiceWhileRecording, inMemoryRecordedCallRepository))
                     {
-                        var fake = fakeService.Fake;
+                        var fake = fakeService.Object;
 
                         fake.GetCount("1");
                         fake.GetTitle("1");
@@ -169,7 +169,7 @@
                 {
                     using (var playbackFakeService = SelfInitializingFake.For<ILibraryService>(() => null, inMemoryRecordedCallRepository))
                     {
-                        var fake = playbackFakeService.Fake;
+                        var fake = playbackFakeService.Object;
 
                         exception = Record.Exception(() => fake.GetTitle("1"));
                     }
@@ -202,7 +202,7 @@
                 {
                     using (var fakeService = SelfInitializingFake.For(() => realServiceWhileRecording, inMemoryRecordedCallRepository))
                     {
-                        var fake = fakeService.Fake;
+                        var fake = fakeService.Object;
 
                         fake.GetCount("1");
                         fake.GetTitle("1");
@@ -214,7 +214,7 @@
                 {
                     using (var playbackFakeService = SelfInitializingFake.For<ILibraryService>(() => null, inMemoryRecordedCallRepository))
                     {
-                        var fake = playbackFakeService.Fake;
+                        var fake = playbackFakeService.Object;
 
                         fake.GetCount("1");
                         fake.GetTitle("1");

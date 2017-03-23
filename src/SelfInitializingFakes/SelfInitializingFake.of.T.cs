@@ -52,13 +52,13 @@
             if (callsFromRepository == null)
             {
                 var wrappedService = serviceFactory.Invoke();
-                this.Fake = A.Fake<TService>(options => options.Wrapping(wrappedService));
+                this.Object = A.Fake<TService>(options => options.Wrapping(wrappedService));
                 this.recordedCalls = new List<RecordedCall>();
                 this.AddRecordingRulesToFake(wrappedService);
             }
             else
             {
-                this.Fake = A.Fake<TService>();
+                this.Object = A.Fake<TService>();
                 this.expectedCalls = new Queue<RecordedCall>(callsFromRepository);
                 this.AddPlaybackRulesToFake();
             }
@@ -68,7 +68,7 @@
         /// Gets the fake <typeparamref name="TService"/> to be used in tests.
         /// </summary>
         /// <value>The fake <typeparamref name="TService"/> to be used in tests.</value>
-        public TService Fake { get; }
+        public TService Object { get; }
 
         private bool IsRecording => this.recordedCalls != null;
 
@@ -146,7 +146,7 @@
         {
             // This rule applies to all calls to the fake, but is
             // overridden for calls with return values belowe.
-            A.CallTo(this.Fake).AssignsOutAndRefParametersLazily(call =>
+            A.CallTo(this.Object).AssignsOutAndRefParametersLazily(call =>
             {
                 try
                 {
@@ -170,7 +170,7 @@
             // This rule relies on an undocumented FakeItEasy behavior: that
             // the actions specified in AssignsOutAndRefParametersLazily will
             // be invoked after ReturnsLazily.
-            A.CallTo(this.Fake).WithNonVoidReturnType()
+            A.CallTo(this.Object).WithNonVoidReturnType()
                 .ReturnsLazily(call =>
                 {
                     try
@@ -197,19 +197,19 @@
 
         private void AddDisposedRecordingRuleToFake()
         {
-            A.CallTo(this.Fake)
+            A.CallTo(this.Object)
                 .Throws(new RecordingException("The fake has been disposed and can record no more calls."));
         }
 
         private void AddPlaybackRulesToFake()
         {
-            A.CallTo(this.Fake)
+            A.CallTo(this.Object)
                 .AssignsOutAndRefParametersLazily(call => this.ConsumeNextExpectedCall(call).OutAndRefValues);
 
             // This rule relies on an undocumented FakeItEasy behavior: that
             // the actions specified in AssignsOutAndRefParametersLazily will
             // be invoked after ReturnsLazily.
-            A.CallTo(this.Fake).WithNonVoidReturnType()
+            A.CallTo(this.Object).WithNonVoidReturnType()
                 .ReturnsLazily(call =>
                 {
                     RecordedCall recordedCall = this.ConsumeNextExpectedCall(call);

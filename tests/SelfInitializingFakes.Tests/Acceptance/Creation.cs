@@ -75,7 +75,7 @@
                 .x(() => fake.Should().NotBeNull());
 
             "And its Fake property is not null"
-                .x(() => fake.Fake.Should().NotBeNull());
+                .x(() => fake.Object.Should().NotBeNull());
         }
 
         [Scenario]

@@ -39,7 +39,7 @@
                 .x(() => fakeService.Dispose());
 
             "When I record a call to a void method using the fake"
-                .x(() => exception = Record.Exception(() => fakeService.Fake.Action()));
+                .x(() => exception = Record.Exception(() => fakeService.Object.Action()));
 
             "Then the fake throws an exception"
                 .x(() => exception.Should()
@@ -69,7 +69,7 @@
                 .x(() => fakeService.Dispose());
 
             "When I record a call to a non-void method using the fake"
-                .x(() => exception = Record.Exception(() => fakeService.Fake.Function()));
+                .x(() => exception = Record.Exception(() => fakeService.Object.Function()));
 
             "Then the fake throws an exception"
                 .x(() => exception.Should()

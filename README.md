@@ -29,18 +29,18 @@ Assuming a class `Service` that implements `IService`, a self-initializing fake 
 var callRepository = new XmlFileRecordedCallRepository("calls.xml");
 using (var selfInitializingService = SelfInitializingFake.For<IService>(() => new Service(), callRepository))
 {
-    var systemUnderTest = new SystemUnderTest(selfInitializingService.Fake);
-    systemUnderTest.DoSomething(); // internally exercises selfInitializingService.Fake
+    var systemUnderTest = new SystemUnderTest(selfInitializingService.Object);
+    systemUnderTest.DoSomething(); // internally uses selfInitializingService.Object
 }
 ```
 
-Let's examine this line by line (excluding the braces). The first time this code is run, it:
+Let's examine this line by line. The first time this code is run, it:
 
 1. Creates a new call repository that will save recorded calls in the file "calls.xml".
 2. Creates a new self-initializing fake. Because the call repository has never been filled, this self-initializing fake wraps the `new Service()` object.
 3. This is just a line with a brace. It doesn't do much.
 4. Obtains a fake object (of type `IService`) from the self-initializing fake and injects it into a new system under test object.
-5. Exercises the system under test, which will use the `selfInitializingService.Fake` object as a collaborator. All calls made to `selfInitializingService.Fake` will be forwarded to the concrete `Service` object.
+5. Exercises the system under test, which will use the `selfInitializingService.Object` as a collaborator. All calls made to `selfInitializingService.Object` will be forwarded to the concrete `Service` object.
 6. Disposes of the `selfInitializingService`, which will cause it to save all calls made to it (and responses) to the `callRepository`.
 
 So far, the self-initializing fake has provided no benefit; a real `Service` object was used, and did all the work it would normally do.
@@ -51,7 +51,7 @@ Then when the test is run again, the code:
 2. Creates a new self-initializing fake. Because the call repository was previously filled with calls, this self-initializing fake does not need to create a `new Service()`.
 3. This is just a line with a brace. It doesn't do much.
 4. Obtains a fake object (of type `IService`) from the self-initializing fake and injects it into a new system under test object.
-5. Exercises the system under test, which will use the `selfInitializingService.Fake` object as a collaborator. All calls made to `selfInitializingService.Fake` will be handled by the object-faking mechanism.
+5. Exercises the system under test, which will use the `selfInitializingService.Object` as a collaborator. All calls made to `selfInitializingService.Object` will be handled by the object-faking mechanism.
 6. Disposes of the `selfInitializingService`, which does nothing, because there's no need to save the calls to "calls.xml".
 
 If at some point the interactions with `Service` need to change, or a real-life `Service` is found to behave differently

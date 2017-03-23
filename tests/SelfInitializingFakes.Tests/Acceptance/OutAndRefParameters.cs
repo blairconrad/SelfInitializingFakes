@@ -47,7 +47,7 @@
                 {
                     using (var fakeService = SelfInitializingFake.For(() => realServiceWhileRecording, inMemoryRecordedCallRepository))
                     {
-                        var fake = fakeService.Fake;
+                        var fake = fakeService.Object;
                         recordingReturn = fake.TryToSetSomeOutAndRefParameters(out recordingOut, ref recordingRef);
                     }
                 });
@@ -57,7 +57,7 @@
                 {
                     using (var playbackFakeService = SelfInitializingFake.For<IService>(() => null, inMemoryRecordedCallRepository))
                     {
-                        var fake = playbackFakeService.Fake;
+                        var fake = playbackFakeService.Object;
                         playbackReturn = fake.TryToSetSomeOutAndRefParameters(out playbackOut, ref playbackRef);
                     }
                 });
@@ -113,7 +113,7 @@
                 {
                     using (var fakeService = SelfInitializingFake.For(() => realServiceWhileRecording, inMemoryRecordedCallRepository))
                     {
-                        var fake = fakeService.Fake;
+                        var fake = fakeService.Object;
                         fake.SetSomeOutAndRefParameters(out recordingOut, ref recordingRef);
                     }
                 });
@@ -123,7 +123,7 @@
                 {
                     using (var playbackFakeService = SelfInitializingFake.For<IService>(() => null, inMemoryRecordedCallRepository))
                     {
-                        var fake = playbackFakeService.Fake;
+                        var fake = playbackFakeService.Object;
                         fake.SetSomeOutAndRefParameters(out playbackOut, ref playbackRef);
                     }
                 });
