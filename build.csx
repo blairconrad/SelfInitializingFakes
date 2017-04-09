@@ -21,14 +21,13 @@ var solutionFile = "./" + solutionName + ".sln";
 var versionInfoFile = "./src/VersionInfo.cs";
 
 // tool locations
-var nuget = "./.nuget/NuGet.exe";
+var gitversion = @".\packages\GitVersion.CommandLine.4.0.0-beta0011\tools\GitVersion.exe";
+var nuget = @".\.nuget\NuGet.exe";
 
 // artifact locations
 var logsDirectory = "./artifacts/logs";
 var outputDirectory = "./artifacts/output";
 var testsDirectory = "./artifacts/tests";
-
-string version;
 
 // targets
 var targets = new TargetDictionary();
@@ -42,24 +41,7 @@ targets.Add("logsDirectory", () => Directory.CreateDirectory(logsDirectory));
 targets.Add("testsDirectory", () => Directory.CreateDirectory(testsDirectory));
 
 targets.Add("versionInfoFile",
-    DependsOn("readVersion"),
-    () =>
-    {
-        var assemblyVersion = version.Split('-')[0];
-        var assemblyFileVersion = assemblyVersion;
-        var assemblyInformationalVersion = version;
-        var versionContents =
-$@"using System.Reflection;
-
-[assembly: AssemblyVersion(""{assemblyVersion}"")]
-[assembly: AssemblyFileVersion(""{assemblyFileVersion}"")]
-[assembly: AssemblyInformationalVersion(""{assemblyInformationalVersion}"")]
-";
-        if (!File.Exists(versionInfoFile) || versionContents != File.ReadAllText(versionInfoFile, Encoding.UTF8))
-        {
-            File.WriteAllText(versionInfoFile, versionContents, Encoding.UTF8);
-        }
-    });
+    () => Cmd(gitversion, $"/updateAssemblyInfo {versionInfoFile} /ensureAssemblyInfo"));
 
 targets.Add(
     "restore",
@@ -75,13 +57,13 @@ targets.Add(
 
 targets.Add(
     "pack",
-    DependsOn("build", "outputDirectory", "readVersion"),
+    DependsOn("build", "outputDirectory"),
     () =>
     {
         var fakeItEasyVersion = GetDependencyVersion("FakeItEasy");
         foreach (var nuspecFile in nuspecFiles)
         {
-            Cmd(nuget, $"pack {nuspecFile} -Version {version} -OutputDirectory {outputDirectory} -NoPackageAnalysis -Properties FakeItEasyVersion={fakeItEasyVersion}");
+            Cmd(gitversion, $@"/exec cmd /execargs ""/c {nuget} pack {nuspecFile} -Version %GitVersion_NuGetVersionV2% -OutputDirectory {outputDirectory} -NoPackageAnalysis -Properties FakeItEasyVersion={fakeItEasyVersion}""");
         }
     });
 
@@ -102,10 +84,6 @@ targets.Add(
             }
         }
     });
-
-targets.Add(
-    "readVersion", () => version = File.ReadLines(releaseNotesFile, Encoding.UTF8)
-        .First(line => line.StartsWith("## ")).Substring(3).Trim());
 
 Run(Args, targets);
 
