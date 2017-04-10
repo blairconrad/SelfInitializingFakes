@@ -96,8 +96,9 @@ targets.Add(
 
             foreach (var framework in frameworks)
             {
-                var outputFile = outputBase + '-' + framework + ".xml";
-                Cmd(testProjectDirectory, "dotnet", $@"test --configuration Release --framework {framework} --logger:trx;LogFileName={outputFile}");
+                var xmlOutputFile = outputBase + '-' + framework + ".xml";
+                var htmlOutputFile = outputBase + '-' + framework + ".html";
+                Cmd(testProjectDirectory, "dotnet", $"xunit -configuration Release -framework {framework} -nologo -xml {xmlOutputFile} -html {htmlOutputFile}");
             }
         }
     });
