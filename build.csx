@@ -21,8 +21,8 @@ var solutionFile = "./" + solutionName + ".sln";
 var versionInfoFile = "./src/VersionInfo.cs";
 
 // tool locations
-var nuget = @".\.nuget\NuGet.exe";
 var gitversion = @".\packages\GitVersion.CommandLine.4.0.0-beta0011\tools\GitVersion.exe";
+var nuget = @".\.nuget\NuGet.exe";
 
 // artifact locations
 var logsDirectory = "./artifacts/logs";
@@ -41,7 +41,7 @@ targets.Add("logsDirectory", () => Directory.CreateDirectory(logsDirectory));
 targets.Add("testsDirectory", () => Directory.CreateDirectory(testsDirectory));
 
 targets.Add("versionInfoFile",
-    () =>Cmd(gitversion, $"/updateAssemblyInfo {versionInfoFile} /ensureAssemblyInfo"));
+    () => Cmd(gitversion, $"/updateAssemblyInfo {versionInfoFile} /ensureAssemblyInfo"));
 
 targets.Add(
     "restore",
