@@ -9,7 +9,7 @@
     <language>en-US</language>
     <projectUrl>https://github.com/blairconrad/SelfInitializingFakes/</projectUrl>
     <iconUrl>https://raw.github.com/blairconrad/SelfInitializingFakes/master/assets/selfinitializingfakes_128x128.png</iconUrl>
-    <licenseUrl>https://github.com/blairconrad/SelfInitializingFakes/blob/master/LICENSE.txt</licenseUrl>
+    <licenseUrl>https://github.com/blairconrad/SelfInitializingFakes/blob/master/License.txt</licenseUrl>
     <releaseNotes>https://github.com/blairconrad/SelfInitializingFakes/blob/master/release_notes.md</releaseNotes>
     <copyright>Copyright (c) Self-Initializing Fakes contributors.</copyright>
     <tags>mocks mocking fakes faking self-initializing</tags>
