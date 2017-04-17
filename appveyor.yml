@@ -22,3 +22,11 @@ test: off
 
 artifacts:
     - path: .\artifacts\*\*
+
+deploy:
+    - provider: NuGet
+      api_key:
+          secure: pMA56H6cIXL1IGvlssfKFdAN+gGHmGrSGcGLmEXje5gGBuaiEC28PT4NFu/XMvBu
+      skip_symbols: true
+      on:
+          appveyor_repo_tag: true
