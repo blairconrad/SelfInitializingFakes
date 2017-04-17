@@ -4,13 +4,13 @@
     <id>SelfInitializingFakes</id>
     <version>99.99.99</version>
     <title>Self-Initializing Fakes</title>
-    <authors>Blair Conrad, SelfInitializingFakes contributors</authors>
+    <authors>Blair Conrad, Self-Initializing Fakes contributors</authors>
     <description>A library for creating Self-Initializing Fakes.</description>
     <language>en-US</language>
     <projectUrl>https://github.com/blairconrad/SelfInitializingFakes/</projectUrl>
     <iconUrl>https://raw.github.com/blairconrad/SelfInitializingFakes/master/assets/selfinitializingfakes_128x128.png</iconUrl>
     <licenseUrl>https://github.com/blairconrad/SelfInitializingFakes/blob/master/LICENSE.txt</licenseUrl>
-    <copyright>Copyright (c) SelfInitializingFakes contributors.</copyright>
+    <copyright>Copyright (c) Self-Initializing Fakes contributors.</copyright>
     <tags>mocks mocking fakes faking self-initializing</tags>
     <dependencies>
       <dependency id="FakeItEasy" version="[$FakeItEasyVersion$,4)" />
