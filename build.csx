@@ -75,13 +75,7 @@ targets.Add(
         foreach (var testProjectDirectory in testProjectDirectories)
         {
             var outputBase = Path.GetFullPath(Path.Combine(testsDirectory, Path.GetFileName(testProjectDirectory)));
-
-            foreach (var framework in frameworks)
-            {
-                var xmlOutputFile = outputBase + '-' + framework + ".xml";
-                var htmlOutputFile = outputBase + '-' + framework + ".html";
-                Cmd(testProjectDirectory, "dotnet", $"xunit -configuration Release -framework {framework} -nologo -xml {xmlOutputFile} -html {htmlOutputFile}");
-            }
+            Cmd(testProjectDirectory, "dotnet", $"xunit -configuration Release -nologo -xml {outputBase}.xml -html {outputBase}.html");
         }
     });
 
