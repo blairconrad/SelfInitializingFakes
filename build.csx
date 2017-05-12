@@ -1,4 +1,4 @@
-#load "packages/simple-targets-csx.5.2.0/simple-targets.csx"
+#load "packages/simple-targets-csx.5.2.1/simple-targets.csx"
 
 #r "System.Runtime.Serialization"
 #r "System.Xml.Linq"
