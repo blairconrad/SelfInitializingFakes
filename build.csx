@@ -13,7 +13,6 @@ var solutionName = "SelfInitializingFakes";
 var frameworks = new[] { "net452", "netcoreapp1.0" };
 
 // solution file locations
-var nuspecFiles = new [] { "src/SelfInitializingFakes.nuspec" };
 var testProjectDirectories = new[] { "tests/SelfInitializingFakes.Tests" };
 var mainProjectFile = "src/SelfInitializingFakes/SelfInitializingFakes.csproj";
 var releaseNotesFile = "./release_notes.md";
@@ -25,7 +24,7 @@ var nuget = @".\.nuget\NuGet.exe";
 
 // artifact locations
 var logsDirectory = "./artifacts/logs";
-var outputDirectory = "./artifacts/output";
+var outputDirectory = Path.GetFullPath("./artifacts/output");
 var testsDirectory = "./artifacts/tests";
 
 string version;
@@ -78,11 +77,7 @@ targets.Add(
     DependsOn("build", "outputDirectory", "readVersion"),
     () =>
     {
-        var fakeItEasyVersion = GetDependencyVersion("FakeItEasy");
-        foreach (var nuspecFile in nuspecFiles)
-        {
-            Cmd(nuget, $"pack {nuspecFile} -Version {version} -OutputDirectory {outputDirectory} -NoPackageAnalysis -Properties FakeItEasyVersion={fakeItEasyVersion}");
-        }
+        Cmd("dotnet", $"pack {mainProjectFile} --configuration Release --no-build --output {outputDirectory} /p:Version={version}");
     });
 
 targets.Add(
@@ -151,16 +146,4 @@ public void Cmd(string workingDirectory, string fileName, string args)
             throw new InvalidOperationException($"The command exited with code {process.ExitCode}.");
         }
     }
-}
-
-public string GetDependencyVersion(string packageName)
-{
-    var xml = XDocument.Load(mainProjectFile);
-
-    return  xml.Root.Elements("ItemGroup")
-                .SelectMany(i=>i.Elements("PackageReference"))
-                .Where(pr=>pr.Attribute("Include").Value == packageName)
-                .Single()
-                .Attribute("Version")
-                .Value;
 }
