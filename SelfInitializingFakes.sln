@@ -18,7 +18,6 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{E5449372-918E-45FB-BD55-7A1BCC98FF1C}"
 	ProjectSection(SolutionItems) = preProject
 		src\CommonAssemblyInfo.cs = src\CommonAssemblyInfo.cs
-		src\SelfInitializingFakes.nuspec = src\SelfInitializingFakes.nuspec
 		SelfInitializingFakes.ruleset = SelfInitializingFakes.ruleset
 	EndProjectSection
 EndProject
