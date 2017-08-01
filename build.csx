@@ -13,7 +13,7 @@ var solutionName = "SelfInitializingFakes";
 var frameworks = new[] { "net452", "netcoreapp1.0" };
 
 // solution file locations
-var testProjectDirectories = new[] { "tests/SelfInitializingFakes.Tests" };
+var testProjectDirectories = Directory.GetDirectories("tests");
 var mainProjectFile = "src/SelfInitializingFakes/SelfInitializingFakes.csproj";
 var releaseNotesFile = "./release_notes.md";
 var solutionFile = "./" + solutionName + ".sln";

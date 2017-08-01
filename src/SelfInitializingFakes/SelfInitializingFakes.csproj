@@ -45,7 +45,7 @@
   </PropertyGroup>
 
   <PropertyGroup Condition=" '$(TargetFramework)' == 'netstandard1.6' ">
-    <DefineConstants>$(DefineConstants);NETFX_CORE;FRAMEWORK_EXCEPTION_DISPATCH_INFO</DefineConstants>
+    <DefineConstants>$(DefineConstants);NETFX_CORE;FRAMEWORK_EXCEPTION_DISPATCH_INFO;FEATURE_NETCORE_REFLECTION</DefineConstants>
   </PropertyGroup>
 
   <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard1.6' ">
