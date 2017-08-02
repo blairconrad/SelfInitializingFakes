@@ -4,8 +4,12 @@
     using System.Collections.Concurrent;
     using System.Collections.Generic;
     using System.Linq;
+#if FEATURE_NETCORE_REFLECTION
+    using System.Reflection;
+#endif
     using FakeItEasy;
     using FakeItEasy.Core;
+    using FakeItEasy.Creation;
     using SelfInitializingFakes.Infrastructure;
 
     /// <summary>
@@ -52,7 +56,8 @@
             if (callsFromRepository == null)
             {
                 var wrappedService = serviceFactory.Invoke();
-                this.Object = A.Fake<TService>(options => options.Wrapping(wrappedService));
+
+                this.Object = A.Fake(CreateWrapper(wrappedService));
                 this.recordedCalls = new List<RecordedCall>();
                 this.AddRecordingRulesToFake(wrappedService);
             }
@@ -62,6 +67,20 @@
                 this.expectedCalls = new Queue<RecordedCall>(callsFromRepository);
                 this.AddPlaybackRulesToFake();
             }
+        }
+
+        Action<IFakeOptions<TService>> CreateWrapper(TService wrappedService)
+        {
+            return options =>
+            {
+#if FEATURE_NETCORE_REFLECTION
+                var optionsType = options.GetType().GetTypeInfo();
+#else
+                var optionsType = options.GetType();
+#endif
+                var wrapping = optionsType.GetMethod("Wrapping", new[] { typeof(TService) });
+                wrapping.Invoke(options, new object[] { wrappedService });
+            };
         }
 
         /// <summary>
