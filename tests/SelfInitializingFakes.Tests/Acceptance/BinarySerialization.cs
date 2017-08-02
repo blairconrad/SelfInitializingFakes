@@ -75,7 +75,11 @@
                 .x(() =>
                 {
                     int i;
+#if FAKEITEASY3
                     DateTime dt = new DateTime(2017, 1, 24);
+#else
+                    DateTime dt = DateTime.MinValue;
+#endif
                     A.CallTo(() => realServiceWhileRecording.VoidMethod(A<string>._, out i, ref dt))
                         .MustHaveHappened();
                     A.CallTo(() => realServiceWhileRecording.NonVoidMethod()).MustHaveHappened();
