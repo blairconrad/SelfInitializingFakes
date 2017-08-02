@@ -24,7 +24,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SelfInitializingFakes", "sr
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{71C0B811-4069-4D47-8D81-1F4EC66E21BF}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SelfInitializingFakes.Tests", "tests\SelfInitializingFakes.Tests\SelfInitializingFakes.Tests.csproj", "{8DFB8024-894F-46B3-B62D-B6E21F0B8945}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SelfInitializingFakes.Tests.Earliest", "tests\SelfInitializingFakes.Tests.Earliest\SelfInitializingFakes.Tests.Earliest.csproj", "{8DFB8024-894F-46B3-B62D-B6E21F0B8945}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SelfInitializingFakes.Tests.Latest", "tests\SelfInitializingFakes.Tests.Latest\SelfInitializingFakes.Tests.Latest.csproj", "{ED447D19-E841-46AE-BBDE-56326FF6F4AB}"
 EndProject
