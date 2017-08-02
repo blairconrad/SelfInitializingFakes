@@ -13,8 +13,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Include="..\SelfInitializingFakes.Tests\**\*.cs" />
-    <Compile Remove="..\SelfInitializingFakes.Tests\obj\**" />
+    <Compile Include="..\SelfInitializingFakes.Tests.Earliest\**\*.cs" />
+    <Compile Remove="..\SelfInitializingFakes.Tests.Earliest\obj\**" />
   </ItemGroup>
 
   <ItemGroup>
@@ -37,7 +37,7 @@
   </ItemGroup>
 
   <ItemGroup Condition=" '$(TargetFramework)' == 'netcoreapp1.0' ">
-    <Compile Remove="..\SelfInitializingFakes.Tests\Acceptance\BinarySerialization.cs" />
+    <Compile Remove="..\SelfInitializingFakes.Tests.Earliest\Acceptance\BinarySerialization.cs" />
   </ItemGroup>
 
 </Project>
