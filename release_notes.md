@@ -3,6 +3,10 @@
 
 ### Additional Items
 - Explicitly use SDK 1.0.4 to build ([#32](https://github.com/blairconrad/SelfInitializingFakes/issues/32))
+- Use simple-targets-csx 6.0.0 ([#33](https://github.com/blairconrad/SelfInitializingFakes/issues/33))
+
+### With special thanks for contributions to this release from:
+- [Adam Ralph](https://github.com/adamralph)
 
 ## 0.1.0
 
