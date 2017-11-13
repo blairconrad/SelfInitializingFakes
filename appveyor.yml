@@ -1,4 +1,4 @@
-version: '{build}'
+﻿version: '{build}'
 
 image: Visual Studio 2017
 
@@ -15,6 +15,9 @@ environment:
 build_script:
     - ps: ./build.ps1
 
+on_failure:
+  - ps: $root = (Resolve-Path artifacts); [IO.Directory]::GetFiles($root.Path, '*.*', 'AllDirectories') | % { Push-AppveyorArtifact $_ -FileName $_.Substring($root.Path.Length + 1) -DeploymentName failed-build }
+  
 nuget:
     disable_publish_on_pr: true
 

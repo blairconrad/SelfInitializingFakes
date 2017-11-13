@@ -26,8 +26,7 @@ if ( ! ( Test-Path $NuGetExecutable ) ) {
     Invoke-WebRequest $NuGetUrl -OutFile "$NuGetExecutable"
 }
 
-if ( ! ( Test-Path .nuget ) )
-{
+if ( ! ( Test-Path .nuget ) ) {
     Write-Output "Creating .nuget directory"
     New-Item -ItemType Directory .nuget > $nul
 }
@@ -43,10 +42,8 @@ Write-Output "Restoring NuGet packages for build script"
 
 $VSDir = & ".\packages\vswhere.$VSWhereVersion\tools\vswhere.exe" -version $VisualStudioVersion -products * -requires Microsoft.Component.MSBuild -property installationPath
 if ($VSDir) {
-  $CSIPath = join-path $VSDir "MSBuild\$VisualStudioVersion\Bin\Roslyn\csi.exe"
-  if (test-path $CSIPath) {
-      & $CSIPath .\build.csx $args
-  }
+    $CSIPath = join-path $VSDir "MSBuild\$VisualStudioVersion\Bin\Roslyn\csi.exe"
+    if (test-path $CSIPath) {
+        & $CSIPath .\build.csx $args
+    }
 }
-
-Pop-Location
