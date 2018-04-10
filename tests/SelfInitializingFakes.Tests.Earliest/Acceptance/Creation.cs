@@ -26,7 +26,7 @@
 
             "When I create a self-initializing fake"
                 .x(() => exception = Record.Exception(() =>
-                        SelfInitializingFake.For(serviceFactory, repository)));
+                        SelfInitializingFake<IService>.For(serviceFactory, repository)));
 
             "Then the constructor throws an exception"
                 .x(() => exception.Should()
@@ -48,7 +48,7 @@
 
             "When I create a self-initializing fake"
                 .x(() => exception = Record.Exception(() =>
-                        SelfInitializingFake.For(serviceFactory, repository)));
+                        SelfInitializingFake<IService>.For(serviceFactory, repository)));
 
             "Then the constructor throws an exception"
                 .x(() => exception.Should()
@@ -69,7 +69,7 @@
                 .x(() => serviceFactory = A.Fake<Func<IService>>());
 
             "When I create a self-initializing fake"
-                .x(() => fake = SelfInitializingFake.For(serviceFactory, repository));
+                .x(() => fake = SelfInitializingFake<IService>.For(serviceFactory, repository));
 
             "Then the self-initializing fake is created"
                 .x(() => fake.Should().NotBeNull());
@@ -94,7 +94,7 @@
                 .x(() => serviceFactory = A.Fake<Func<IService>>());
 
             "When I create a self-initializing fake"
-                .x(() => fake = SelfInitializingFake.For(serviceFactory, repository));
+                .x(() => fake = SelfInitializingFake<IService>.For(serviceFactory, repository));
 
             "Then the factory is not invoked"
                 .x(() => A.CallTo(serviceFactory).MustNotHaveHappened());
@@ -116,7 +116,7 @@
                 .x(() => serviceFactory = A.Fake<Func<IService>>());
 
             "When I create a self-initializing fake"
-                .x(() => fake = SelfInitializingFake.For(serviceFactory, repository));
+                .x(() => fake = SelfInitializingFake<IService>.For(serviceFactory, repository));
 
             "Then the factory is invoked to create the service"
                 .x(() => A.CallTo(serviceFactory).MustHaveHappened());
@@ -138,7 +138,7 @@
                 .x(() => serviceFactory = A.Fake<Func<Service>>());
 
             "When I create a self-initializing fake"
-                .x(() => fake = SelfInitializingFake.For<IService>(serviceFactory, repository));
+                .x(() => fake = SelfInitializingFake<IService>.For<IService>(serviceFactory, repository));
 
             "Then the factory is invoked to create the service"
                 .x(() => A.CallTo(serviceFactory).MustHaveHappened());

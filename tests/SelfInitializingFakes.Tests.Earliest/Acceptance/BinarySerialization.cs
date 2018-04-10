@@ -51,7 +51,7 @@
             "When I use a self-initializing fake in recording mode"
                 .x(() =>
                 {
-                    using (var fakeService = SelfInitializingFake.For(() => realServiceWhileRecording, repository))
+                    using (var fakeService = SelfInitializingFake<IService>.For(() => realServiceWhileRecording, repository))
                     {
                         var fake = fakeService.Object;
                         fake.VoidMethod("firstCallKey", out voidMethodOutInteger, ref voidMethodRefDateTime);
@@ -62,7 +62,7 @@
             "And I use a self-initializing fake in playback mode"
                 .x(() =>
                 {
-                    using (var playbackFakeService = SelfInitializingFake.For<IService>(() => null, repository))
+                    using (var playbackFakeService = SelfInitializingFake<IService>.For<IService>(() => null, repository))
                     {
                         var fake = playbackFakeService.Object;
                         int i;

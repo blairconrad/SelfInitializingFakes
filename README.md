@@ -27,7 +27,7 @@ Assuming a class `Service` that implements `IService`, a self-initializing fake 
 
 ```c#
 var callRepository = new XmlFileRecordedCallRepository("calls.xml");
-using (var selfInitializingService = SelfInitializingFake.For<IService>(() => new Service(), callRepository))
+using (var selfInitializingService = SelfInitializingFake<IService>.For(() => new Service(), callRepository))
 {
     var systemUnderTest = new SystemUnderTest(selfInitializingService.Object);
     systemUnderTest.DoSomething(); // internally uses selfInitializingService.Object

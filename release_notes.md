@@ -1,3 +1,6 @@
+### Changed
+- Require faked service type to be mentioned explicitly to avoid accidentally creating live services ([#37](https://github.com/blairconrad/SelfInitializingFakes/issues/37)
+
 ### New
 - Support FakeItEasy [3.0.0, 5.0.0) ([#27](https://github.com/blairconrad/SelfInitializingFakes/issues/27))
 

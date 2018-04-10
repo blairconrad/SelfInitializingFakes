@@ -45,7 +45,7 @@
             "When I use a self-initializing fake in recording mode to try to set some out and ref parameters"
                 .x(() =>
                 {
-                    using (var fakeService = SelfInitializingFake.For(() => realServiceWhileRecording, inMemoryRecordedCallRepository))
+                    using (var fakeService = SelfInitializingFake<IService>.For(() => realServiceWhileRecording, inMemoryRecordedCallRepository))
                     {
                         var fake = fakeService.Object;
                         recordingReturn = fake.TryToSetSomeOutAndRefParameters(out recordingOut, ref recordingRef);
@@ -55,7 +55,7 @@
             "And I use a self-initializing fake in playback mode to try to set some out and ref parameters"
                 .x(() =>
                 {
-                    using (var playbackFakeService = SelfInitializingFake.For<IService>(() => null, inMemoryRecordedCallRepository))
+                    using (var playbackFakeService = SelfInitializingFake<IService>.For<IService>(() => null, inMemoryRecordedCallRepository))
                     {
                         var fake = playbackFakeService.Object;
                         playbackReturn = fake.TryToSetSomeOutAndRefParameters(out playbackOut, ref playbackRef);
@@ -111,7 +111,7 @@
             "When I use a self-initializing fake in recording mode to set some out and ref parameters"
                 .x(() =>
                 {
-                    using (var fakeService = SelfInitializingFake.For(() => realServiceWhileRecording, inMemoryRecordedCallRepository))
+                    using (var fakeService = SelfInitializingFake<IService>.For(() => realServiceWhileRecording, inMemoryRecordedCallRepository))
                     {
                         var fake = fakeService.Object;
                         fake.SetSomeOutAndRefParameters(out recordingOut, ref recordingRef);
@@ -121,7 +121,7 @@
             "And I use a self-initializing fake in playback mode to set some out and ref parameters"
                 .x(() =>
                 {
-                    using (var playbackFakeService = SelfInitializingFake.For<IService>(() => null, inMemoryRecordedCallRepository))
+                    using (var playbackFakeService = SelfInitializingFake<IService>.For<IService>(() => null, inMemoryRecordedCallRepository))
                     {
                         var fake = playbackFakeService.Object;
                         fake.SetSomeOutAndRefParameters(out playbackOut, ref playbackRef);
