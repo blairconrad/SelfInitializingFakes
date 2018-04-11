@@ -1,4 +1,4 @@
-﻿namespace SelfInitializingFakes
+namespace SelfInitializingFakes
 {
     using System;
     using System.Collections.Concurrent;
@@ -67,6 +67,31 @@
                 this.expectedCalls = new Queue<RecordedCall>(callsFromRepository);
                 this.AddPlaybackRulesToFake();
             }
+        }
+
+        /// <summary>
+        /// Creates a new self-initializing fake <typeparamref name="TService"/>.
+        /// </summary>
+        /// <typeparam name="TConcreteService">The type of the service the factory will produce.</typeparam>
+        /// <param name="serviceFactory">A factory that will create a concrete service if needed.</param>
+        /// <param name="repository">A source of saved call information, or sink for the same.</param>
+        /// <returns>A new self-initializing fake <typeparamref name="TService"/>.</returns>
+        public static SelfInitializingFake<TService> For<TConcreteService>(
+            Func<TConcreteService> serviceFactory,
+            IRecordedCallRepository repository)
+            where TConcreteService : TService
+        {
+            if (serviceFactory == null)
+            {
+                throw new ArgumentNullException(nameof(serviceFactory));
+            }
+
+            if (repository == null)
+            {
+                throw new ArgumentNullException(nameof(repository));
+            }
+
+            return new SelfInitializingFake<TService>(() => serviceFactory.Invoke(), repository);
         }
 
         Action<IFakeOptions<TService>> CreateWrapper(TService wrappedService)

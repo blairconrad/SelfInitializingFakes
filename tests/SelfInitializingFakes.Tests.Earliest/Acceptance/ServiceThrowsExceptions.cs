@@ -40,7 +40,7 @@
             "When I use a self-initializing fake in recording mode to execute the method"
                 .x(() =>
                 {
-                    var fakeService = SelfInitializingFake.For(() => realServiceWhileRecording, inMemoryRecordedCallRepository);
+                    var fakeService = SelfInitializingFake<IService>.For(() => realServiceWhileRecording, inMemoryRecordedCallRepository);
                     var fake = fakeService.Object;
 
                     exceptionWhileRecording = Record.Exception(() => fake.Function());
@@ -83,7 +83,7 @@
             "When I use a self-initializing fake in recording mode to execute the method"
                 .x(() =>
                 {
-                    var fakeService = SelfInitializingFake.For(() => realServiceWhileRecording, inMemoryRecordedCallRepository);
+                    var fakeService = SelfInitializingFake<IService>.For(() => realServiceWhileRecording, inMemoryRecordedCallRepository);
                     var fake = fakeService.Object;
 
                     exceptionWhileRecording = Record.Exception(() => fake.Action());

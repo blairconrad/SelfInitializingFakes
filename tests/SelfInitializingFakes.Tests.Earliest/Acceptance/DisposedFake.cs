@@ -33,7 +33,7 @@
                 .x(() => realServiceWhileRecording = A.Fake<IService>());
 
             "And a self-initializing fake wrapping the service"
-                .x(() => fakeService = SelfInitializingFake.For(() => realServiceWhileRecording, inMemoryRecordedCallRepository));
+                .x(() => fakeService = SelfInitializingFake<IService>.For(() => realServiceWhileRecording, inMemoryRecordedCallRepository));
 
             "And the fake is disposed"
                 .x(() => fakeService.Dispose());
@@ -63,7 +63,7 @@
                 .x(() => realServiceWhileRecording = A.Fake<IService>());
 
             "And a self-initializing fake wrapping the service"
-                .x(() => fakeService = SelfInitializingFake.For(() => realServiceWhileRecording, inMemoryRecordedCallRepository));
+                .x(() => fakeService = SelfInitializingFake<IService>.For(() => realServiceWhileRecording, inMemoryRecordedCallRepository));
 
             "And the fake is disposed"
                 .x(() => fakeService.Dispose());
