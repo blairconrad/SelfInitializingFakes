@@ -11,6 +11,10 @@ pull_requests:
 
 environment:
     BUILD: $(APPVEYOR_BUILD_NUMBER)
+    NUGET_API_KEY:
+        secure: Dgj/78UqI7Sn62XajiI6SQp0JoT6YTK+k/GuoJ335F4rLnpKFGPf7SLdnHuDaaip
+    GITHUB_TOKEN:
+        secure: IulXujun1RiFyQC2SrK5F/2MtGblamfSjQlGd62zphUlEV7TttNKJErPq6plSCD1
 
 build_script:
     - ps: ./build.ps1
@@ -23,10 +27,5 @@ test: off
 artifacts:
     - path: .\artifacts\*\*
 
-deploy:
-    - provider: NuGet
-      api_key:
-          secure: Dgj/78UqI7Sn62XajiI6SQp0JoT6YTK+k/GuoJ335F4rLnpKFGPf7SLdnHuDaaip
-      skip_symbols: true
-      on:
-          appveyor_repo_tag: true
+deploy_script:
+    - ps: .\tools\deploy.ps1
