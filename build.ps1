@@ -1,5 +1,5 @@
 
-$NuGetVersion = 'v3.5.0'
+$NuGetVersion = 'v4.6.1'
 $VisualStudioVersion = '15.0'
 $VSWhereVersion = '1.0.58'
 
@@ -17,7 +17,7 @@ $CachedNuGetExecutable = Join-Path $NuGetCacheDir NuGet.exe
 $NuGetExecutable = Join-Path tools NuGet.exe
 
 # download nuget to cache dir
-if ( ! ( Test-Path $NuGetExecutable ) ) {
+if ( ! ( Test-Path $CachedNuGetExecutable ) ) {
     if ( ! ( Test-Path $NuGetCacheDir ) ) {
         New-Item -Type directory $NuGetCacheDir > $nul
     }
