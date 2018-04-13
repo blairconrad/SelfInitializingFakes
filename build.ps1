@@ -13,7 +13,8 @@ Push-Location $ScriptDir
 
 # determine cache dir
 $NuGetCacheDir = "$env:LocalAppData\.nuget\$NuGetVersion"
-$NuGetExecutable = "$NuGetCacheDir/NuGet.exe"
+$CachedNuGetExecutable = Join-Path $NuGetCacheDir NuGet.exe
+$NuGetExecutable = Join-Path tools NuGet.exe
 
 # download nuget to cache dir
 if ( ! ( Test-Path $NuGetExecutable ) ) {
@@ -21,32 +22,24 @@ if ( ! ( Test-Path $NuGetExecutable ) ) {
         New-Item -Type directory $NuGetCacheDir > $nul
     }
 
-    Write-Output "Downloading '$NuGetUrl' to '$NuGetExecutable'..."
+    Write-Output "Downloading '$NuGetUrl' to '$CachedNuGetExecutable'..."
     $ProgressPreference = 'SilentlyContinue'
-    Invoke-WebRequest $NuGetUrl -OutFile "$NuGetExecutable"
+    Invoke-WebRequest $NuGetUrl -OutFile $CachedNuGetExecutable
 }
 
-if ( ! ( Test-Path .nuget ) )
-{
-    Write-Output "Creating .nuget directory"
-    New-Item -ItemType Directory .nuget > $nul
-}
-
-if ( ! ( Test-Path .nuget\NuGet.exe ) ) {
-    Write-Output "Copying NuGet.exe into .nuget directory"
-    Copy-Item $NuGetExecutable .nuget\NuGet.exe
-}
+Write-Output "Copying NuGet.exe to $NuGetExecutable"
+Copy-Item $CachedNuGetExecutable $NuGetExecutable
 
 # restore packages
 Write-Output "Restoring NuGet packages for build script"
-.nuget\NuGet.exe restore .\packages.config -PackagesDirectory .\packages -Verbosity quiet
+& $NuGetExecutable restore .\packages.config -PackagesDirectory .\packages -Verbosity quiet
 
 $VSDir = & ".\packages\vswhere.$VSWhereVersion\tools\vswhere.exe" -version $VisualStudioVersion -products * -requires Microsoft.Component.MSBuild -property installationPath
 if ($VSDir) {
-  $CSIPath = join-path $VSDir "MSBuild\$VisualStudioVersion\Bin\Roslyn\csi.exe"
-  if (test-path $CSIPath) {
-      & $CSIPath .\build.csx $args
-  }
+    $CSIPath = join-path $VSDir "MSBuild\$VisualStudioVersion\Bin\Roslyn\csi.exe"
+    if (test-path $CSIPath) {
+        & $CSIPath .\build.csx $args
+    }
 }
 
 Pop-Location
