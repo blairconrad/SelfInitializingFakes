@@ -38,7 +38,7 @@ $VSDir = & ".\packages\vswhere.$VSWhereVersion\tools\vswhere.exe" -version $Visu
 if ($VSDir) {
     $CSIPath = join-path $VSDir "MSBuild\$VisualStudioVersion\Bin\Roslyn\csi.exe"
     if (test-path $CSIPath) {
-        & $CSIPath .\build.csx $args
+        & $CSIPath .\tools\build.csx $args
     }
 }
 
