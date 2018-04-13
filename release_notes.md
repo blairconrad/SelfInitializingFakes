@@ -1,4 +1,4 @@
-## 0.2.0-beta001
+## 0.2.0-beta002
 
 ### Changed
 - Require faked service type to be mentioned explicitly to avoid accidentally creating live services ([#37](https://github.com/blairconrad/SelfInitializingFakes/issues/37))
