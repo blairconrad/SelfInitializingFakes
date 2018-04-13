@@ -1,4 +1,4 @@
-#load "packages/simple-targets-csx.6.0.0/contentFiles/csx/any/simple-targets.csx"
+#load "../packages/simple-targets-csx.6.0.0/contentFiles/csx/any/simple-targets.csx"
 
 #r "System.Runtime.Serialization"
 #r "System.Xml.Linq"
@@ -99,16 +99,16 @@ targets.Add(
              .First(line => line.StartsWith("## ")).Substring(3).Trim();
         Console.WriteLine($"Read version '{versionFromReleaseNotes}' from release notes");
         var tagName = Environment.GetEnvironmentVariable("APPVEYOR_REPO_TAG_NAME");
-        if ( versionFromReleaseNotes != tagName )
+        if (versionFromReleaseNotes != tagName)
         {
             Console.WriteLine($"Release notes version does not match tag name '{tagName}'. Disambiguating.");
-            if ( ! versionFromReleaseNotes.Contains('-') )
+            if (!versionFromReleaseNotes.Contains('-'))
             {
                 versionFromReleaseNotes += "-adhoc";
             }
 
             version = versionFromReleaseNotes +
-                "+Build." +  (Environment.GetEnvironmentVariable("APPVEYOR_BUILD_NUMBER") ?? "adhoc") +
+                "+Build." + (Environment.GetEnvironmentVariable("APPVEYOR_BUILD_NUMBER") ?? "adhoc") +
                 "-Sha." + (Environment.GetEnvironmentVariable("APPVEYOR_REPO_COMMIT") ?? "adhoc");
         }
         else
