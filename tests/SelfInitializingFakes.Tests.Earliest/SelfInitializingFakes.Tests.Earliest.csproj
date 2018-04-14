@@ -1,13 +1,18 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <AssemblyName>SelfInitializingFakes.Tests.Earliest</AssemblyName>
-    <PackageId>SelfInitializingFakes.Tests.Earliest</PackageId>
+    <AssemblyName>SelfInitializingFakes.Tests.Latest</AssemblyName>
+    <PackageId>SelfInitializingFakes.Tests.Latest</PackageId>
     <DefineConstants>$(DefineConstants);FAKEITEASY3</DefineConstants>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Compile Include="..\SelfInitializingFakes.Tests.Latest\**\*.cs" />
+    <Compile Remove="..\SelfInitializingFakes.Tests.Latest\obj\**" />
+  </ItemGroup>
+
   <ItemGroup Condition=" '$(TargetFramework)' == 'netcoreapp1.0' ">
-    <Compile Remove="Acceptance\BinarySerialization.cs" />
+    <Compile Remove="..\SelfInitializingFakes.Tests.Latest\Acceptance\BinarySerialization.cs" />
   </ItemGroup>
 
 </Project>
