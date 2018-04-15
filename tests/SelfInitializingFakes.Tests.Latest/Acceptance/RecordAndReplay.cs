@@ -69,7 +69,7 @@
 
             "Then the recording fake forwards calls to the wrapped service"
                 .x(() => A.CallTo(() => realServiceWhileRecording.GetCount("1"))
-                    .MustHaveHappened(Repeated.Exactly.Twice));
+                    .MustHaveHappenedTwiceExactly());
 
             "And the recording fake returns the wrapped service's results"
                 .x(() => countsWhileRecording.Should().Equal(0x1A, 0x2, 0x1B));
