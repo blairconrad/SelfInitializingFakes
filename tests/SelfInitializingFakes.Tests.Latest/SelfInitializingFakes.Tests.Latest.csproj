@@ -7,6 +7,7 @@
 
   <ItemGroup>
     <PackageReference Include="FakeItEasy" Version="4.5.1" />
+    <PackageReference Include="FakeItEasy.Analyzer" Version="4.5.1" />
   </ItemGroup>
 
   <ItemGroup Condition=" '$(TargetFramework)' == 'netcoreapp1.0' ">

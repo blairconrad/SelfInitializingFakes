@@ -11,4 +11,8 @@
     <GenerateAssemblyInformationalVersionAttribute>false</GenerateAssemblyInformationalVersionAttribute>
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="FakeItEasy.Analyzer" Version="4.5.1" />
+  </ItemGroup>
+
 </Project>
