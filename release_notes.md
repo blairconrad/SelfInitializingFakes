@@ -1,3 +1,10 @@
+### Fixed
+
+- Error during recording throws a PlaybackException ([#48](https://github.com/blairconrad/SelfInitializingFakes/issues/48))
+
+### With special thanks for contributions to this release from:
+- [Thomas Levesque](https://github.com/thomaslevesque)
+
 ## 0.2.0
 
 ### Changed
