@@ -1,3 +1,5 @@
+## 0.2.1
+
 ### Fixed
 
 - Error during recording throws a PlaybackException ([#48](https://github.com/blairconrad/SelfInitializingFakes/issues/48))
