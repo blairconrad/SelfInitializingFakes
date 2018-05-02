@@ -97,7 +97,7 @@ namespace SelfInitializingFakes
             {
                 if (this.recordingRule.RecordingException != null)
                 {
-                    throw new PlaybackException(
+                    throw new RecordingException(
                         "error encountered while recording actual service calls",
                         this.recordingRule.RecordingException);
                 }

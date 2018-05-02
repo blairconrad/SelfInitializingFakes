@@ -51,8 +51,8 @@
             "Then the recording fake throws the original exception"
                 .x(() => exceptionWhileRecording.Should().BeSameAs(originalException));
 
-            "But ending the recording session throws a playback exception"
-                .x(() => exceptionWhileEndingRecordingSession.Should().BeOfType<PlaybackException>()
+            "But ending the recording session throws a recording exception"
+                .x(() => exceptionWhileEndingRecordingSession.Should().BeOfType<RecordingException>()
                     .Which.Message.Should().Be("error encountered while recording actual service calls"));
 
             "And the session-ending exception has the original exception as its inner exception"
@@ -94,8 +94,8 @@
             "Then the recording fake throws the original exception"
                 .x(() => exceptionWhileRecording.Should().BeSameAs(originalException));
 
-            "But ending the recording session throws a playback exception"
-                .x(() => exceptionWhileEndingRecordingSession.Should().BeOfType<PlaybackException>()
+            "But ending the recording session throws a recording exception"
+                .x(() => exceptionWhileEndingRecordingSession.Should().BeOfType<RecordingException>()
                     .Which.Message.Should().Be("error encountered while recording actual service calls"));
 
             "And the session-ending exception has the original exception as its inner exception"
