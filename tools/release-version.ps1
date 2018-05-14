@@ -13,8 +13,9 @@ try {
 
     Write-Host "Releasing version $NewVersion"
 
-    git fetch origin
-    git checkout --quiet -b  $branchName origin/master
+    git checkout master
+    git pull --ff-only origin master
+    git checkout --quiet -b $branchName master
 
     $releaseNotesContent = [System.IO.File]::ReadAllText($releaseNotesFile)
     $releaseNotesContent = ("## $NewVersion`r`n`r`n" + $releaseNotesContent)
@@ -30,12 +31,12 @@ try {
     }
 
     git commit --quiet --message "Set version to $NewVersion" $releaseNotesFile
-    git checkout --quiet origin/master
+    git checkout --quiet master
     git merge --quiet --no-ff $branchName
     git branch -D $branchName
 
     git tag $NewVersion
-    git push --tags origin/master
+    git push origin $NewVersion master
 }
 finally {
     Pop-Location
