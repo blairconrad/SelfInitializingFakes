@@ -2,7 +2,7 @@ namespace FakeItEasy
 {
     using FakeItEasy.Configuration;
 
-    public static class Polyfill 
+    internal static class Polyfill
     {
         public static UnorderedCallAssertion MustHaveHappenedTwiceExactly(this IAssertConfiguration configuration)
         {

@@ -56,6 +56,14 @@ namespace SelfInitializingFakes
         }
 
         /// <summary>
+        /// Gets the fake <typeparamref name="TService"/> to be used in tests.
+        /// </summary>
+        /// <value>The fake <typeparamref name="TService"/> to be used in tests.</value>
+        public TService Object { get; }
+
+        private bool IsRecording => this.recordingRule != null;
+
+        /// <summary>
         /// Creates a new self-initializing fake <typeparamref name="TService"/>.
         /// </summary>
         /// <typeparam name="TConcreteService">The type of the service the factory will produce.</typeparam>
@@ -81,12 +89,6 @@ namespace SelfInitializingFakes
         }
 
         /// <summary>
-        /// Gets the fake <typeparamref name="TService"/> to be used in tests.
-        /// </summary>
-        /// <value>The fake <typeparamref name="TService"/> to be used in tests.</value>
-        public TService Object { get; }
-
-        /// <summary>
         /// Ends a recording or playback session.
         /// In recording mode, ensures that captured calls are persisted for subsequent sessions.
         /// In playback mode, causes captured calls to be verified.
@@ -107,8 +109,6 @@ namespace SelfInitializingFakes
 
             this.AddDisposedRecordingRuleToFake();
         }
-
-        private bool IsRecording => this.recordingRule != null;
 
         private void AddDisposedRecordingRuleToFake()
         {
