@@ -1,7 +1,6 @@
 ﻿namespace SelfInitializingFakes.Tests.Acceptance
 {
     using System;
-    using System.Collections.Generic;
     using FakeItEasy;
     using FluentAssertions;
     using SelfInitializingFakes.Tests.Acceptance.Helpers;
@@ -21,8 +20,6 @@
         public static void CannotRecordVoidMethodAfterDisposing(
             InMemoryRecordedCallRepository inMemoryRecordedCallRepository,
             IService realServiceWhileRecording,
-            IEnumerable<int> countsWhileRecording,
-            IEnumerable<int> countsDuringPlayback,
             SelfInitializingFake<IService> fakeService,
             Exception exception)
         {
@@ -51,8 +48,6 @@
         public static void CannotRecordNonVoidAfterDisposing(
             InMemoryRecordedCallRepository inMemoryRecordedCallRepository,
             IService realServiceWhileRecording,
-            IEnumerable<int> countsWhileRecording,
-            IEnumerable<int> countsDuringPlayback,
             SelfInitializingFake<IService> fakeService,
             Exception exception)
         {

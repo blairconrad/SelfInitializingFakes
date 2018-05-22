@@ -39,7 +39,9 @@
         /// <returns>The deserialized calls.</returns>
         protected override IEnumerable<RecordedCall> ReadFromStream(FileStream fileStream)
         {
+#pragma warning disable CA3075 // Insecure DTD processing in XML - the framework is for testing, so presumably is run in a safe environment
             return (IEnumerable<RecordedCall>)Serializer.Deserialize(fileStream);
+#pragma warning restore CA3075 // Insecure DTD processing in XML
         }
     }
 }

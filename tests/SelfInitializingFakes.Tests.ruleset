@@ -1,6 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RuleSet Name="SelfInitializingFakes" Description="Rule set for all SelfInitializingFakes projects" ToolsVersion="15.0">
     <Include Path="..\SelfInitializingFakes.ruleset" Action="Default" />
+    <Rules AnalyzerId="Microsoft.Analyzers.ManagedCodeAnalysis" RuleNamespace="Microsoft.Rules.Managed">
+          <Rule Id="CA1016" Action="None" /> <!-- Mark assemblies with assembly version -->
+          <Rule Id="CA1034" Action="None" /> <!-- Nested types should not be visible -->
+          <Rule Id="CA1707" Action="None" /> <!-- Identifiers should not contain underscores -->
+          <Rule Id="CA1716" Action="None" /> <!-- Identifiers should not match keywords -->          
+          <Rule Id="CA1822" Action="None" /> <!-- Mark members as static -->
+    </Rules>
     <Rules AnalyzerId="System.Runtime.Analyzers" RuleNamespace="System.Runtime.Analyzers">
         <Rule Id="SA0001" Action="None" /> <!-- XML comment analysis is disabled due to project configuration -->
         <Rule Id="SA1600" Action="None" /> <!-- Elements should be documented -->

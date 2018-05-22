@@ -12,6 +12,13 @@
         /// <summary>
         /// Initializes a new instance of the <see cref="RecordingException"/> class.
         /// </summary>
+        public RecordingException()
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="RecordingException"/> class.
+        /// </summary>
         /// <param name="message">The error message that explains the reason for the exception. </param>
         public RecordingException(string message)
             : base(message)
