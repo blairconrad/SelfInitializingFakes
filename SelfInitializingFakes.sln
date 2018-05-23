@@ -9,20 +9,25 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		.gitignore = .gitignore
 		build.csx = build.csx
 		build.ps1 = build.ps1
+		Directory.Build.props = Directory.Build.props
 		how_to_build.md = how_to_build.md
 		License.txt = License.txt
 		README.md = README.md
+		SelfInitializingFakes.ruleset = SelfInitializingFakes.ruleset
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{E5449372-918E-45FB-BD55-7A1BCC98FF1C}"
 	ProjectSection(SolutionItems) = preProject
 		src\CommonAssemblyInfo.cs = src\CommonAssemblyInfo.cs
-		SelfInitializingFakes.ruleset = SelfInitializingFakes.ruleset
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SelfInitializingFakes", "src\SelfInitializingFakes\SelfInitializingFakes.csproj", "{08462E29-25C0-4A1F-9275-23B7898E95F0}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{71C0B811-4069-4D47-8D81-1F4EC66E21BF}"
+	ProjectSection(SolutionItems) = preProject
+		tests\Directory.Build.props = tests\Directory.Build.props
+		tests\SelfInitializingFakes.Tests.ruleset = tests\SelfInitializingFakes.Tests.ruleset
+	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SelfInitializingFakes.Tests.Earliest", "tests\SelfInitializingFakes.Tests.Earliest\SelfInitializingFakes.Tests.Earliest.csproj", "{8DFB8024-894F-46B3-B62D-B6E21F0B8945}"
 EndProject
@@ -54,5 +59,8 @@ Global
 		{08462E29-25C0-4A1F-9275-23B7898E95F0} = {E5449372-918E-45FB-BD55-7A1BCC98FF1C}
 		{8DFB8024-894F-46B3-B62D-B6E21F0B8945} = {71C0B811-4069-4D47-8D81-1F4EC66E21BF}
 		{ED447D19-E841-46AE-BBDE-56326FF6F4AB} = {71C0B811-4069-4D47-8D81-1F4EC66E21BF}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {A306C694-22A2-4AFB-974B-24B3629C8F28}
 	EndGlobalSection
 EndGlobal

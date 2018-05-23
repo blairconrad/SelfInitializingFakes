@@ -18,7 +18,6 @@
         public static void NonVoidOutAndRef(
             InMemoryRecordedCallRepository inMemoryRecordedCallRepository,
             IService realServiceWhileRecording,
-            IService realServiceDuringPlayback,
             int recordingOut,
             int recordingRef,
             bool recordingReturn,
@@ -85,13 +84,10 @@
         public static void VoidOutAndRef(
             InMemoryRecordedCallRepository inMemoryRecordedCallRepository,
             IService realServiceWhileRecording,
-            IService realServiceDuringPlayback,
             int recordingOut,
             int recordingRef,
-            bool recordingReturn,
             int playbackOut,
-            int playbackRef,
-            bool playbackReturn)
+            int playbackRef)
         {
             "Given a call storage object"
                 .x(() => inMemoryRecordedCallRepository = new InMemoryRecordedCallRepository());

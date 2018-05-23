@@ -1,13 +1,16 @@
-﻿namespace SelfInitializingFakes.Tests.Acceptance
+namespace SelfInitializingFakes.Tests.Acceptance
 {
     using System;
+    using System.Diagnostics.CodeAnalysis;
+    using System.Linq;
     using FakeItEasy;
     using FluentAssertions;
     using Xbehave;
     using Xunit;
 
-    public static class Creation
+    public static class FakeCreation
     {
+        [SuppressMessage("Design", "CA1040:Avoid empty interfaces", Justification = "For testing. The interface doesn't need to do anything.")]
         public interface IService
         {
         }
@@ -88,7 +91,7 @@
                 .x(() => repository = A.Fake<IRecordedCallRepository>());
 
             "And the repository has been initialized"
-                .x(() => A.CallTo(() => repository.Load()).Returns(new RecordedCall[0]));
+                .x(() => A.CallTo(() => repository.Load()).Returns(Enumerable.Empty<RecordedCall>()));
 
             "And a service factory"
                 .x(() => serviceFactory = A.Fake<Func<IService>>());

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RuleSet Name="SelfInitializingFakes" Description="Rule set for all SelfInitializingFakes projects" ToolsVersion="15.0">
+    <Rules AnalyzerId="System.Runtime.Analyzers" RuleNamespace="System.Runtime.Analyzers">
+        <Rule Id="SA1633" Action="None" /> <!-- File must have header -->
+    </Rules>
+</RuleSet>

@@ -82,7 +82,6 @@
         public static void IgnoresParameterValuesInRecordedCalls(
             InMemoryRecordedCallRepository inMemoryRecordedCallRepository,
             ILibraryService realServiceWhileRecording,
-            ILibraryService realServiceDuringPlayback,
             IEnumerable<int> countsWhileRecording,
             IEnumerable<int> countsDuringPlayback)
         {
