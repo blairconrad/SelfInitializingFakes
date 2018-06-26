@@ -1,4 +1,4 @@
-#load "../packages/simple-targets-csx.6.0.0/contentFiles/csx/any/simple-targets.csx"
+#r "../packages/Bullseye.1.0.0-rc.4/lib/netstandard2.0/Bullseye.dll"
 
 #r "System.Runtime.Serialization"
 #r "System.Xml.Linq"
@@ -6,7 +6,8 @@
 using System.Runtime.Serialization.Json;
 using System.Xml;
 using System.Xml.Linq;
-using static SimpleTargets;
+using Bullseye;
+using static Bullseye.Targets;
 
 // options
 var solutionName = "SelfInitializingFakes";
@@ -30,17 +31,15 @@ var testsDirectory = "./artifacts/tests";
 string version;
 
 // targets
-var targets = new TargetDictionary();
+Targets.Add("default", DependsOn("pack", "test"));
 
-targets.Add("default", DependsOn("pack", "test"));
+Targets.Add("outputDirectory", () => Directory.CreateDirectory(outputDirectory));
 
-targets.Add("outputDirectory", () => Directory.CreateDirectory(outputDirectory));
+Targets.Add("logsDirectory", () => Directory.CreateDirectory(logsDirectory));
 
-targets.Add("logsDirectory", () => Directory.CreateDirectory(logsDirectory));
+Targets.Add("testsDirectory", () => Directory.CreateDirectory(testsDirectory));
 
-targets.Add("testsDirectory", () => Directory.CreateDirectory(testsDirectory));
-
-targets.Add("versionInfoFile",
+Targets.Add("versionInfoFile",
     DependsOn("readVersion"),
     () =>
     {
@@ -60,11 +59,11 @@ $@"using System.Reflection;
         }
     });
 
-targets.Add(
+Targets.Add(
     "restore",
     () => Cmd("dotnet", $"restore {solutionFile} --packages packages"));
 
-targets.Add(
+Targets.Add(
     "build",
     DependsOn("restore", "versionInfoFile", "logsDirectory"),
     () => Cmd(
@@ -72,7 +71,7 @@ targets.Add(
         $"build {solutionFile} /p:Configuration=Release /nologo /m /v:m " +
             $"/fl /flp:LogFile={logsDirectory}/build.log;Verbosity=Detailed;PerformanceSummary"));
 
-targets.Add(
+Targets.Add(
     "pack",
     DependsOn("build", "outputDirectory", "readVersion"),
     () =>
@@ -80,7 +79,7 @@ targets.Add(
         Cmd("dotnet", $"pack {mainProjectFile} --configuration Release --no-build --output {outputDirectory} /p:Version={version}");
     });
 
-targets.Add(
+Targets.Add(
     "test",
     DependsOn("build", "testsDirectory"),
     () =>
@@ -92,7 +91,7 @@ targets.Add(
         }
     });
 
-targets.Add(
+Targets.Add(
     "readVersion", () =>
     {
         var versionFromReleaseNotes = File.ReadLines(releaseNotesFile, Encoding.UTF8)
@@ -117,7 +116,7 @@ targets.Add(
         }
     });
 
-Run(Args, targets);
+Targets.Run(Args);
 
 // helpers
 public void Cmd(string fileName, string args)
