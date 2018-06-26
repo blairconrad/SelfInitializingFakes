@@ -1,4 +1,5 @@
-#load "../packages/simple-targets-csx.6.0.0/contentFiles/csx/any/simple-targets.csx"
+#r "../packages/Bullseye.1.0.0-rc.4/lib/netstandard2.0/Bullseye.dll"
+#r "../packages/SimpleExec.2.2.0/lib/netstandard2.0/SimpleExec.dll"
 
 #r "System.Runtime.Serialization"
 #r "System.Xml.Linq"
@@ -6,7 +7,9 @@
 using System.Runtime.Serialization.Json;
 using System.Xml;
 using System.Xml.Linq;
-using static SimpleTargets;
+using Bullseye;
+using static Bullseye.Targets;
+using static SimpleExec.Command;
 
 // options
 var solutionName = "SelfInitializingFakes";
@@ -30,17 +33,15 @@ var testsDirectory = "./artifacts/tests";
 string version;
 
 // targets
-var targets = new TargetDictionary();
+Targets.Add("default", DependsOn("pack", "test"));
 
-targets.Add("default", DependsOn("pack", "test"));
+Targets.Add("outputDirectory", () => Directory.CreateDirectory(outputDirectory));
 
-targets.Add("outputDirectory", () => Directory.CreateDirectory(outputDirectory));
+Targets.Add("logsDirectory", () => Directory.CreateDirectory(logsDirectory));
 
-targets.Add("logsDirectory", () => Directory.CreateDirectory(logsDirectory));
+Targets.Add("testsDirectory", () => Directory.CreateDirectory(testsDirectory));
 
-targets.Add("testsDirectory", () => Directory.CreateDirectory(testsDirectory));
-
-targets.Add("versionInfoFile",
+Targets.Add("versionInfoFile",
     DependsOn("readVersion"),
     () =>
     {
@@ -60,27 +61,27 @@ $@"using System.Reflection;
         }
     });
 
-targets.Add(
+Targets.Add(
     "restore",
-    () => Cmd("dotnet", $"restore {solutionFile} --packages packages"));
+    () => Run("dotnet", $"restore {solutionFile} --packages packages"));
 
-targets.Add(
+Targets.Add(
     "build",
     DependsOn("restore", "versionInfoFile", "logsDirectory"),
-    () => Cmd(
+    () => Run(
         "dotnet",
         $"build {solutionFile} /p:Configuration=Release /nologo /m /v:m " +
             $"/fl /flp:LogFile={logsDirectory}/build.log;Verbosity=Detailed;PerformanceSummary"));
 
-targets.Add(
+Targets.Add(
     "pack",
     DependsOn("build", "outputDirectory", "readVersion"),
     () =>
     {
-        Cmd("dotnet", $"pack {mainProjectFile} --configuration Release --no-build --output {outputDirectory} /p:Version={version}");
+        Run("dotnet", $"pack {mainProjectFile} --configuration Release --no-build --output {outputDirectory} /p:Version={version}");
     });
 
-targets.Add(
+Targets.Add(
     "test",
     DependsOn("build", "testsDirectory"),
     () =>
@@ -88,11 +89,11 @@ targets.Add(
         foreach (var testProjectDirectory in testProjectDirectories)
         {
             var outputBase = Path.GetFullPath(Path.Combine(testsDirectory, Path.GetFileName(testProjectDirectory)));
-            Cmd(testProjectDirectory, "dotnet", $"xunit -configuration Release -nologo -xml {outputBase}.xml -html {outputBase}.html");
+            Run("dotnet", $"xunit -configuration Release -nologo -xml {outputBase}.xml -html {outputBase}.html", testProjectDirectory);
         }
     });
 
-targets.Add(
+Targets.Add(
     "readVersion", () =>
     {
         var versionFromReleaseNotes = File.ReadLines(releaseNotesFile, Encoding.UTF8)
@@ -117,33 +118,4 @@ targets.Add(
         }
     });
 
-Run(Args, targets);
-
-// helpers
-public void Cmd(string fileName, string args)
-{
-    Cmd(".", fileName, args);
-}
-
-public void Cmd(string workingDirectory, string fileName, string args)
-{
-    using (var process = new Process())
-    {
-        process.StartInfo = new ProcessStartInfo
-        {
-            FileName = $"\"{fileName}\"",
-            Arguments = args,
-            WorkingDirectory = workingDirectory,
-            UseShellExecute = false,
-        };
-
-        var workingDirectoryMessage = workingDirectory == "." ? "" : $" in '{process.StartInfo.WorkingDirectory}'";
-        Console.WriteLine($"Running '{process.StartInfo.FileName} {process.StartInfo.Arguments}'{workingDirectoryMessage}...");
-        process.Start();
-        process.WaitForExit();
-        if (process.ExitCode != 0)
-        {
-            throw new InvalidOperationException($"The command exited with code {process.ExitCode}.");
-        }
-    }
-}
+Targets.Run(Args);

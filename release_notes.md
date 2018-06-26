@@ -1,6 +1,11 @@
 ### Changed
-
 - `SelfInitializingFake<TService>` is now sealed ([#50](https://github.com/blairconrad/SelfInitializingFakes/pull/50))
+
+### Additional Items
+- Use [Bullseye](https://github.com/adamralph/bullseye) and [SimpleExec](https://github.com/adamralph/simple-exec) in build script
+
+### With special thanks for contributions to this release from:
+- [Adam Ralph](https://github.com/adamralph)
 
 ## 0.2.1
 
