@@ -17,7 +17,6 @@ try {
     # Use Tls12 to communicate with GitHub
     [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
     $nugetServer = "https://www.nuget.org/api/v2/package"
-    $nugetPath = Join-Path $PSScriptRoot NuGet.exe
     $artifactsPattern = "artifacts/output/*.nupkg"
     $releasesUrl = "https://api.github.com/repos/$repo/releases"
     $headers = @{
@@ -82,7 +81,7 @@ try {
     Write-Output "Pushing nupkgs to nuget.org"
     $artifacts | ForEach-Object {
         Write-Output "Pushing $($_.Name)"
-        & $nugetPath push $_ -ApiKey $nugetApiKey -Source $nugetServer -NonInteractive -ForceEnglishOutput
+        & dotnet nuget push $_ --api-key $nugetApiKey --source $nugetServer --force-english-output
         if ($LASTEXITCODE -ne 0) {
             throw "Push failed with error $LASTEXITCODE"
         }

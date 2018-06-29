@@ -1,0 +1,12 @@
+<RuleSet Name="Targets" ToolsVersion="10.0">
+    <Include Path="..\SelfInitializingFakes.ruleset" Action="Default" />
+    <Rules AnalyzerId="Microsoft.Analyzers.ManagedCodeAnalysis" RuleNamespace="Microsoft.Rules.Managed">
+        <Rule Id="CA1016" Action="None"/> <!-- Mark assemblies with assembly version -->
+    </Rules>
+    <Rules AnalyzerId="StyleCop.Analyzers" RuleNamespace="StyleCop.Analyzers">
+        <Rule Id="SA0001" Action="None"/> <!-- SA0001XmlCommentAnalysisDisabled -->
+        <Rule Id="SA1118" Action="None"/> <!-- SA1118ParameterMustNotSpanMultipleLines -->
+        <Rule Id="SA1652" Action="None"/> <!-- SA1652EnableXmlDocumentationOutput -->
+        <Rule Id="SA1652" Action="None"/> <!-- SA1652EnableXmlDocumentationOutput -->
+    </Rules>
+</RuleSet>
