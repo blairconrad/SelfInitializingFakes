@@ -13,7 +13,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="FakeItEasy.Analyzer" Version="4.5.1" />
+    <PackageReference Include="FakeItEasy.Analyzer" Version="4.7.1" />
     <PackageReference Include="StyleCop.Analyzers" Version="1.1.0-beta007" PrivateAssets="all" />
     <PackageReference Include="Microsoft.CodeAnalysis.FxCopAnalyzers" Version="2.6.0" PrivateAssets="all" />
   </ItemGroup>
