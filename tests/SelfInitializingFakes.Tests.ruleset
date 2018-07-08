@@ -1,15 +1,64 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RuleSet Name="SelfInitializingFakes" Description="Rule set for all SelfInitializingFakes projects" ToolsVersion="15.0">
-    <Include Path="..\SelfInitializingFakes.ruleset" Action="Default" />
-    <Rules AnalyzerId="Microsoft.Analyzers.ManagedCodeAnalysis" RuleNamespace="Microsoft.Rules.Managed">
-          <Rule Id="CA1016" Action="None" /> <!-- Mark assemblies with assembly version -->
-          <Rule Id="CA1034" Action="None" /> <!-- Nested types should not be visible -->
-          <Rule Id="CA1707" Action="None" /> <!-- Identifiers should not contain underscores -->
-          <Rule Id="CA1716" Action="None" /> <!-- Identifiers should not match keywords -->          
-          <Rule Id="CA1822" Action="None" /> <!-- Mark members as static -->
-    </Rules>
-    <Rules AnalyzerId="System.Runtime.Analyzers" RuleNamespace="System.Runtime.Analyzers">
-        <Rule Id="SA0001" Action="None" /> <!-- XML comment analysis is disabled due to project configuration -->
-        <Rule Id="SA1600" Action="None" /> <!-- Elements should be documented -->
-    </Rules>
+  <Include Path="..\SelfInitializingFakes.ruleset" Action="Default" />
+  <Rules AnalyzerId="Microsoft.Analyzers.ManagedCodeAnalysis" RuleNamespace="Microsoft.Rules.Managed">
+    <Rule Id="CA1016" Action="None" /> <!-- Mark assemblies with assembly version -->
+    <Rule Id="CA1034" Action="None" /> <!-- Nested types should not be visible -->
+    <Rule Id="CA1707" Action="None" /> <!-- Identifiers should not contain underscores -->
+    <Rule Id="CA1716" Action="None" /> <!-- Identifiers should not match keywords -->
+    <Rule Id="CA1822" Action="None" /> <!-- Mark members as static -->
+  </Rules>
+  <Rules AnalyzerId="System.Runtime.Analyzers" RuleNamespace="System.Runtime.Analyzers">
+    <Rule Id="SA0001" Action="None" /> <!-- XML comment analysis is disabled due to project configuration -->
+    <Rule Id="SA1600" Action="None" /> <!-- Elements should be documented -->
+  </Rules>
+  <Rules AnalyzerId="FluentAssertions.Analyzers" RuleNamespace="FluentAssertions.Analyzers">
+    <Rule Id="CollectionShouldBeInAscendingOrder" Action="Warning" />
+    <Rule Id="CollectionShouldBeInDescendingOrder" Action="Warning" />
+    <Rule Id="CollectionShouldContainItem" Action="Warning" />
+    <Rule Id="CollectionShouldContainProperty" Action="Warning" />
+    <Rule Id="CollectionShouldContainSingle" Action="Warning" />
+    <Rule Id="CollectionShouldEqualOtherCollectionByComparer" Action="Warning" />
+    <Rule Id="CollectionShouldHaveCount" Action="Warning" />
+    <Rule Id="CollectionShouldHaveCountGreaterOrEqualTo" Action="Warning" />
+    <Rule Id="CollectionShouldHaveCountGreaterThan" Action="Warning" />
+    <Rule Id="CollectionShouldHaveCountLessOrEqualTo" Action="Warning" />
+    <Rule Id="CollectionShouldHaveCountLessThan" Action="Warning" />
+    <Rule Id="CollectionShouldHaveElementAt" Action="Warning" />
+    <Rule Id="CollectionShouldHaveElementAt0Null" Action="Warning" />
+    <Rule Id="CollectionShouldHaveSameCount" Action="Warning" />
+    <Rule Id="CollectionShouldIntersectWith" Action="Warning" />
+    <Rule Id="CollectionShouldNotBeNullOrEmpty" Action="Warning" />
+    <Rule Id="CollectionShouldNotContainItem" Action="Warning" />
+    <Rule Id="CollectionShouldNotContainNulls" Action="Warning" />
+    <Rule Id="CollectionShouldNotContainProperty" Action="Warning" />
+    <Rule Id="CollectionShouldNotHaveCount" Action="Warning" />
+    <Rule Id="CollectionShouldNotHaveSameCount" Action="Warning" />
+    <Rule Id="CollectionShouldNotIntersectWith" Action="Warning" />
+    <Rule Id="CollectionShouldOnlyContainProperty" Action="Warning" />
+    <Rule Id="CollectionShouldOnlyHaveUniqueItems" Action="Warning" />
+    <Rule Id="CollectionShouldOnlyHaveUniqueItemsByComparer" Action="Warning" />
+    <Rule Id="CollectionsShouldBeEmpty" Action="Warning" />
+    <Rule Id="CollectionsShouldNotBeEmpty" Action="Warning" />
+    <Rule Id="DictionaryShouldContainKey" Action="Warning" />
+    <Rule Id="DictionaryShouldContainKeyAndValue" Action="Warning" />
+    <Rule Id="DictionaryShouldContainPair" Action="Warning" />
+    <Rule Id="DictionaryShouldContainValue" Action="Warning" />
+    <Rule Id="DictionaryShouldNotContainKey" Action="Warning" />
+    <Rule Id="DictionaryShouldNotContainValue" Action="Warning" />
+    <Rule Id="ExceptionShouldThrowWithInnerException" Action="Warning" />
+    <Rule Id="ExceptionShouldThrowWithMessage" Action="Warning" />
+    <Rule Id="NullConditionalAssertion" Action="Warning" />
+    <Rule Id="NumericShouldBeApproximately" Action="Warning" />
+    <Rule Id="NumericShouldBeInRange" Action="Warning" />
+    <Rule Id="NumericShouldBeNegative" Action="Warning" />
+    <Rule Id="NumericShouldBePositive" Action="Warning" />
+    <Rule Id="StringShouldBeNullOrEmpty" Action="Warning" />
+    <Rule Id="StringShouldBeNullOrWhiteSpace" Action="Warning" />
+    <Rule Id="StringShouldEndWith" Action="Warning" />
+    <Rule Id="StringShouldHaveLength" Action="Warning" />
+    <Rule Id="StringShouldNotBeNullOrEmpty" Action="Warning" />
+    <Rule Id="StringShouldNotBeNullOrWhiteSpace" Action="Warning" />
+    <Rule Id="StringShouldStartWith" Action="Warning" />
+  </Rules>
 </RuleSet>

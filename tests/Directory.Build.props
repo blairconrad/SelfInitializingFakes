@@ -17,6 +17,7 @@
     <PackageReference Include="xunit" Version="2.4.0-rc.1.build4038" />
     <PackageReference Include="xunit.runner.visualstudio" Version="2.4.0-rc.1.build4038" />
     <PackageReference Include="FluentAssertions" Version="5.4.1" />
+    <PackageReference Include="Fluentassertions.Analyzers" Version="0.11.3" PrivateAssets="all" />
     <PackageReference Include="Microsoft.Extensions.DependencyModel" Version="2.1.0" />
     <PackageReference Include="Xbehave.Core" Version="2.4.0-rc.1" />
   </ItemGroup>
