@@ -76,7 +76,7 @@ internal class Program
                 foreach (var testProjectDirectory in testProjectDirectories)
                 {
                     var outputBase = Path.GetFullPath(Path.Combine(testsDirectory, Path.GetFileName(testProjectDirectory)));
-                    Run("dotnet", $"xunit -configuration Release -nologo -xml {outputBase}.xml -html {outputBase}.html", testProjectDirectory);
+                    Run("dotnet", $"test --configuration Release", testProjectDirectory);
                 }
             });
 

@@ -19,7 +19,6 @@
     <PackageReference Include="FluentAssertions" Version="5.4.1" />
     <PackageReference Include="Microsoft.Extensions.DependencyModel" Version="2.1.0" />
     <PackageReference Include="Xbehave.Core" Version="2.2.0-beta0003-build685" />
-    <DotNetCliToolReference Include="dotnet-xunit" Version="2.3.0-beta1-build3642" />
   </ItemGroup>
 
   <ItemGroup Condition=" '$(TargetFramework)' == 'net452' ">
