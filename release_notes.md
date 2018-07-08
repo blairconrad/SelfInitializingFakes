@@ -1,6 +1,9 @@
 ### Changed
 - `SelfInitializingFake<TService>` is now sealed ([#50](https://github.com/blairconrad/SelfInitializingFakes/pull/50))
 
+### Fixed
+- Bad dependency on  FakeItEasy.Analyzer ([#54](https://github.com/blairconrad/SelfInitializingFakes/pull/54))
+
 ### Additional Items
 - Use [Bullseye](https://github.com/adamralph/bullseye) and [SimpleExec](https://github.com/adamralph/simple-exec) in build script
 
