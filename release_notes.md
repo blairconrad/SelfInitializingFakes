@@ -6,6 +6,8 @@
 
 ### Additional Items
 - Use [Bullseye](https://github.com/adamralph/bullseye) and [SimpleExec](https://github.com/adamralph/simple-exec) in build script
+  ([#51](https://github.com/blairconrad/SelfInitializingFakes/pull/51),
+   [#52](https://github.com/blairconrad/SelfInitializingFakes/pull/52))
 
 ### With special thanks for contributions to this release from:
 - [Adam Ralph](https://github.com/adamralph)
