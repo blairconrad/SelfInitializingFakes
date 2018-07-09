@@ -1,5 +1,5 @@
 <RuleSet Name="Targets" ToolsVersion="10.0">
-    <Include Path="..\SelfInitializingFakes.ruleset" Action="Default" />
+    <Include Path="..\..\SelfInitializingFakes.ruleset" Action="Default" />
     <Rules AnalyzerId="Microsoft.Analyzers.ManagedCodeAnalysis" RuleNamespace="Microsoft.Rules.Managed">
         <Rule Id="CA1016" Action="None"/> <!-- Mark assemblies with assembly version -->
     </Rules>
