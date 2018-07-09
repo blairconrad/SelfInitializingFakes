@@ -1,1 +1,1 @@
-dotnet run --project targets --no-launch-profile -- $args
+dotnet run --project tools/targets --no-launch-profile -- $args
