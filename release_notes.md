@@ -1,3 +1,5 @@
+## 0.3.0
+
 ### Changed
 - `SelfInitializingFake<TService>` is now sealed ([#50](https://github.com/blairconrad/SelfInitializingFakes/pull/50))
 
