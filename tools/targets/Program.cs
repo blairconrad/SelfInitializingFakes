@@ -75,7 +75,6 @@ internal class Program
             {
                 foreach (var testProjectDirectory in testProjectDirectories)
                 {
-                    var outputBase = Path.GetFullPath(Path.Combine(testsDirectory, Path.GetFileName(testProjectDirectory)));
                     Run("dotnet", $"test --configuration Release", testProjectDirectory);
                 }
             });
