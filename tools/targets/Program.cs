@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-using Bullseye;
+using static Bullseye.Targets;
 using static SimpleExec.Command;
 
 internal class Program
@@ -23,15 +23,15 @@ internal class Program
 
         string version = null;
 
-        Targets.Add("default", DependsOn("pack", "test"));
+        Target("default", DependsOn("pack", "test"));
 
-        Targets.Add("outputDirectory", () => Directory.CreateDirectory(outputDirectory));
+        Target("outputDirectory", () => Directory.CreateDirectory(outputDirectory));
 
-        Targets.Add("logsDirectory", () => Directory.CreateDirectory(logsDirectory));
+        Target("logsDirectory", () => Directory.CreateDirectory(logsDirectory));
 
-        Targets.Add("testsDirectory", () => Directory.CreateDirectory(testsDirectory));
+        Target("testsDirectory", () => Directory.CreateDirectory(testsDirectory));
 
-        Targets.Add(
+        Target(
             "versionInfoFile",
             DependsOn("readVersion"),
             () =>
@@ -52,7 +52,7 @@ internal class Program
                 }
             });
 
-        Targets.Add(
+        Target(
             "build",
             DependsOn("versionInfoFile", "logsDirectory"),
             () => Run(
@@ -60,7 +60,7 @@ internal class Program
                 $"build {solutionFile} /p:Configuration=Release /nologo /m /v:m " +
                     $"/fl /flp:LogFile={logsDirectory}/build.log;Verbosity=Detailed;PerformanceSummary"));
 
-        Targets.Add(
+        Target(
             "pack",
             DependsOn("build", "outputDirectory", "readVersion"),
             () =>
@@ -68,19 +68,13 @@ internal class Program
                 Run("dotnet", $"pack {mainProjectFile} --configuration Release --no-build --output {outputDirectory} /p:Version={version}");
             });
 
-        Targets.Add(
+        Target(
             "test",
             DependsOn("build", "testsDirectory"),
-            () =>
-            {
-                foreach (var testProjectDirectory in testProjectDirectories)
-                {
-                    var outputBase = Path.GetFullPath(Path.Combine(testsDirectory, Path.GetFileName(testProjectDirectory)));
-                    Run("dotnet", $"test --configuration Release", testProjectDirectory);
-                }
-            });
+            forEach: testProjectDirectories,
+            action: testProjectDirectory => Run("dotnet", $"test --configuration Release", testProjectDirectory));
 
-        Targets.Add(
+        Target(
             "readVersion", () =>
             {
                 var versionFromReleaseNotes = File.ReadLines(releaseNotesFile, Encoding.UTF8)
@@ -105,8 +99,6 @@ internal class Program
                 }
             });
 
-        Targets.Run(args);
+        RunTargets(args);
     }
-
-    private static string[] DependsOn(params string[] dependencies) => Targets.DependsOn(dependencies);
 }
