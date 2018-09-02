@@ -17,7 +17,7 @@ environment:
         secure: IulXujun1RiFyQC2SrK5F/2MtGblamfSjQlGd62zphUlEV7TttNKJErPq6plSCD1
 
 build_script:
-    - ps: ./build.ps1
+    - cmd: ./build.cmd
 
 nuget:
     disable_publish_on_pr: true
