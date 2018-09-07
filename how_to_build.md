@@ -8,7 +8,7 @@
 
 ## Building
 
-Using a command prompt, navigate to your clone root folder and execute the Powershell script `build.ps1`.
+Using a command prompt, navigate to your clone root folder and execute `build.cmd`.
 
 This executes the default build tasks to produce both the .NET Standard and the .NET Core artifacts.
 
