@@ -1,6 +1,7 @@
 ### Additional Items
 
 - Use [Bullseye](https://github.com/adamralph/bullseye) 1.2.0-rc.2 to provide coloured build output on Windows ([#59](https://github.com/blairconrad/SelfInitializingFakes/pull/59))
+- Switch build script from PowerShell to cmd ([#60](https://github.com/blairconrad/SelfInitializingFakes/pull/60))
 
 ### With special thanks for contributions to this release from:
 - [Adam Ralph](https://github.com/adamralph)
