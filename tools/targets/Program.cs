@@ -99,6 +99,6 @@ internal class Program
                 }
             });
 
-        RunTargets(args);
+        RunTargetsAndExit(args);
     }
 }
