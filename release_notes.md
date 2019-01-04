@@ -1,3 +1,8 @@
+### Changed
+
+- Require faked services to be reference types, enforced by compiler
+  ([#68](https://github.com/blairconrad/SelfInitializingFakes/pull/68))
+
 ### Additional Items
 
 - Use [Bullseye](https://github.com/adamralph/bullseye) 2.3.0 to provide coloured build output on Windows ([#59](https://github.com/blairconrad/SelfInitializingFakes/pull/59), [#67](https://github.com/blairconrad/SelfInitializingFakes/pull/67))

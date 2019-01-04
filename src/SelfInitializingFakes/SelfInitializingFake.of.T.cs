@@ -12,6 +12,7 @@ namespace SelfInitializingFakes
     /// </summary>
     /// <typeparam name="TService">The type of the service to fake.</typeparam>
     public sealed class SelfInitializingFake<TService> : IDisposable
+        where TService : class
     {
         private readonly IRecordedCallRepository repository;
         private readonly RecordingRule recordingRule;
