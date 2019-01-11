@@ -1,3 +1,8 @@
+### New
+
+- Supports FakeItEasy 5.*
+  ([#69](https://github.com/blairconrad/SelfInitializingFakes/pull/69))
+
 ### Changed
 
 - Require faked services to be reference types, enforced by compiler
