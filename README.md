@@ -59,5 +59,5 @@ than it used to, the old call repository ("calls.xml" in this example) can be re
 regenerate it and it's good to use thereafter.
 
 ----
-Logo: [Self Obsession](https://thenounproject.com/search/?q=self+obsession&i=54849])
+Logo: [Self Obsession](https://thenounproject.com/search/?q=self+obsession&i=54849)
 by [Michael A. Salter](https://thenounproject.com/michael.salter.73/) from the Noun Project.
