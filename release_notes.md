@@ -10,11 +10,13 @@
 
 ### Additional Items
 
+- Fixed link to Self Obsession logo ([#70](https://github.com/blairconrad/SelfInitializingFakes/pull/70))
 - Use [Bullseye](https://github.com/adamralph/bullseye) 2.3.0 to provide coloured build output on Windows ([#59](https://github.com/blairconrad/SelfInitializingFakes/pull/59), [#67](https://github.com/blairconrad/SelfInitializingFakes/pull/67))
 - Switch build script from PowerShell to cmd ([#60](https://github.com/blairconrad/SelfInitializingFakes/pull/60))
 
 ### With special thanks for contributions to this release from:
 - [Adam Ralph](https://github.com/adamralph)
+- [Cédric Luthi](https://github.com/0xced)
 
 ## 0.3.0
 
