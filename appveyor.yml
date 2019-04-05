@@ -12,7 +12,7 @@ pull_requests:
 environment:
     BUILD: $(APPVEYOR_BUILD_NUMBER)
     NUGET_API_KEY:
-        secure: Dgj/78UqI7Sn62XajiI6SQp0JoT6YTK+k/GuoJ335F4rLnpKFGPf7SLdnHuDaaip
+        secure: caOlzCKYY1Jw08B9EfPx5jBmyKxQ484KQI4eIaV18ThSFYnWkbtdedby4I9Eyxv4
     GITHUB_TOKEN:
         secure: IulXujun1RiFyQC2SrK5F/2MtGblamfSjQlGd62zphUlEV7TttNKJErPq6plSCD1
 
