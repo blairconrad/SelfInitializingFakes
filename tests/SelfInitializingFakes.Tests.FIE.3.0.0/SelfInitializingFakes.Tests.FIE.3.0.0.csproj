@@ -1,8 +1,8 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <AssemblyName>SelfInitializingFakes.Tests.Latest</AssemblyName>
-    <PackageId>SelfInitializingFakes.Tests.Latest</PackageId>
+    <AssemblyName>SelfInitializingFakes.Tests.FIE.3.0.0</AssemblyName>
+    <PackageId>SelfInitializingFakes.Tests.FIE.3.0.0</PackageId>
     <DefineConstants>$(DefineConstants);FAKEITEASY3</DefineConstants>
   </PropertyGroup>
 

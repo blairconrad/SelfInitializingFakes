@@ -29,7 +29,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{71C0B811
 		tests\SelfInitializingFakes.Tests.ruleset = tests\SelfInitializingFakes.Tests.ruleset
 	EndProjectSection
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SelfInitializingFakes.Tests.Earliest", "tests\SelfInitializingFakes.Tests.Earliest\SelfInitializingFakes.Tests.Earliest.csproj", "{8DFB8024-894F-46B3-B62D-B6E21F0B8945}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SelfInitializingFakes.Tests.FIE.3.0.0", "tests\SelfInitializingFakes.Tests.FIE.3.0.0\SelfInitializingFakes.Tests.FIE.3.0.0.csproj", "{8DFB8024-894F-46B3-B62D-B6E21F0B8945}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SelfInitializingFakes.Tests.Latest", "tests\SelfInitializingFakes.Tests.Latest\SelfInitializingFakes.Tests.Latest.csproj", "{ED447D19-E841-46AE-BBDE-56326FF6F4AB}"
 EndProject
