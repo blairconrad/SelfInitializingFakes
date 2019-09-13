@@ -7,12 +7,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Include="..\SelfInitializingFakes.Tests.Latest\**\*.cs" />
-    <Compile Remove="..\SelfInitializingFakes.Tests.Latest\obj\**" />
+    <Compile Include="..\SelfInitializingFakes.Tests.FIE.Latest\**\*.cs" />
+    <Compile Remove="..\SelfInitializingFakes.Tests.FIE.Latest\obj\**" />
   </ItemGroup>
 
   <ItemGroup Condition=" '$(TargetFramework)' == 'netcoreapp1.0' ">
-    <Compile Remove="..\SelfInitializingFakes.Tests.Latest\Acceptance\BinarySerialization.cs" />
+    <Compile Remove="..\SelfInitializingFakes.Tests.FIE.Latest\Acceptance\BinarySerialization.cs" />
   </ItemGroup>
 
 </Project>

@@ -1,8 +1,8 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <AssemblyName>SelfInitializingFakes.Tests.Latest</AssemblyName>
-    <PackageId>SelfInitializingFakes.Tests.Latest</PackageId>
+    <AssemblyName>SelfInitializingFakes.Tests.FIE.Latest</AssemblyName>
+    <PackageId>SelfInitializingFakes.Tests.FIE.Latest</PackageId>
   </PropertyGroup>
 
   <ItemGroup>
