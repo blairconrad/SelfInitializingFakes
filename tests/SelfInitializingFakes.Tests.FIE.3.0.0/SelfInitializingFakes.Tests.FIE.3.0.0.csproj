@@ -3,7 +3,7 @@
   <PropertyGroup>
     <AssemblyName>SelfInitializingFakes.Tests.FIE.3.0.0</AssemblyName>
     <PackageId>SelfInitializingFakes.Tests.FIE.3.0.0</PackageId>
-    <DefineConstants>$(DefineConstants);FAKEITEASY3</DefineConstants>
+    <DefineConstants>$(DefineConstants);BUG_ASSIGNING_REF_VALUE_CLEARS_INCOMING_VALUE</DefineConstants>
   </PropertyGroup>
 
   <ItemGroup>
