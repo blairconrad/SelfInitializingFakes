@@ -11,7 +11,7 @@ internal class Program
 {
     public static void Main(string[] args)
     {
-        var testProjectDirectories = Directory.GetDirectories("tests").Reverse();
+        var testProjects = Directory.GetDirectories("tests").Reverse().Select(s => new Project(s));
         var mainProjectFile = "src/SelfInitializingFakes/SelfInitializingFakes.csproj";
         var releaseNotesFile = "./release_notes.md";
         var solutionFile = "./SelfInitializingFakes.sln";
@@ -71,8 +71,8 @@ internal class Program
         Target(
             "test",
             DependsOn("build", "testsDirectory"),
-            forEach: testProjectDirectories,
-            action: testProjectDirectory => Run("dotnet", $"test --configuration Release", testProjectDirectory));
+            forEach: testProjects,
+            action: testProject => Run("dotnet", $"test --configuration Release", testProject.Path));
 
         Target(
             "readVersion", () =>
@@ -100,5 +100,18 @@ internal class Program
             });
 
         RunTargetsAndExit(args);
+    }
+
+    private class Project
+    {
+        public Project(string path) => this.Path = path;
+
+        public string Path { get; }
+
+        public override string ToString()
+        {
+            int matchStartIndex = this.Path.IndexOf("SelfInitializingFakes.Tests.", StringComparison.Ordinal);
+            return this.Path.Substring(matchStartIndex + 28);
+        }
     }
 }
