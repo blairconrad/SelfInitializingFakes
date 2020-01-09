@@ -75,7 +75,7 @@
                 .x(() =>
                 {
                     int i;
-#if FAKEITEASY3
+#if BUG_ASSIGNING_REF_VALUE_CLEARS_INCOMING_VALUE
                     DateTime dt = new DateTime(2017, 1, 24);
 #else
                     DateTime dt = DateTime.MinValue;

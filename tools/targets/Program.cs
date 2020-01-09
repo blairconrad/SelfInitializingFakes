@@ -11,7 +11,7 @@ internal class Program
 {
     public static void Main(string[] args)
     {
-        var testProjectDirectories = Directory.GetDirectories("tests");
+        var testProjectDirectories = Directory.GetDirectories("tests").Reverse();
         var mainProjectFile = "src/SelfInitializingFakes/SelfInitializingFakes.csproj";
         var releaseNotesFile = "./release_notes.md";
         var solutionFile = "./SelfInitializingFakes.sln";

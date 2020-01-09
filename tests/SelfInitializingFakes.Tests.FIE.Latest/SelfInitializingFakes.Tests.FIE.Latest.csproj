@@ -1,12 +1,12 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <AssemblyName>SelfInitializingFakes.Tests.Latest</AssemblyName>
-    <PackageId>SelfInitializingFakes.Tests.Latest</PackageId>
+    <AssemblyName>SelfInitializingFakes.Tests.FIE.Latest</AssemblyName>
+    <PackageId>SelfInitializingFakes.Tests.FIE.Latest</PackageId>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="FakeItEasy" Version="5.0.0" />
+    <PackageReference Include="FakeItEasy" Version="*" />
   </ItemGroup>
 
   <ItemGroup Condition=" '$(TargetFramework)' == 'netcoreapp1.0' ">

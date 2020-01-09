@@ -1,0 +1,21 @@
+﻿<Project Sdk="Microsoft.NET.Sdk" ToolsVersion="15.0">
+
+  <PropertyGroup>
+    <AssemblyName>SelfInitializingFakes.Tests.FIE.4.9.2</AssemblyName>
+    <PackageId>SelfInitializingFakes.Tests.FIE.4.9.2</PackageId>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="FakeItEasy" Version="4.9.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Include="..\SelfInitializingFakes.Tests.FIE.Latest\**\*.cs" />
+    <Compile Remove="..\SelfInitializingFakes.Tests.FIE.Latest\obj\**" />
+  </ItemGroup>
+
+  <ItemGroup Condition=" '$(TargetFramework)' == 'netcoreapp1.0' ">
+    <Compile Remove="..\SelfInitializingFakes.Tests.FIE.Latest\Acceptance\BinarySerialization.cs" />
+  </ItemGroup>
+
+</Project>
