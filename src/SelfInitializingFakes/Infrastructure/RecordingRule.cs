@@ -59,7 +59,9 @@ namespace SelfInitializingFakes.Infrastructure
                 this.RecordedCalls.Add(recordedCall);
                 ApplyRecordedCall(recordedCall, fakeObjectCall);
             }
+#pragma warning disable CA1031 // We do rethrow the exception
             catch (Exception e)
+#pragma warning restore CA1031 // We do rethrow the exception
             {
                 var serviceException = e.InnerException ?? e;
                 if (this.RecordingException == null)

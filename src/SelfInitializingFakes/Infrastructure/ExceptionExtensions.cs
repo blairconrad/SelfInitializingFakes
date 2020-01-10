@@ -32,7 +32,9 @@
             {
                 PreserveStackTrace(exception);
             }
+#pragma warning disable CA1031 // We're rethrowing an exception. If preserving the stack trace fails, there's nothing we can do
             catch
+#pragma warning restore CA1031 // We're rethrowing an exception. If preserving the stack trace fails, there's nothing we can do
             {
             }
 
