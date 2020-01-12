@@ -18,7 +18,7 @@ namespace SelfInitializingFakes.Tests.Acceptance
         [Scenario]
         public static void CreateFromNullServiceFactory(
             IRecordedCallRepository repository,
-            Func<IService> serviceFactory,
+            Func<IService>? serviceFactory,
             Exception exception)
         {
             "Given a null service factory"
@@ -29,7 +29,7 @@ namespace SelfInitializingFakes.Tests.Acceptance
 
             "When I create a self-initializing fake"
                 .x(() => exception = Record.Exception(() =>
-                        SelfInitializingFake<IService>.For(serviceFactory, repository)));
+                        SelfInitializingFake<IService>.For(serviceFactory!, repository)));
 
             "Then the constructor throws an exception"
                 .x(() => exception.Should()
@@ -39,7 +39,7 @@ namespace SelfInitializingFakes.Tests.Acceptance
 
         [Scenario]
         public static void CreateFromNullCallRepository(
-            IRecordedCallRepository repository,
+            IRecordedCallRepository? repository,
             Func<IService> serviceFactory,
             Exception exception)
         {
@@ -51,7 +51,7 @@ namespace SelfInitializingFakes.Tests.Acceptance
 
             "When I create a self-initializing fake"
                 .x(() => exception = Record.Exception(() =>
-                        SelfInitializingFake<IService>.For(serviceFactory, repository)));
+                        SelfInitializingFake<IService>.For(serviceFactory, repository!)));
 
             "Then the constructor throws an exception"
                 .x(() => exception.Should()

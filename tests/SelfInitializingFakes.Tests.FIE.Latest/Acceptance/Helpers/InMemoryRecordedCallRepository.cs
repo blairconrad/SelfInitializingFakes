@@ -5,12 +5,9 @@
 
     public class InMemoryRecordedCallRepository : IRecordedCallRepository
     {
-        private IEnumerable<RecordedCall> recordedCalls;
+        private IEnumerable<RecordedCall>? recordedCalls;
 
-        public IEnumerable<RecordedCall> Load()
-        {
-            return this.recordedCalls;
-        }
+        public IEnumerable<RecordedCall>? Load() => this.recordedCalls;
 
         public void Save(IEnumerable<RecordedCall> calls)
         {

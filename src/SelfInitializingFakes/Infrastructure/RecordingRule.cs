@@ -13,6 +13,7 @@ namespace SelfInitializingFakes.Infrastructure
     internal class RecordingRule : IFakeObjectCallRule
     {
         private readonly object target;
+        private Exception? recordingException;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="RecordingRule"/> class.
@@ -27,11 +28,6 @@ namespace SelfInitializingFakes.Infrastructure
         /// Gets the number of calls for which the rule is valid. This rule has no expiration.
         /// </summary>
         public int? NumberOfTimesToCall => null;
-
-        /// <summary>
-        /// Gets or sets the first exception encountered while recording calls.
-        /// </summary>
-        public Exception RecordingException { get; set; }
 
         /// <summary>
         /// Gets the calls encountered while recording.
@@ -64,12 +60,25 @@ namespace SelfInitializingFakes.Infrastructure
 #pragma warning restore CA1031 // We do rethrow the exception
             {
                 var serviceException = e.InnerException ?? e;
-                if (this.RecordingException == null)
+                if (this.recordingException == null)
                 {
-                    this.RecordingException = serviceException;
+                    this.recordingException = serviceException;
                 }
 
                 serviceException.Rethrow();
+            }
+        }
+
+        /// <summary>
+        /// Throw a <see cref="RecordingException"/> if there was an error while recording calls.
+        /// </summary>
+        public void ThrowIfFailed()
+        {
+            if (this.recordingException != null)
+            {
+                throw new RecordingException(
+                    "error encountered while recording actual service calls",
+                    this.recordingException);
             }
         }
 

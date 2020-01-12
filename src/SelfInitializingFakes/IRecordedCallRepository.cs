@@ -17,6 +17,6 @@
         /// Loads and returns saved calls.
         /// </summary>
         /// <returns>The saved calls, or <c>null</c> if there are none.</returns>
-        IEnumerable<RecordedCall> Load();
+        IEnumerable<RecordedCall>? Load();
     }
 }

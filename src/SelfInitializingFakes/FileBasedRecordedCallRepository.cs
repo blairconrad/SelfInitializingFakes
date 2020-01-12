@@ -35,7 +35,7 @@
         /// Loads and returns saved calls.
         /// </summary>
         /// <returns>The saved calls, or <c>null</c> if there are none.</returns>
-        public IEnumerable<RecordedCall> Load()
+        public IEnumerable<RecordedCall>? Load()
         {
             if (!File.Exists(this.path))
             {

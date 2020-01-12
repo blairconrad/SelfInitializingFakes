@@ -15,7 +15,7 @@ namespace SelfInitializingFakes
         where TService : class
     {
         private readonly IRecordedCallRepository repository;
-        private readonly RecordingRule recordingRule;
+        private readonly RecordingRule? recordingRule;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SelfInitializingFake{TService}"/> class.
@@ -53,8 +53,6 @@ namespace SelfInitializingFakes
         [SuppressMessage("Microsoft.Naming", "CA1720:IdentifiersShouldNotContainTypeNames", MessageId = "Object", Justification = "The term Object does not refer to the type System.Object.")]
         public TService Object { get; }
 
-        private bool IsRecording => this.recordingRule != null;
-
         /// <summary>
         /// Creates a new self-initializing fake <typeparamref name="TService"/>.
         /// </summary>
@@ -88,17 +86,9 @@ namespace SelfInitializingFakes
         /// </summary>
         public void Dispose()
         {
-            if (this.IsRecording)
+            if (this.recordingRule != null)
             {
-                if (this.recordingRule.RecordingException != null)
-                {
-#pragma warning disable CA1065 // Do not raise exceptions in unexpected locations - exception is required to communicate error hit while recording
-                    throw new RecordingException(
-                        "error encountered while recording actual service calls",
-                        this.recordingRule.RecordingException);
-#pragma warning restore CA1065 // Do not raise exceptions in unexpected locations
-                }
-
+                this.recordingRule.ThrowIfFailed();
                 this.repository.Save(this.recordingRule.RecordedCalls);
             }
 

@@ -55,7 +55,7 @@
             "And I use a self-initializing fake in playback mode to get the counts for book 1, 2, and 1 again"
                 .x(() =>
                 {
-                    using (var playbackFakeService = SelfInitializingFake<ILibraryService>.For(() => (ILibraryService)null, inMemoryRecordedCallRepository))
+                    using (var playbackFakeService = SelfInitializingFake<ILibraryService>.For(UnusedFactory, inMemoryRecordedCallRepository))
                     {
                         var fake = playbackFakeService.Object;
                         countsDuringPlayback = new List<int>
@@ -117,7 +117,7 @@
             "And I use a self-initializing fake in playback mode to get the counts for book 1 and 2"
                 .x(() =>
                 {
-                    using (var playbackFakeService = SelfInitializingFake<ILibraryService>.For(() => (ILibraryService)null, inMemoryRecordedCallRepository))
+                    using (var playbackFakeService = SelfInitializingFake<ILibraryService>.For(UnusedFactory, inMemoryRecordedCallRepository))
                     {
                         var fake = playbackFakeService.Object;
 
@@ -166,7 +166,7 @@
             "And I use a self-initializing fake in playback mode to get the title for book 1"
                 .x(() =>
                 {
-                    using (var playbackFakeService = SelfInitializingFake<ILibraryService>.For(() => (ILibraryService)null, inMemoryRecordedCallRepository))
+                    using (var playbackFakeService = SelfInitializingFake<ILibraryService>.For(UnusedFactory, inMemoryRecordedCallRepository))
                     {
                         var fake = playbackFakeService.Object;
 
@@ -211,7 +211,7 @@
             "And I use a self-initializing fake in playback mode to get the count and title and count for book 1"
                 .x(() =>
                 {
-                    using (var playbackFakeService = SelfInitializingFake<ILibraryService>.For(() => (ILibraryService)null, inMemoryRecordedCallRepository))
+                    using (var playbackFakeService = SelfInitializingFake<ILibraryService>.For(UnusedFactory, inMemoryRecordedCallRepository))
                     {
                         var fake = playbackFakeService.Object;
 
@@ -229,5 +229,7 @@
                     .BeOfType<PlaybackException>().Which.Message.Should()
                     .Be("expected no more calls, but found [Int32 GetCount(System.String)]"));
         }
+
+        private static ILibraryService UnusedFactory() => null!;
     }
 }
