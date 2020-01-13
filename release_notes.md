@@ -1,12 +1,13 @@
 ### New
 
-- Supports FakeItEasy 5.*
-  ([#69](https://github.com/blairconrad/SelfInitializingFakes/pull/69))
+- Supports FakeItEasy 5.* and 6.*
+  ([#69](https://github.com/blairconrad/SelfInitializingFakes/pull/69), [#73](https://github.com/blairconrad/SelfInitializingFakes/pull/73))
 
 ### Changed
 
 - Require faked services to be reference types, enforced by compiler
   ([#68](https://github.com/blairconrad/SelfInitializingFakes/pull/68))
+- `RecordedCall` no longer has a public constructor ([#77](https://github.com/blairconrad/SelfInitializingFakes/pull/77))
 
 ### Additional Items
 

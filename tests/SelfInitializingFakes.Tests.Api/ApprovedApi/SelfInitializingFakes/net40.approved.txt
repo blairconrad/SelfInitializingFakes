@@ -31,7 +31,6 @@ namespace SelfInitializingFakes
     }
     public class RecordedCall
     {
-        public RecordedCall() { }
         public string Method { get; set; }
         public object[] OutAndRefValues { get; set; }
         public object ReturnValue { get; set; }

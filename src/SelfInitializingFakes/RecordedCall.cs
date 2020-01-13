@@ -13,6 +13,29 @@
 #endif
     public class RecordedCall
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="RecordedCall"/> class.
+        /// </summary>
+        /// <param name="method">The name of the method that was recorded.</param>
+        /// <param name="returnValue">The return value of the method. May be <c>null</c>.</param>
+        /// <param name="outAndRefValues">Any out and ref values. If none, should be a zero-length array. Items may be <c>null</c>.</param>
+        internal RecordedCall(string method, object returnValue, object[] outAndRefValues)
+        {
+            this.Method = method;
+            this.ReturnValue = returnValue;
+            this.OutAndRefValues = outAndRefValues;
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="RecordedCall"/> class.
+        /// </summary>
+        /// <remarks>
+        ///  For serialization (including XML-based) only.
+        /// </remarks>
+        private RecordedCall()
+        {
+        }
+
         /// <summary>Gets or sets the method that was called.</summary>
         /// <value>The string representation of the method that was called.</value>
         public string Method { get; set; }
