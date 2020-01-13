@@ -1,0 +1,14 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>netcoreapp3.1</TargetFrameworks>
+    <AssemblyName>SelfInitializingFakes.Tests.Api</AssemblyName>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="ApprovalTests" Version="4.2.2" />
+    <PackageReference Include="ApprovalUtilities" Version="4.2.2" />
+    <PackageReference Include="PublicApiGenerator" Version="10.0.1" />
+  </ItemGroup>
+
+</Project>
