@@ -11,7 +11,7 @@ internal class Program
 {
     public static void Main(string[] args)
     {
-        var testProjects = Directory.GetDirectories("tests").Reverse().Select(s => new Project(s));
+        var testProjects = Directory.GetDirectories("tests", "SelfInitializingFakes.Tests.FIE.*").Reverse().Select(s => new Project(s));
         var mainProjectFile = "src/SelfInitializingFakes/SelfInitializingFakes.csproj";
         var releaseNotesFile = "./release_notes.md";
         var solutionFile = "./SelfInitializingFakes.sln";
@@ -23,7 +23,7 @@ internal class Program
 
         string version = null;
 
-        Target("default", DependsOn("pack", "test"));
+        Target("default", DependsOn("pack", "test", "check-api"));
 
         Target("outputDirectory", () => Directory.CreateDirectory(outputDirectory));
 
@@ -73,6 +73,21 @@ internal class Program
             DependsOn("build", "testsDirectory"),
             forEach: testProjects,
             action: testProject => Run("dotnet", $"test --configuration Release", testProject.Path));
+
+        Target(
+            "check-api",
+            DependsOn("build", "testsDirectory"),
+            () => Run("dotnet", "test --configuration Release tests/SelfInitializingFakes.Tests.Api"));
+
+        Target(
+            "approve-api",
+            () =>
+                {
+                    foreach (var received in Directory.EnumerateFiles("tests/SelfInitializingFakes.Tests.Api/ApprovedApi", "*.received.txt", SearchOption.AllDirectories))
+                    {
+                        File.Copy(received, received.Replace(".received.txt", ".approved.txt", StringComparison.Ordinal), overwrite: true);
+                    }
+                });
 
         Target(
             "readVersion", () =>
