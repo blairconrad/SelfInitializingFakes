@@ -107,12 +107,7 @@ namespace SelfInitializingFakes.Infrastructure
                 ++index;
             }
 
-            return new RecordedCall
-            {
-                Method = call.Method.ToString(),
-                ReturnValue = result,
-                OutAndRefValues = outAndRefValues.ToArray(),
-            };
+            return new RecordedCall(call.Method.ToString(), result, outAndRefValues.ToArray());
         }
     }
 }
