@@ -1,5 +1,6 @@
 ﻿namespace SelfInitializingFakes.Tests.Acceptance
 {
+    using System;
     using FakeItEasy;
     using FluentAssertions;
     using SelfInitializingFakes.Tests.Acceptance.Helpers;
@@ -54,7 +55,7 @@
             "And I use a self-initializing fake in playback mode to try to set some out and ref parameters"
                 .x(() =>
                 {
-                    using (var playbackFakeService = SelfInitializingFake<IService>.For<IService>(() => null, inMemoryRecordedCallRepository))
+                    using (var playbackFakeService = SelfInitializingFake<IService>.For<IService>(UnusedFactory, inMemoryRecordedCallRepository))
                     {
                         var fake = playbackFakeService.Object;
                         playbackReturn = fake.TryToSetSomeOutAndRefParameters(out playbackOut, ref playbackRef);
@@ -117,7 +118,7 @@
             "And I use a self-initializing fake in playback mode to set some out and ref parameters"
                 .x(() =>
                 {
-                    using (var playbackFakeService = SelfInitializingFake<IService>.For<IService>(() => null, inMemoryRecordedCallRepository))
+                    using (var playbackFakeService = SelfInitializingFake<IService>.For<IService>(UnusedFactory, inMemoryRecordedCallRepository))
                     {
                         var fake = playbackFakeService.Object;
                         fake.SetSomeOutAndRefParameters(out playbackOut, ref playbackRef);
@@ -136,5 +137,7 @@
             "And it sets the ref parameter to the value seen in recording mode"
                 .x(() => playbackRef.Should().Be(-14));
         }
+
+        private static IService UnusedFactory() => null!;
     }
 }

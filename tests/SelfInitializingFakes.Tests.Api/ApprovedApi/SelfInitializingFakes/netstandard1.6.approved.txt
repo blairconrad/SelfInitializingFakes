@@ -6,14 +6,14 @@ namespace SelfInitializingFakes
     public abstract class FileBasedRecordedCallRepository : SelfInitializingFakes.IRecordedCallRepository
     {
         protected FileBasedRecordedCallRepository(string path) { }
-        public System.Collections.Generic.IEnumerable<SelfInitializingFakes.RecordedCall> Load() { }
+        public System.Collections.Generic.IEnumerable<SelfInitializingFakes.RecordedCall>? Load() { }
         protected abstract System.Collections.Generic.IEnumerable<SelfInitializingFakes.RecordedCall> ReadFromStream(System.IO.FileStream fileStream);
         public void Save(System.Collections.Generic.IEnumerable<SelfInitializingFakes.RecordedCall> calls) { }
         protected abstract void WriteToStream(System.Collections.Generic.IEnumerable<SelfInitializingFakes.RecordedCall> calls, System.IO.FileStream fileStream);
     }
     public interface IRecordedCallRepository
     {
-        System.Collections.Generic.IEnumerable<SelfInitializingFakes.RecordedCall> Load();
+        System.Collections.Generic.IEnumerable<SelfInitializingFakes.RecordedCall>? Load();
         void Save(System.Collections.Generic.IEnumerable<SelfInitializingFakes.RecordedCall> calls);
     }
     public class PlaybackException : System.Exception
@@ -25,8 +25,8 @@ namespace SelfInitializingFakes
     public class RecordedCall
     {
         public string Method { get; set; }
-        public object[] OutAndRefValues { get; set; }
-        public object ReturnValue { get; set; }
+        public object?[] OutAndRefValues { get; set; }
+        public object? ReturnValue { get; set; }
     }
     public class RecordingException : System.Exception
     {

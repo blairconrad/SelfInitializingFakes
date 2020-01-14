@@ -21,7 +21,7 @@ internal class Program
         var outputDirectory = Path.GetFullPath("./artifacts/output");
         var testsDirectory = "./artifacts/tests";
 
-        string version = null;
+        string version = string.Empty;
 
         Target("default", DependsOn("pack", "test", "check-api"));
 

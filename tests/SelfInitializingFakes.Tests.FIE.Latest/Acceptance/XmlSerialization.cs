@@ -58,7 +58,7 @@
             "And I use a self-initializing fake in playback mode"
                 .x(() =>
                 {
-                    using (var playbackFakeService = SelfInitializingFake<IService>.For<IService>(() => null, repository))
+                    using (var playbackFakeService = SelfInitializingFake<IService>.For<IService>(UnusedFactory, repository))
                     {
                         var fake = playbackFakeService.Object;
                         int i;
@@ -89,5 +89,7 @@
                     nonVoidMethodResult.Should().Be(new Guid("6c7d8912-802a-43c0-82a2-cb811058a9bd"));
                 });
         }
+
+        private static IService UnusedFactory() => null!;
     }
 }
