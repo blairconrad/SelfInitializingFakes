@@ -1,21 +1,27 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk" ToolsVersion="15.0">
-
   <PropertyGroup>
     <AssemblyName>SelfInitializingFakes.Tests.FIE.3.4.2</AssemblyName>
     <PackageId>SelfInitializingFakes.Tests.FIE.3.4.2</PackageId>
+    <ProjectGuid>{7F7EC34C-AA06-460B-B0B7-EF429DD99E21}</ProjectGuid>
   </PropertyGroup>
-
   <ItemGroup>
     <PackageReference Include="FakeItEasy" Version="3.4.2" />
   </ItemGroup>
-
   <ItemGroup>
-    <Compile Include="..\SelfInitializingFakes.Tests.FIE.Latest\**\*.cs" />
+    <Compile Include="..\SelfInitializingFakes.Tests.FIE.Latest\Acceptance\DisposedFake.cs" />
+    <Compile Include="..\SelfInitializingFakes.Tests.FIE.Latest\Acceptance\FakeCreation.cs" />
+    <Compile Include="..\SelfInitializingFakes.Tests.FIE.Latest\Acceptance\Helpers\InMemoryRecordedCallRepository.cs" />
+    <Compile Include="..\SelfInitializingFakes.Tests.FIE.Latest\Acceptance\JsonSerialization.cs">
+      <Link>JsonSerialization.cs</Link>
+    </Compile>
+    <Compile Include="..\SelfInitializingFakes.Tests.FIE.Latest\Acceptance\OutAndRefParameters.cs" />
+    <Compile Include="..\SelfInitializingFakes.Tests.FIE.Latest\Acceptance\RecordAndReplay.cs" />
+    <Compile Include="..\SelfInitializingFakes.Tests.FIE.Latest\Acceptance\ServiceThrowsExceptions.cs" />
+    <Compile Include="..\SelfInitializingFakes.Tests.FIE.Latest\Conventions\ExportedTypesNamespaces.cs" />
+    <Compile Include="..\SelfInitializingFakes.Tests.FIE.Latest\Conventions\Naming.cs" />
     <Compile Remove="..\SelfInitializingFakes.Tests.FIE.Latest\obj\**" />
   </ItemGroup>
-
-  <ItemGroup Condition=" '$(TargetFramework)' == 'netcoreapp1.0' ">
+  <ItemGroup Condition=" '$(TargetFramework)' == 'netcoreapp3.1' ">
     <Compile Remove="..\SelfInitializingFakes.Tests.FIE.Latest\Acceptance\BinarySerialization.cs" />
   </ItemGroup>
-
 </Project>

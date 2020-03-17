@@ -12,7 +12,7 @@
     <Compile Include="..\SelfInitializingFakes.Tests.FIE.3.4.2\Polyfill.cs" />
   </ItemGroup>
 
-  <ItemGroup Condition=" '$(TargetFramework)' == 'netcoreapp1.0' ">
+  <ItemGroup Condition=" '$(TargetFramework)' == 'netcoreapp3.1' ">
     <Compile Remove="..\SelfInitializingFakes.Tests.FIE.Latest\Acceptance\BinarySerialization.cs" />
   </ItemGroup>
 
