@@ -21,7 +21,7 @@ try {
     $releasesUrl = "https://api.github.com/repos/$repo/releases"
     $headers = @{
         "Authorization" = "Bearer $gitHubAuthToken"
-        "Content-type"  = "application/json"
+        "Content-Type"  = "application/json; charset=utf-8";
     }
 
     Write-Output "Deploying $releaseName"
