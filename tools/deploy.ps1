@@ -51,8 +51,6 @@ try {
         $releaseNotesLine++
     }
 
-    $releaseBody = [System.Text.Encoding]::UTF8.GetBytes($releaseBody)
-
     $createReleaseBody = @{
         tag_name   = $releaseName
         name       = $releaseName
@@ -60,6 +58,8 @@ try {
         draft      = $false
         prerelease = $releaseName.Contains('-')
     } | ConvertTo-Json
+
+    $createReleaseBody = [System.Text.Encoding]::UTF8.GetBytes($createReleaseBody)
 
     Write-Output "Creating GitHub release $releaseName"
     $release = Invoke-RestMethod -Uri $releasesUrl -Headers $headers -Method POST -Body $createReleaseBody -ContentType 'application/json'
