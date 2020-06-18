@@ -1,3 +1,5 @@
+## 0.4.0
+
 ### New
 
 - Support FakeItEasy 5.* and 6.*
