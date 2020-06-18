@@ -51,6 +51,8 @@ try {
         $releaseNotesLine++
     }
 
+    $releaseBody = [System.Text.Encoding]::UTF8.GetBytes($releaseBody)
+
     $createReleaseBody = @{
         tag_name   = $releaseName
         name       = $releaseName
