@@ -14,7 +14,7 @@ environment:
     NUGET_API_KEY:
         secure: caOlzCKYY1Jw08B9EfPx5jBmyKxQ484KQI4eIaV18ThSFYnWkbtdedby4I9Eyxv4
     GITHUB_TOKEN:
-        secure: IulXujun1RiFyQC2SrK5F/2MtGblamfSjQlGd62zphUlEV7TttNKJErPq6plSCD1
+        secure: 3WCxNL+rE42HOZYEOtqm5Pn7MsIicFRcfq52w/maAPPv+FUZ3U8IwIJWXGUhg5k/
 
 build_script:
     - cmd: ./build.cmd
