@@ -31,4 +31,13 @@
     <Reference Include="Microsoft.CSharp" />
   </ItemGroup>
 
+  <ItemGroup Condition=" $(AssemblyName.StartsWith(`SelfInitializingFakes.Tests.FIE.`)) ">
+    <Compile Include="..\Acceptance\**\*.cs"><Link>Acceptance/%(Filename)%(Extension)</Link></Compile>
+    <Compile Include="..\Conventions\**\*.cs"><Link>Conventions/%(Filename)%(Extension)</Link></Compile>
+  </ItemGroup>
+
+  <ItemGroup Condition=" '$(TargetFramework)' == 'netcoreapp1.0' ">
+    <Compile Remove="..\Acceptance\BinarySerialization.cs" />
+  </ItemGroup>
+
 </Project>

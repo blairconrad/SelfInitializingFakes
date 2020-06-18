@@ -7,13 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Include="..\SelfInitializingFakes.Tests.FIE.Latest\**\*.cs" />
-    <Compile Remove="..\SelfInitializingFakes.Tests.FIE.Latest\obj\**" />
     <Compile Include="..\SelfInitializingFakes.Tests.FIE.3.4.2\Polyfill.cs" />
-  </ItemGroup>
-
-  <ItemGroup Condition=" '$(TargetFramework)' == 'netcoreapp1.0' ">
-    <Compile Remove="..\SelfInitializingFakes.Tests.FIE.Latest\Acceptance\BinarySerialization.cs" />
   </ItemGroup>
 
 </Project>
