@@ -10,5 +10,11 @@ namespace SelfInitializingFakes.Tests.Acceptance.Helpers
         Guid GuidReturningMethod();
 
         IDictionary<string, Guid> DictionaryReturningMethod();
+
+        Lazy<int> LazyIntReturningMethod();
+
+        Lazy<string> LazyStringReturningMethod();
+
+        void MethodWithLazyOut(out Lazy<int> lazyInt);
     }
 }

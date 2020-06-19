@@ -9,14 +9,17 @@ namespace SelfInitializingFakes.Infrastructure
     internal class PlaybackRule : IFakeObjectCallRule
     {
         private readonly Queue<RecordedCall> expectedCalls;
+        private readonly ITypeConverter typeConverter;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="PlaybackRule"/> class.
         /// </summary>
         /// <param name="expectedCalls">The calls that are expected to be made on the fake.</param>
-        public PlaybackRule(Queue<RecordedCall> expectedCalls)
+        /// <param name="typeConverter">A helper to convert values from serialized variants to their original representations.</param>
+        public PlaybackRule(Queue<RecordedCall> expectedCalls, ITypeConverter typeConverter)
         {
             this.expectedCalls = expectedCalls;
+            this.typeConverter = typeConverter;
         }
 
         /// <summary>
@@ -32,8 +35,8 @@ namespace SelfInitializingFakes.Infrastructure
         public void Apply(IInterceptedFakeObjectCall fakeObjectCall)
         {
             RecordedCall recordedCall = this.ConsumeNextExpectedCall(fakeObjectCall);
-            SetReturnValue(fakeObjectCall, recordedCall);
-            SetOutAndRefValues(fakeObjectCall, recordedCall);
+            this.SetReturnValue(fakeObjectCall, recordedCall);
+            this.SetOutAndRefValues(fakeObjectCall, recordedCall);
         }
 
         /// <summary>
@@ -44,12 +47,18 @@ namespace SelfInitializingFakes.Infrastructure
         /// <returns><c>true</c> all the time.</returns>
         public bool IsApplicableTo(IFakeObjectCall fakeObjectCall) => true;
 
-        private static void SetReturnValue(IInterceptedFakeObjectCall fakeObjectCall, RecordedCall recordedCall)
+        private void SetReturnValue(IInterceptedFakeObjectCall fakeObjectCall, RecordedCall recordedCall)
         {
-            fakeObjectCall.SetReturnValue(recordedCall.ReturnValue);
+            var returnValue = recordedCall.ReturnValue;
+            if (this.typeConverter.ConvertForPlayback(fakeObjectCall.Method.ReturnType, returnValue, out object? convertedReturnValue))
+            {
+                returnValue = convertedReturnValue;
+            }
+
+            fakeObjectCall.SetReturnValue(returnValue);
         }
 
-        private static void SetOutAndRefValues(IInterceptedFakeObjectCall fakeObjectCall, RecordedCall recordedCall)
+        private void SetOutAndRefValues(IInterceptedFakeObjectCall fakeObjectCall, RecordedCall recordedCall)
         {
             int outOrRefIndex = 0;
             for (int parameterIndex = 0; parameterIndex < fakeObjectCall.Method.GetParameters().Length; parameterIndex++)
@@ -57,7 +66,16 @@ namespace SelfInitializingFakes.Infrastructure
                 var parameter = fakeObjectCall.Method.GetParameters()[parameterIndex];
                 if (parameter.ParameterType.IsByRef)
                 {
-                    fakeObjectCall.SetArgumentValue(parameterIndex, recordedCall.OutAndRefValues[outOrRefIndex++]);
+                    var parameterValue = recordedCall.OutAndRefValues[outOrRefIndex++];
+                    if (this.typeConverter.ConvertForPlayback(
+                            parameter.ParameterType.GetElementType(),
+                            parameterValue,
+                            out object? convertedParameterValue))
+                    {
+                        parameterValue = convertedParameterValue;
+                    }
+
+                    fakeObjectCall.SetArgumentValue(parameterIndex, parameterValue);
                 }
             }
         }

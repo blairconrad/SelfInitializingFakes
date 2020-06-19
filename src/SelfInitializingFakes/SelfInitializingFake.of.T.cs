@@ -31,18 +31,21 @@ namespace SelfInitializingFakes
 
             this.repository = repository ?? throw new ArgumentNullException(nameof(repository));
 
+            var typeConverter = new LazyTypeConverter();
             var callsFromRepository = this.repository.Load();
             if (callsFromRepository == null)
             {
                 var wrappedService = serviceFactory.Invoke();
                 this.Object = A.Fake<TService>();
-                this.recordingRule = new RecordingRule(wrappedService);
+                this.recordingRule = new RecordingRule(wrappedService, typeConverter);
                 Fake.GetFakeManager(this.Object).AddRuleFirst(this.recordingRule);
             }
             else
             {
                 this.Object = A.Fake<TService>();
-                Fake.GetFakeManager(this.Object).AddRuleFirst(new PlaybackRule(new Queue<RecordedCall>(callsFromRepository)));
+                Fake.GetFakeManager(this.Object).AddRuleFirst(new PlaybackRule(
+                    new Queue<RecordedCall>(callsFromRepository),
+                    typeConverter));
             }
         }
 
