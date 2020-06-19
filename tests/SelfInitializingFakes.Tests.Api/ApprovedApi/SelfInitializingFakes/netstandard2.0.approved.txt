@@ -1,0 +1,51 @@
+﻿[assembly: System.Runtime.InteropServices.ComVisible(false)]
+[assembly: System.Runtime.InteropServices.Guid("08462e29-25c0-4a1f-9275-23b7898e95f0")]
+[assembly: System.Runtime.Versioning.TargetFramework(".NETStandard,Version=v2.0", FrameworkDisplayName="")]
+namespace SelfInitializingFakes
+{
+    public abstract class FileBasedRecordedCallRepository : SelfInitializingFakes.IRecordedCallRepository
+    {
+        protected FileBasedRecordedCallRepository(string path) { }
+        public System.Collections.Generic.IEnumerable<SelfInitializingFakes.RecordedCall>? Load() { }
+        protected abstract System.Collections.Generic.IEnumerable<SelfInitializingFakes.RecordedCall> ReadFromStream(System.IO.FileStream fileStream);
+        public void Save(System.Collections.Generic.IEnumerable<SelfInitializingFakes.RecordedCall> calls) { }
+        protected abstract void WriteToStream(System.Collections.Generic.IEnumerable<SelfInitializingFakes.RecordedCall> calls, System.IO.FileStream fileStream);
+    }
+    public interface IRecordedCallRepository
+    {
+        System.Collections.Generic.IEnumerable<SelfInitializingFakes.RecordedCall>? Load();
+        void Save(System.Collections.Generic.IEnumerable<SelfInitializingFakes.RecordedCall> calls);
+    }
+    public class PlaybackException : System.Exception
+    {
+        public PlaybackException() { }
+        public PlaybackException(string message) { }
+        public PlaybackException(string message, System.Exception innerException) { }
+    }
+    public class RecordedCall
+    {
+        public string Method { get; set; }
+        public object?[] OutAndRefValues { get; set; }
+        public object? ReturnValue { get; set; }
+    }
+    public class RecordingException : System.Exception
+    {
+        public RecordingException() { }
+        public RecordingException(string message) { }
+        public RecordingException(string message, System.Exception innerException) { }
+    }
+    public sealed class SelfInitializingFake<TService> : System.IDisposable
+        where TService :  class
+    {
+        public TService Object { get; }
+        public void Dispose() { }
+        public static SelfInitializingFakes.SelfInitializingFake<TService> For<TConcreteService>(System.Func<TConcreteService> serviceFactory, SelfInitializingFakes.IRecordedCallRepository repository)
+            where TConcreteService : TService { }
+    }
+    public class XmlFileRecordedCallRepository : SelfInitializingFakes.FileBasedRecordedCallRepository
+    {
+        public XmlFileRecordedCallRepository(string path) { }
+        protected override System.Collections.Generic.IEnumerable<SelfInitializingFakes.RecordedCall> ReadFromStream(System.IO.FileStream fileStream) { }
+        protected override void WriteToStream(System.Collections.Generic.IEnumerable<SelfInitializingFakes.RecordedCall> calls, System.IO.FileStream fileStream) { }
+    }
+}

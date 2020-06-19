@@ -9,8 +9,4 @@
     <PackageReference Include="FakeItEasy" Version="*" />
   </ItemGroup>
 
-  <ItemGroup Condition=" '$(TargetFramework)' == 'netcoreapp1.0' ">
-    <Compile Remove="Acceptance\BinarySerialization.cs" />
-  </ItemGroup>
-
 </Project>

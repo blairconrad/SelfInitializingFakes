@@ -1,3 +1,8 @@
+### New
+
+- Provide netstandard2.0 package (restricted to FakeItEasy 4.9.2+)
+  ([#82](https://github.com/blairconrad/SelfInitializingFakes/pull/82))
+
 ## 0.4.0
 
 ### New

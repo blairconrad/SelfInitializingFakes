@@ -1,19 +1,14 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
+    <TargetFrameworks>net452;netcoreapp1.0</TargetFrameworks>
     <AssemblyName>SelfInitializingFakes.Tests.FIE.3.0.0</AssemblyName>
     <PackageId>SelfInitializingFakes.Tests.FIE.3.0.0</PackageId>
     <DefineConstants>$(DefineConstants);BUG_ASSIGNING_REF_VALUE_CLEARS_INCOMING_VALUE</DefineConstants>
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Include="..\SelfInitializingFakes.Tests.FIE.Latest\**\*.cs" />
-    <Compile Remove="..\SelfInitializingFakes.Tests.FIE.Latest\obj\**" />
     <Compile Include="..\SelfInitializingFakes.Tests.FIE.3.4.2\Polyfill.cs" />
-  </ItemGroup>
-
-  <ItemGroup Condition=" '$(TargetFramework)' == 'netcoreapp1.0' ">
-    <Compile Remove="..\SelfInitializingFakes.Tests.FIE.Latest\Acceptance\BinarySerialization.cs" />
   </ItemGroup>
 
 </Project>

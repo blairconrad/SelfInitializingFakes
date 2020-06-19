@@ -17,6 +17,7 @@ namespace FakeItEasy.Tests.Approval
 
         [InlineData("net40")]
         [InlineData("netstandard1.6")]
+        [InlineData("netstandard2.0")]
         [UseReporter(typeof(DiffReporter))]
         [MethodImpl(MethodImplOptions.NoInlining)]
         [Theory]

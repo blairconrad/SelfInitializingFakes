@@ -32,11 +32,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SelfInitializingFakes.Tests
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SelfInitializingFakes.Tests.FIE.Latest", "tests\SelfInitializingFakes.Tests.FIE.Latest\SelfInitializingFakes.Tests.FIE.Latest.csproj", "{ED447D19-E841-46AE-BBDE-56326FF6F4AB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SelfInitializingFakes.Tests.FIE.3.4.2", "tests\SelfInitializingFakes.Tests.FIE.3.4.2\SelfInitializingFakes.Tests.FIE.3.4.2.csproj", "{7F7EC34C-AA06-460B-B0B7-EF429DD99E21}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SelfInitializingFakes.Tests.FIE.3.4.2", "tests\SelfInitializingFakes.Tests.FIE.3.4.2\SelfInitializingFakes.Tests.FIE.3.4.2.csproj", "{7F7EC34C-AA06-460B-B0B7-EF429DD99E21}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SelfInitializingFakes.Tests.FIE.4.9.2", "tests\SelfInitializingFakes.Tests.FIE.4.9.2\SelfInitializingFakes.Tests.FIE.4.9.2.csproj", "{FB3705B3-8BD8-4293-9266-6DE11FDACB2B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SelfInitializingFakes.Tests.FIE.4.9.2", "tests\SelfInitializingFakes.Tests.FIE.4.9.2\SelfInitializingFakes.Tests.FIE.4.9.2.csproj", "{FB3705B3-8BD8-4293-9266-6DE11FDACB2B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SelfInitializingFakes.Tests.FIE.5.5.0", "tests\SelfInitializingFakes.Tests.FIE.5.5.0\SelfInitializingFakes.Tests.FIE.5.5.0.csproj", "{27DE54D0-FB17-4A30-AB53-2FC98EEF2C4C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SelfInitializingFakes.Tests.FIE.5.5.0", "tests\SelfInitializingFakes.Tests.FIE.5.5.0\SelfInitializingFakes.Tests.FIE.5.5.0.csproj", "{27DE54D0-FB17-4A30-AB53-2FC98EEF2C4C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
