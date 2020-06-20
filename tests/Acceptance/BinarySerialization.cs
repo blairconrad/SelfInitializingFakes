@@ -3,7 +3,6 @@
     using System;
     using System.Collections.Generic;
     using System.IO;
-    using FakeItEasy;
     using FluentAssertions;
     using Xbehave;
 
@@ -20,7 +19,6 @@
         public static void SerializeVoidCall(
             string path,
             IRecordedCallRepository repository,
-            IService realServiceWhileRecording,
             int voidMethodOutInteger,
             DateTime voidMethodRefDateTime,
             IDictionary<string, Guid> nonVoidMethodResult)
@@ -31,31 +29,15 @@
             "And a BinaryFileRecordedCallRepository targeting that path"
                 .x(() => repository = new BinaryFileRecordedCallRepository(path));
 
-            "And a real service to wrap while recording"
-                .x(() =>
-                {
-                    realServiceWhileRecording = A.Fake<IService>();
-
-                    int i;
-                    DateTime dt = DateTime.MinValue;
-                    A.CallTo(() => realServiceWhileRecording.VoidMethod("firstCallKey", out i, ref dt))
-                        .AssignsOutAndRefParameters(17, new DateTime(2017, 1, 24));
-
-                    A.CallTo(() => realServiceWhileRecording.NonVoidMethod())
-                        .Returns(new Dictionary<string, Guid>
-                        {
-                            ["key1"] = new Guid("6c7d8912-802a-43c0-82a2-cb811058a9bd"),
-                        });
-                });
-
             "When I use a self-initializing fake in recording mode"
                 .x(() =>
                 {
-                    using (var fakeService = SelfInitializingFake<IService>.For(() => realServiceWhileRecording, repository))
+                    using (var fakeService = SelfInitializingFake<IService>.For(() => new Service(), repository))
                     {
+                        DateTime discardDateTime = DateTime.MaxValue;
                         var fake = fakeService.Object;
-                        fake.VoidMethod("firstCallKey", out voidMethodOutInteger, ref voidMethodRefDateTime);
-                        nonVoidMethodResult = fake.NonVoidMethod();
+                        fake.VoidMethod("firstCallKey", out _, ref discardDateTime);
+                        _ = fake.NonVoidMethod();
                     }
                 });
 
@@ -65,27 +47,12 @@
                     using (var playbackFakeService = SelfInitializingFake<IService>.For<IService>(UnusedFactory, repository))
                     {
                         var fake = playbackFakeService.Object;
-                        int i;
-                        DateTime dt = DateTime.MinValue;
-                        fake.VoidMethod("blah", out i, ref dt);
+                        fake.VoidMethod("firstCallKey", out voidMethodOutInteger, ref voidMethodRefDateTime);
+                        nonVoidMethodResult = fake.NonVoidMethod();
                     }
                 });
 
-            "Then the recording fake forwards calls to the wrapped service"
-                .x(() =>
-                {
-                    int i;
-#if BUG_ASSIGNING_REF_VALUE_CLEARS_INCOMING_VALUE
-                    DateTime dt = new DateTime(2017, 1, 24);
-#else
-                    DateTime dt = DateTime.MinValue;
-#endif
-                    A.CallTo(() => realServiceWhileRecording.VoidMethod(A<string>._, out i, ref dt))
-                        .MustHaveHappened();
-                    A.CallTo(() => realServiceWhileRecording.NonVoidMethod()).MustHaveHappened();
-                });
-
-            "And the playback fake returns the recorded out and ref parameters and results"
+            "Then the playback fake returns the recorded out and ref parameters and results"
                 .x(() =>
                 {
                     voidMethodOutInteger.Should().Be(17);
@@ -98,5 +65,19 @@
         }
 
         private static IService UnusedFactory() => null!;
+
+        private class Service : IService
+        {
+            public void VoidMethod(string s, out int i, ref DateTime dt)
+            {
+                i = 17;
+                dt = new DateTime(2017, 1, 24);
+            }
+
+            public IDictionary<string, Guid> NonVoidMethod() => new Dictionary<string, Guid>
+            {
+                ["key1"] = new Guid("6c7d8912-802a-43c0-82a2-cb811058a9bd"),
+            };
+        }
     }
 }
