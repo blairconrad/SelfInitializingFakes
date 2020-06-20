@@ -2,25 +2,20 @@
 {
     using System;
     using System.IO;
+
     using FluentAssertions;
+    using SelfInitializingFakes.Tests.Acceptance.Helpers;
     using Xbehave;
 
     public static class XmlSerialization
     {
-        public interface IService
-        {
-            void VoidMethod(string s, out int i, ref DateTime dt);
-
-            Guid NonVoidMethod();
-        }
-
         [Scenario]
         public static void SerializeVoidCall(
             string path,
             IRecordedCallRepository repository,
             int voidMethodOutInteger,
             DateTime voidMethodRefDateTime,
-            Guid nonVoidMethodResult)
+            Guid guidMethodResult)
         {
             "Given a file path"
                 .x(() => path = Path.Combine(Path.GetTempPath(), Guid.NewGuid() + ".xml"));
@@ -31,23 +26,23 @@
             "When I use a self-initializing fake in recording mode"
                 .x(() =>
                 {
-                    using (var fakeService = SelfInitializingFake<IService>.For(() => new Service(), repository))
+                    using (var fakeService = SelfInitializingFake<ISampleService>.For(() => new SampleService(), repository))
                     {
                         DateTime discardDateTime = DateTime.MaxValue;
                         var fake = fakeService.Object;
                         fake.VoidMethod("recordingCallKey", out _, ref discardDateTime);
-                        _ = fake.NonVoidMethod();
+                        _ = fake.GuidReturningMethod();
                     }
                 });
 
             "And I use a self-initializing fake in playback mode"
                 .x(() =>
                 {
-                    using (var playbackFakeService = SelfInitializingFake<IService>.For<IService>(UnusedFactory, repository))
+                    using (var playbackFakeService = SelfInitializingFake<ISampleService>.For<ISampleService>(UnusedFactory, repository))
                     {
                         var fake = playbackFakeService.Object;
                         fake.VoidMethod("blah", out voidMethodOutInteger, ref voidMethodRefDateTime);
-                        nonVoidMethodResult = fake.NonVoidMethod();
+                        guidMethodResult = fake.GuidReturningMethod();
                     }
                 });
 
@@ -56,21 +51,10 @@
                 {
                     voidMethodOutInteger.Should().Be(17);
                     voidMethodRefDateTime.Should().Be(new DateTime(2017, 1, 24));
-                    nonVoidMethodResult.Should().Be(new Guid("6c7d8912-802a-43c0-82a2-cb811058a9bd"));
+                    guidMethodResult.Should().Be(new Guid("5b61d48f-e9e5-49ad-9c51-a9aae056aa84"));
                 });
         }
 
-        private static IService UnusedFactory() => null!;
-
-        private class Service : IService
-        {
-            public void VoidMethod(string s, out int i, ref DateTime dt)
-            {
-                i = 17;
-                dt = new DateTime(2017, 1, 24);
-            }
-
-            public Guid NonVoidMethod() => new Guid("6c7d8912-802a-43c0-82a2-cb811058a9bd");
-        }
+        private static ISampleService UnusedFactory() => null!;
     }
 }
