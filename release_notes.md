@@ -1,3 +1,5 @@
+## 0.5.0
+
 ### New
 
 - Provide netstandard2.0 package (restricted to FakeItEasy 4.9.2+)
