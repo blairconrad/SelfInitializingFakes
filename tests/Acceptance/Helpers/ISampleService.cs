@@ -2,6 +2,7 @@ namespace SelfInitializingFakes.Tests.Acceptance.Helpers
 {
     using System;
     using System.Collections.Generic;
+    using System.Threading.Tasks;
 
     public interface ISampleService
     {
@@ -16,5 +17,9 @@ namespace SelfInitializingFakes.Tests.Acceptance.Helpers
         Lazy<string> LazyStringReturningMethod();
 
         void MethodWithLazyOut(out Lazy<int> lazyInt);
+
+        Task TaskReturningMethod();
+
+        Task<int> TaskIntReturningMethod();
     }
 }

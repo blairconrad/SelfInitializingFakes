@@ -2,6 +2,7 @@ namespace SelfInitializingFakes.Tests.Acceptance
 {
     using System;
     using System.Collections.Generic;
+    using System.Threading.Tasks;
 
     using FluentAssertions;
     using SelfInitializingFakes.Tests.Acceptance.Helpers;
@@ -29,11 +30,15 @@ namespace SelfInitializingFakes.Tests.Acceptance
                     using (var fakeService = SelfInitializingFake<ISampleService>.For(() => new SampleService(), repository))
                     {
                         DateTime discardDateTime = DateTime.MaxValue;
+
                         var fake = fakeService.Object;
+
                         fake.VoidMethod("firstCallKey", out _, ref discardDateTime);
                         _ = fake.LazyIntReturningMethod();
                         _ = fake.LazyStringReturningMethod();
                         fake.MethodWithLazyOut(out _);
+                        _ = fake.TaskReturningMethod();
+                        _ = fake.TaskIntReturningMethod();
                     }
                 });
 
@@ -43,10 +48,13 @@ namespace SelfInitializingFakes.Tests.Acceptance
                     using (var playbackFakeService = SelfInitializingFake<ISampleService>.For(UnusedFactory, repository))
                     {
                         var fake = playbackFakeService.Object;
+
                         fake.VoidMethod("firstCallKey", out voidMethodOutInteger, ref voidMethodRefDateTime);
                         lazyIntMethodResult = fake.LazyIntReturningMethod();
                         lazyStringMethodResult = fake.LazyStringReturningMethod();
                         fake.MethodWithLazyOut(out lazyOutResult);
+                        taskResult = fake.TaskReturningMethod();
+                        taskIntResult = fake.TaskIntReturningMethod();
                     }
                 });
 
@@ -64,6 +72,11 @@ namespace SelfInitializingFakes.Tests.Acceptance
 
                     lazyOutResult.IsValueCreated.Should().BeFalse();
                     lazyOutResult.Value.Should().Be(-14);
+
+                    taskResult.IsCompleted.Should().BeTrue();
+
+                    taskIntResult.IsCompleted.Should().BeTrue();
+                    taskIntResult.Result.Should().Be(5);
                 });
         }
 

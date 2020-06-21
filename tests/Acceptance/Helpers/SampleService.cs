@@ -2,6 +2,7 @@ namespace SelfInitializingFakes.Tests.Acceptance.Helpers
 {
     using System;
     using System.Collections.Generic;
+    using System.Threading.Tasks;
 
     public class SampleService : ISampleService
     {
@@ -23,5 +24,9 @@ namespace SelfInitializingFakes.Tests.Acceptance.Helpers
         public Lazy<string> LazyStringReturningMethod() => new Lazy<string>(() => "three");
 
         public void MethodWithLazyOut(out Lazy<int> lazyInt) => lazyInt = new Lazy<int>(() => -14);
+
+        public Task TaskReturningMethod() => Task<string>.FromResult("void Task");
+
+        public Task<int> TaskIntReturningMethod() => Task<int>.FromResult(5);
     }
 }
