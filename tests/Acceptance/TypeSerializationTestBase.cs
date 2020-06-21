@@ -19,7 +19,8 @@ namespace SelfInitializingFakes.Tests.Acceptance
             Lazy<string> lazyStringMethodResult,
             Lazy<int> lazyOutResult,
             Task taskResult,
-            Task<int> taskIntResult)
+            Task<int> taskIntResult,
+            Lazy<Task<int>> lazyTaskIntResult)
         {
             "Given a recorded call repository"
                 .x(() => repository = this.CreateRepository());
@@ -39,6 +40,7 @@ namespace SelfInitializingFakes.Tests.Acceptance
                         fake.MethodWithLazyOut(out _);
                         _ = fake.TaskReturningMethod();
                         _ = fake.TaskIntReturningMethod();
+                        _ = fake.LazyTaskIntReturningMethod();
                     }
                 });
 
@@ -55,6 +57,7 @@ namespace SelfInitializingFakes.Tests.Acceptance
                         fake.MethodWithLazyOut(out lazyOutResult);
                         taskResult = fake.TaskReturningMethod();
                         taskIntResult = fake.TaskIntReturningMethod();
+                        lazyTaskIntResult = fake.LazyTaskIntReturningMethod();
                     }
                 });
 
@@ -77,6 +80,10 @@ namespace SelfInitializingFakes.Tests.Acceptance
 
                     taskIntResult.IsCompleted.Should().BeTrue();
                     taskIntResult.Result.Should().Be(5);
+
+                    lazyTaskIntResult.IsValueCreated.Should().BeFalse();
+                    lazyTaskIntResult.Value.IsCompleted.Should().BeTrue();
+                    lazyTaskIntResult.Value.Result.Should().Be(19);
                 });
         }
 
