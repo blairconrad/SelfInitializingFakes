@@ -25,7 +25,7 @@ namespace SelfInitializingFakes.Tests.Acceptance.Helpers
 
         public void MethodWithLazyOut(out Lazy<int> lazyInt) => lazyInt = new Lazy<int>(() => -14);
 
-        public Task TaskReturningMethod() => Task<string>.FromResult("void Task");
+        public Task TaskReturningMethod() => Task.Delay(0);
 
         public Task<int> TaskIntReturningMethod() => Task<int>.FromResult(5);
     }
