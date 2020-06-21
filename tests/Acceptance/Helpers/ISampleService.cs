@@ -23,5 +23,7 @@ namespace SelfInitializingFakes.Tests.Acceptance.Helpers
         Task<int> TaskIntReturningMethod();
 
         Lazy<Task<int>> LazyTaskIntReturningMethod();
+
+        Task<Lazy<int>> TaskLazyIntReturningMethod();
     }
 }

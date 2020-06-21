@@ -2,6 +2,8 @@
 
 - Allow multiple path components in file-based recorded call repository constructors ([#88](https://github.com/blairconrad/SelfInitializingFakes/pull/88))
 - Create missing directories for file-based recorded call repositories ([#87](https://github.com/blairconrad/SelfInitializingFakes/pull/87))
+- Serialize `Lazy<T>`, `Task`, and `Task<T>` return values and out and ref
+  parameters ([#81](https://github.com/blairconrad/SelfInitializingFakes/issues/81))
 
 ### With special thanks for contributions to this release from:
 - [CableZa](https://github.com/CableZa)

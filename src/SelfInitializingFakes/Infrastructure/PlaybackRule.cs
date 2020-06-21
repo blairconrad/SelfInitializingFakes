@@ -50,7 +50,7 @@ namespace SelfInitializingFakes.Infrastructure
         private void SetReturnValue(IInterceptedFakeObjectCall fakeObjectCall, RecordedCall recordedCall)
         {
             var returnValue = recordedCall.ReturnValue;
-            if (this.typeConverter.ConvertForPlayback(fakeObjectCall.Method.ReturnType, returnValue, out object? convertedReturnValue))
+            if (this.typeConverter.ConvertForPlayback(fakeObjectCall.Method.ReturnType, returnValue, this.typeConverter, out object? convertedReturnValue))
             {
                 returnValue = convertedReturnValue;
             }
@@ -70,6 +70,7 @@ namespace SelfInitializingFakes.Infrastructure
                     if (this.typeConverter.ConvertForPlayback(
                             parameter.ParameterType.GetElementType(),
                             parameterValue,
+                            this.typeConverter,
                             out object? convertedParameterValue))
                     {
                         parameterValue = convertedParameterValue;

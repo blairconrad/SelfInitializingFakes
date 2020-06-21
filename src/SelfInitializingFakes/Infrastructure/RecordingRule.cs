@@ -125,14 +125,14 @@ namespace SelfInitializingFakes.Infrastructure
 
         private void ConvertRecordedCallForSerialization(RecordedCall call)
         {
-            if (this.typeConverter.ConvertForRecording(call.ReturnValue, out object? convertedReturnValue))
+            if (this.typeConverter.ConvertForRecording(call.ReturnValue, this.typeConverter, out object? convertedReturnValue))
             {
                 call.ReturnValue = convertedReturnValue;
             }
 
             for (int i = 0; i < call.OutAndRefValues.Length; ++i)
             {
-                if (this.typeConverter.ConvertForRecording(call.OutAndRefValues[i], out object? convertedValue))
+                if (this.typeConverter.ConvertForRecording(call.OutAndRefValues[i], this.typeConverter, out object? convertedValue))
                 {
                     call.OutAndRefValues[i] = convertedValue;
                 }
