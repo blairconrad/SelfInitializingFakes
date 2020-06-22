@@ -2,26 +2,34 @@ namespace SelfInitializingFakes.Tests.Acceptance
 {
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics.CodeAnalysis;
+    using System.Linq;
+    using System.Reflection;
     using System.Threading.Tasks;
 
     using FluentAssertions;
     using SelfInitializingFakes.Tests.Acceptance.Helpers;
     using Xbehave;
+    using Xunit;
 
     public abstract class TypeSerializationTestBase
     {
+        /// <summary>Create common test cases for <see cref="SerializeCommonCalls(string, IRecordedCallRepository)" />.</summary>
+        public static IEnumerable<object[]> TestCases()
+        {
+            return typeof(TypeSerializationTestBase).GetNestedTypes(BindingFlags.NonPublic)
+#if FRAMEWORK_TYPE_LACKS_ISABSTRACT
+               .Where(t => !t.GetTypeInfo().IsAbstract)
+#else
+               .Where(t => !t.IsAbstract)
+#endif
+               .Where(t => typeof(TestCase).IsAssignableFrom(t))
+               .Select(t => new object[] { Activator.CreateInstance(t) });
+        }
+
+        [MemberData(nameof(TestCases))]
         [Scenario]
-        public void SerializeCommonCalls(
-            IRecordedCallRepository repository,
-            int voidMethodOutInteger,
-            DateTime voidMethodRefDateTime,
-            Lazy<int> lazyIntMethodResult,
-            Lazy<string> lazyStringMethodResult,
-            Lazy<int> lazyOutResult,
-            Task taskResult,
-            Task<int> taskIntResult,
-            Lazy<Task<int>> lazyTaskIntResult,
-            Task<Lazy<int>> taskLazyIntResult)
+        public void SerializeCommonCalls(TestCase testCase, IRecordedCallRepository repository)
         {
             "Given a recorded call repository"
                 .x(() => repository = this.CreateRepository());
@@ -31,18 +39,8 @@ namespace SelfInitializingFakes.Tests.Acceptance
                 {
                     using (var fakeService = SelfInitializingFake<ISampleService>.For(() => new SampleService(), repository))
                     {
-                        DateTime discardDateTime = DateTime.MaxValue;
-
                         var fake = fakeService.Object;
-
-                        fake.VoidMethod("firstCallKey", out _, ref discardDateTime);
-                        _ = fake.LazyIntReturningMethod();
-                        _ = fake.LazyStringReturningMethod();
-                        fake.MethodWithLazyOut(out _);
-                        _ = fake.TaskReturningMethod();
-                        _ = fake.TaskIntReturningMethod();
-                        _ = fake.LazyTaskIntReturningMethod();
-                        _ = fake.TaskLazyIntReturningMethod();
+                        testCase.Record(fake);
                     }
                 });
 
@@ -52,50 +50,207 @@ namespace SelfInitializingFakes.Tests.Acceptance
                     using (var playbackFakeService = SelfInitializingFake<ISampleService>.For(UnusedFactory, repository))
                     {
                         var fake = playbackFakeService.Object;
-
-                        fake.VoidMethod("firstCallKey", out voidMethodOutInteger, ref voidMethodRefDateTime);
-                        lazyIntMethodResult = fake.LazyIntReturningMethod();
-                        lazyStringMethodResult = fake.LazyStringReturningMethod();
-                        fake.MethodWithLazyOut(out lazyOutResult);
-                        taskResult = fake.TaskReturningMethod();
-                        taskIntResult = fake.TaskIntReturningMethod();
-                        lazyTaskIntResult = fake.LazyTaskIntReturningMethod();
-                        taskLazyIntResult = fake.TaskLazyIntReturningMethod();
+                        testCase.Playback(fake);
                     }
                 });
 
             "Then the playback fake returns the recorded out and ref parameters and results"
                 .x(() =>
                 {
-                    voidMethodOutInteger.Should().Be(17);
-                    voidMethodRefDateTime.Should().Be(new DateTime(2017, 1, 24));
-
-                    lazyIntMethodResult.IsValueCreated.Should().BeFalse();
-                    lazyIntMethodResult.Value.Should().Be(3);
-
-                    lazyStringMethodResult.IsValueCreated.Should().BeFalse();
-                    lazyStringMethodResult.Value.Should().Be("three");
-
-                    lazyOutResult.IsValueCreated.Should().BeFalse();
-                    lazyOutResult.Value.Should().Be(-14);
-
-                    taskResult.IsCompleted.Should().BeTrue();
-
-                    taskIntResult.IsCompleted.Should().BeTrue();
-                    taskIntResult.Result.Should().Be(5);
-
-                    lazyTaskIntResult.IsValueCreated.Should().BeFalse();
-                    lazyTaskIntResult.Value.IsCompleted.Should().BeTrue();
-                    lazyTaskIntResult.Value.Result.Should().Be(19);
-
-                    taskLazyIntResult.IsCompleted.Should().BeTrue();
-                    taskLazyIntResult.Result.IsValueCreated.Should().BeFalse();
-                    taskLazyIntResult.Result.Value.Should().Be(18);
+                    testCase.Verify();
                 });
         }
 
         protected static ISampleService UnusedFactory() => null!;
 
         protected abstract IRecordedCallRepository CreateRepository();
+
+        public abstract class TestCase
+        {
+            public abstract void Record(ISampleService service);
+
+            public abstract void Playback(ISampleService service);
+
+            public abstract void Verify();
+        }
+
+        [SuppressMessage("Microsoft.Performance", "CA1812:AvoidUninstantiatedInternalClasses", Justification = "Required for testing.")]
+        private class MethodWithOutIntegerAndRefDateTime : TestCase
+        {
+            private int voidMethodOutInteger;
+            private DateTime voidMethodRefDateTime;
+
+            public override void Record(ISampleService service)
+            {
+                DateTime discardDateTime = DateTime.MinValue;
+                service.VoidMethod("firstCallKey", out _, ref discardDateTime);
+            }
+
+            public override void Playback(ISampleService service)
+            {
+                service.VoidMethod("firstCallKey", out this.voidMethodOutInteger, ref this.voidMethodRefDateTime);
+            }
+
+            public override void Verify()
+            {
+                this.voidMethodOutInteger.Should().Be(17);
+                this.voidMethodRefDateTime.Should().Be(new DateTime(2017, 1, 24));
+            }
+        }
+
+        [SuppressMessage("Microsoft.Performance", "CA1812:AvoidUninstantiatedInternalClasses", Justification = "Required for testing.")]
+        private class MethodThatReturnsLazyInt : TestCase
+        {
+            private Lazy<int>? result;
+
+            public override void Record(ISampleService service)
+            {
+                service.LazyIntReturningMethod();
+            }
+
+            public override void Playback(ISampleService service)
+            {
+                this.result = service.LazyIntReturningMethod();
+            }
+
+            public override void Verify()
+            {
+                this.result!.IsValueCreated.Should().BeFalse();
+                this.result!.Value.Should().Be(3);
+            }
+        }
+
+        [SuppressMessage("Microsoft.Performance", "CA1812:AvoidUninstantiatedInternalClasses", Justification = "Required for testing.")]
+        private class MethodThatReturnsLazyString : TestCase
+        {
+            private Lazy<string>? result;
+
+            public override void Record(ISampleService service)
+            {
+                service.LazyStringReturningMethod();
+            }
+
+            public override void Playback(ISampleService service)
+            {
+                this.result = service.LazyStringReturningMethod();
+            }
+
+            public override void Verify()
+            {
+                this.result!.IsValueCreated.Should().BeFalse();
+                this.result!.Value.Should().Be("three");
+            }
+        }
+
+        [SuppressMessage("Microsoft.Performance", "CA1812:AvoidUninstantiatedInternalClasses", Justification = "Required for testing.")]
+        private class MethodWithOutLazyInt : TestCase
+        {
+            private Lazy<int>? lazyInt;
+
+            public override void Record(ISampleService service)
+            {
+                service.MethodWithLazyOut(out _);
+            }
+
+            public override void Playback(ISampleService service)
+            {
+                service.MethodWithLazyOut(out this.lazyInt);
+            }
+
+            public override void Verify()
+            {
+                this.lazyInt!.IsValueCreated.Should().BeFalse();
+                this.lazyInt!.Value.Should().Be(-14);
+            }
+        }
+
+        [SuppressMessage("Microsoft.Performance", "CA1812:AvoidUninstantiatedInternalClasses", Justification = "Required for testing.")]
+        private class MethodThatReturnsTask : TestCase
+        {
+            private Task? result;
+
+            public override void Record(ISampleService service)
+            {
+                service.TaskReturningMethod();
+            }
+
+            public override void Playback(ISampleService service)
+            {
+                this.result = service.TaskReturningMethod();
+            }
+
+            public override void Verify()
+            {
+                this.result!.IsCompleted.Should().BeTrue();
+            }
+        }
+
+        [SuppressMessage("Microsoft.Performance", "CA1812:AvoidUninstantiatedInternalClasses", Justification = "Required for testing.")]
+        private class MethodThatReturnsTaskInt : TestCase
+        {
+            private Task<int>? result;
+
+            public override void Record(ISampleService service)
+            {
+                service.TaskIntReturningMethod();
+            }
+
+            public override void Playback(ISampleService service)
+            {
+                this.result = service.TaskIntReturningMethod();
+            }
+
+            public override void Verify()
+            {
+                this.result!.IsCompleted.Should().BeTrue();
+                this.result!.Result.Should().Be(5);
+            }
+        }
+
+        [SuppressMessage("Microsoft.Performance", "CA1812:AvoidUninstantiatedInternalClasses", Justification = "Required for testing.")]
+        private class MethodThatReturnsLazyTaskInt : TestCase
+        {
+            private Lazy<Task<int>>? result;
+
+            public override void Record(ISampleService service)
+            {
+                service.LazyTaskIntReturningMethod();
+            }
+
+            public override void Playback(ISampleService service)
+            {
+                this.result = service.LazyTaskIntReturningMethod();
+            }
+
+            public override void Verify()
+            {
+                this.result!.IsValueCreated.Should().BeFalse();
+                this.result!.Value.IsCompleted.Should().BeTrue();
+                this.result!.Value.Result.Should().Be(19);
+            }
+        }
+
+        [SuppressMessage("Microsoft.Performance", "CA1812:AvoidUninstantiatedInternalClasses", Justification = "Required for testing.")]
+        private class MethodThatReturnsTaskLazyInt : TestCase
+        {
+            private Task<Lazy<int>>? result;
+
+            public override void Record(ISampleService service)
+            {
+                service.TaskLazyIntReturningMethod();
+            }
+
+            public override void Playback(ISampleService service)
+            {
+                this.result = service.TaskLazyIntReturningMethod();
+            }
+
+            public override void Verify()
+            {
+                this.result!.IsCompleted.Should().BeTrue();
+                this.result!.Result.IsValueCreated.Should().BeFalse();
+                this.result!.Result.Value.Should().Be(18);
+            }
+        }
     }
 }
