@@ -17,12 +17,13 @@
         /// <summary>
         /// Initializes a new instance of the <see cref="XmlFileRecordedCallRepository"/> class.
         /// </summary>
-        /// <param name="path">
+        /// <param name="pathComponents">
         /// The file to save calls to, or load them from.
+        /// May be a complete filename, or path components that will be combined.
         /// If not present, the containing directory will be created on save.
         /// </param>
-        public XmlFileRecordedCallRepository(string path)
-            : base(path)
+        public XmlFileRecordedCallRepository(params string[] pathComponents)
+            : base(pathComponents)
         {
         }
 

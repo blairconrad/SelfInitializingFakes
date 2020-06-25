@@ -66,5 +66,46 @@
             "Then the repository file is created"
                 .x(() => File.Exists(repositoryPath).Should().BeTrue("the file should exist"));
         }
+
+        [Scenario]
+        [MemberData(nameof(ConcreteRepositoryTypes))]
+        public static void CreateFromPathComponents(
+            Type concreteRepositoryType,
+            string baseDirectory,
+            string pathComponent1,
+            string pathComponent2,
+            IRecordedCallRepository repository,
+            IService realServiceWhileRecording)
+        {
+            "Given a base directory"
+                .x(() => baseDirectory = Path.GetTempPath());
+
+            "And a path component"
+                .x(() => pathComponent1 = Guid.NewGuid().ToString());
+
+            "And another path component"
+                .x(() => pathComponent2 = Guid.NewGuid().ToString());
+
+            $"And a {concreteRepositoryType} created from those  3 parts"
+                .x(() => repository = (IRecordedCallRepository)Activator.CreateInstance(
+                    concreteRepositoryType,
+                    baseDirectory,
+                    pathComponent1,
+                    pathComponent2));
+
+            "And a real service to wrap while recording"
+                .x(() => realServiceWhileRecording = A.Fake<IService>());
+
+            "When I use a self-initializing fake in recording mode"
+                .x(() =>
+                {
+                    using var fakeService = SelfInitializingFake<IService>.For(() => realServiceWhileRecording, repository);
+                    var fake = fakeService.Object;
+                    _ = fake.NonVoidMethod();
+                });
+
+            "Then the desired repository file is created"
+                .x(() => File.Exists(Path.Combine(baseDirectory, pathComponent1, pathComponent2)).Should().BeTrue("the file should exist"));
+        }
     }
 }
