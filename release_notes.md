@@ -1,3 +1,10 @@
+### New
+
+- Create missing directories for file-based recorded call repositories ([#87](https://github.com/blairconrad/SelfInitializingFakes/pull/87))
+
+### With special thanks for contributions to this release from:
+- [CableZa](https://github.com/CableZa)
+
 ## 0.5.0
 
 ### New

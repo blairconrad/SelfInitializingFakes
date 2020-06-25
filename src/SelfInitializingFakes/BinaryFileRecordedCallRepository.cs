@@ -14,7 +14,10 @@
         /// <summary>
         /// Initializes a new instance of the <see cref="BinaryFileRecordedCallRepository"/> class.
         /// </summary>
-        /// <param name="path">The location to save calls to, or load them from.</param>
+        /// <param name="path">
+        /// The file to save calls to, or load them from.
+        /// If not present, the containing directory will be created on save.
+        /// </param>
         public BinaryFileRecordedCallRepository(string path)
             : base(path)
         {

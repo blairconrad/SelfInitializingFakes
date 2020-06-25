@@ -13,7 +13,10 @@
         /// <summary>
         /// Initializes a new instance of the <see cref="FileBasedRecordedCallRepository"/> class.
         /// </summary>
-        /// <param name="path">The file to save calls to, or load them from.</param>
+        /// <param name="path">
+        /// The file to save calls to, or load them from.
+        /// If not present, the containing directory will be created on save.
+        /// </param>
         protected FileBasedRecordedCallRepository(string path)
         {
             this.path = path;
@@ -25,10 +28,9 @@
         /// <param name="calls">The recorded calls to save.</param>
         public void Save(IEnumerable<RecordedCall> calls)
         {
-            using (var fileStream = File.Open(this.path, FileMode.Create))
-            {
-                this.WriteToStream(calls, fileStream);
-            }
+            Directory.CreateDirectory(Path.GetDirectoryName(this.path));
+            using var fileStream = File.Open(this.path, FileMode.Create);
+            this.WriteToStream(calls, fileStream);
         }
 
         /// <summary>
@@ -42,10 +44,8 @@
                 return null;
             }
 
-            using (var fileStream = File.OpenRead(this.path))
-            {
-                return this.ReadFromStream(fileStream);
-            }
+            using var fileStream = File.OpenRead(this.path);
+            return this.ReadFromStream(fileStream);
         }
 
         /// <summary>

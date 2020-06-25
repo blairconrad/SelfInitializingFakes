@@ -36,6 +36,10 @@
     <Compile Include="..\Conventions\**\*.cs"><Link>Conventions/%(Filename)%(Extension)</Link></Compile>
   </ItemGroup>
 
+  <PropertyGroup Condition=" '$(TargetFramework)' == 'netcoreapp1.0' ">
+    <DefineConstants>$(DefineConstants);FEATURE_NETCORE_REFLECTION</DefineConstants>
+  </PropertyGroup>
+
   <ItemGroup Condition=" '$(TargetFramework)' != 'net452' ">
     <Compile Remove="..\Acceptance\BinarySerialization.cs" />
   </ItemGroup>
