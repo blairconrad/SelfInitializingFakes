@@ -1,5 +1,6 @@
 ### New
 
+- Allow multiple path components in file-based recorded call repository constructors ([#88](https://github.com/blairconrad/SelfInitializingFakes/pull/88))
 - Create missing directories for file-based recorded call repositories ([#87](https://github.com/blairconrad/SelfInitializingFakes/pull/87))
 
 ### With special thanks for contributions to this release from:

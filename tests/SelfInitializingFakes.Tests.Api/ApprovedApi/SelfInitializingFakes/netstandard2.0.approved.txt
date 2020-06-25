@@ -5,7 +5,7 @@ namespace SelfInitializingFakes
 {
     public abstract class FileBasedRecordedCallRepository : SelfInitializingFakes.IRecordedCallRepository
     {
-        protected FileBasedRecordedCallRepository(string path) { }
+        protected FileBasedRecordedCallRepository(params string[] pathComponents) { }
         public System.Collections.Generic.IEnumerable<SelfInitializingFakes.RecordedCall>? Load() { }
         protected abstract System.Collections.Generic.IEnumerable<SelfInitializingFakes.RecordedCall> ReadFromStream(System.IO.FileStream fileStream);
         public void Save(System.Collections.Generic.IEnumerable<SelfInitializingFakes.RecordedCall> calls) { }
@@ -44,7 +44,7 @@ namespace SelfInitializingFakes
     }
     public class XmlFileRecordedCallRepository : SelfInitializingFakes.FileBasedRecordedCallRepository
     {
-        public XmlFileRecordedCallRepository(string path) { }
+        public XmlFileRecordedCallRepository(params string[] pathComponents) { }
         protected override System.Collections.Generic.IEnumerable<SelfInitializingFakes.RecordedCall> ReadFromStream(System.IO.FileStream fileStream) { }
         protected override void WriteToStream(System.Collections.Generic.IEnumerable<SelfInitializingFakes.RecordedCall> calls, System.IO.FileStream fileStream) { }
     }
