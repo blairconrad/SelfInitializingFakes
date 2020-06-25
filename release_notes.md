@@ -1,3 +1,5 @@
+## 0.6.0
+
 ### New
 
 - Allow multiple path components in file-based recorded call repository constructors ([#88](https://github.com/blairconrad/SelfInitializingFakes/pull/88))
