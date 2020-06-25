@@ -3,7 +3,7 @@ namespace SelfInitializingFakes.Tests.Acceptance.Helper
     using System;
     using System.Collections.Generic;
     using System.Linq;
-#if FEATURE_NETCORE_REFLECTION
+#if FRAMEWORK_WEAK_TYPE_CLASS
     using System.Reflection;
 #endif
 
@@ -18,7 +18,7 @@ namespace SelfInitializingFakes.Tests.Acceptance.Helper
         /// <param name="this">This type argument.</param>
         /// <returns>A list of all concrete subtypes.</returns>
         public static IEnumerable<Type> GetConcreteSubTypesInAssembly(this Type @this) =>
-#if FEATURE_NETCORE_REFLECTION
+#if FRAMEWORK_WEAK_TYPE_CLASS
             typeof(FileBasedRecordedCallRepository).GetTypeInfo().Assembly.GetTypes()
                .Where(t => @this.GetTypeInfo().IsAssignableFrom(t) && !t.GetTypeInfo().IsAbstract);
 #else
