@@ -1,4 +1,4 @@
-namespace SelfInitializingFakes.Tests.Acceptance.Helper
+namespace SelfInitializingFakes.Tests.Acceptance.Helpers
 {
     using System;
     using System.Collections.Generic;

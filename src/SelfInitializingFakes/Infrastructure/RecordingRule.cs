@@ -13,15 +13,18 @@ namespace SelfInitializingFakes.Infrastructure
     internal class RecordingRule : IFakeObjectCallRule
     {
         private readonly object target;
+        private readonly ITypeConverter typeConverter;
         private Exception? recordingException;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="RecordingRule"/> class.
         /// </summary>
         /// <param name="target">The object to which to forward calls, in order to harvest return, out, and ref values.</param>
-        public RecordingRule(object target)
+        /// <param name="typeConverter">A helper to convert values from their original representation to serializable variants.</param>
+        public RecordingRule(object target, ITypeConverter typeConverter)
         {
             this.target = target;
+            this.typeConverter = typeConverter;
         }
 
         /// <summary>
@@ -52,8 +55,9 @@ namespace SelfInitializingFakes.Infrastructure
             try
             {
                 var recordedCall = this.BuildRecordedCall(fakeObjectCall);
-                this.RecordedCalls.Add(recordedCall);
                 ApplyRecordedCall(recordedCall, fakeObjectCall);
+                this.ConvertRecordedCallForSerialization(recordedCall);
+                this.RecordedCalls.Add(recordedCall);
             }
 #pragma warning disable CA1031 // We do rethrow the exception
             catch (Exception e)
@@ -117,6 +121,22 @@ namespace SelfInitializingFakes.Infrastructure
             }
 
             return new RecordedCall(call.Method.ToString(), result, outAndRefValues.ToArray());
+        }
+
+        private void ConvertRecordedCallForSerialization(RecordedCall call)
+        {
+            if (this.typeConverter.ConvertForRecording(call.ReturnValue, this.typeConverter, out object? convertedReturnValue))
+            {
+                call.ReturnValue = convertedReturnValue;
+            }
+
+            for (int i = 0; i < call.OutAndRefValues.Length; ++i)
+            {
+                if (this.typeConverter.ConvertForRecording(call.OutAndRefValues[i], this.typeConverter, out object? convertedValue))
+                {
+                    call.OutAndRefValues[i] = convertedValue;
+                }
+            }
         }
     }
 }

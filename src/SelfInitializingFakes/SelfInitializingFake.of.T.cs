@@ -14,6 +14,8 @@ namespace SelfInitializingFakes
     public sealed class SelfInitializingFake<TService> : IDisposable
         where TService : class
     {
+        private static readonly ITypeConverter TypeConverter = new CompoundTypeConverter(new TaskTypeConverter(), new LazyTypeConverter());
+
         private readonly IRecordedCallRepository repository;
         private readonly RecordingRule? recordingRule;
 
@@ -36,13 +38,15 @@ namespace SelfInitializingFakes
             {
                 var wrappedService = serviceFactory.Invoke();
                 this.Object = A.Fake<TService>();
-                this.recordingRule = new RecordingRule(wrappedService);
+                this.recordingRule = new RecordingRule(wrappedService, TypeConverter);
                 Fake.GetFakeManager(this.Object).AddRuleFirst(this.recordingRule);
             }
             else
             {
                 this.Object = A.Fake<TService>();
-                Fake.GetFakeManager(this.Object).AddRuleFirst(new PlaybackRule(new Queue<RecordedCall>(callsFromRepository)));
+                Fake.GetFakeManager(this.Object).AddRuleFirst(new PlaybackRule(
+                    new Queue<RecordedCall>(callsFromRepository),
+                    TypeConverter));
             }
         }
 

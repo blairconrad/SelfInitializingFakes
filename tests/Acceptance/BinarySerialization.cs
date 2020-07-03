@@ -3,100 +3,55 @@
     using System;
     using System.Collections.Generic;
     using System.IO;
-    using FakeItEasy;
+
     using FluentAssertions;
+    using SelfInitializingFakes.Tests.Acceptance.Helpers;
     using Xbehave;
 
-    public static class BinarySerialization
+    public class BinarySerialization : TypeSerializationTestBase
     {
-        public interface IService
-        {
-            void VoidMethod(string s, out int i, ref DateTime dt);
-
-            IDictionary<string, Guid> NonVoidMethod();
-        }
-
         [Scenario]
-        public static void SerializeVoidCall(
-            string path,
+        public void SerializeCallWithDictionary(
             IRecordedCallRepository repository,
-            IService realServiceWhileRecording,
-            int voidMethodOutInteger,
-            DateTime voidMethodRefDateTime,
-            IDictionary<string, Guid> nonVoidMethodResult)
+            IDictionary<string, Guid> dictionaryMethodResult)
         {
-            "Given a file path"
-                .x(() => path = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString()));
+            "Given a recorded call repository"
+                .x(() => repository = this.CreateRepository());
 
-            "And a BinaryFileRecordedCallRepository targeting that path"
-                .x(() => repository = new BinaryFileRecordedCallRepository(path));
-
-            "And a real service to wrap while recording"
+            "When I record a dictionary-returning method via a self-initializing fake"
                 .x(() =>
                 {
-                    realServiceWhileRecording = A.Fake<IService>();
-
-                    int i;
-                    DateTime dt = DateTime.MinValue;
-                    A.CallTo(() => realServiceWhileRecording.VoidMethod("firstCallKey", out i, ref dt))
-                        .AssignsOutAndRefParameters(17, new DateTime(2017, 1, 24));
-
-                    A.CallTo(() => realServiceWhileRecording.NonVoidMethod())
-                        .Returns(new Dictionary<string, Guid>
-                        {
-                            ["key1"] = new Guid("6c7d8912-802a-43c0-82a2-cb811058a9bd"),
-                        });
-                });
-
-            "When I use a self-initializing fake in recording mode"
-                .x(() =>
-                {
-                    using (var fakeService = SelfInitializingFake<IService>.For(() => realServiceWhileRecording, repository))
+                    using (var fakeService = SelfInitializingFake<ISampleService>.For(() => new SampleService(), repository))
                     {
                         var fake = fakeService.Object;
-                        fake.VoidMethod("firstCallKey", out voidMethodOutInteger, ref voidMethodRefDateTime);
-                        nonVoidMethodResult = fake.NonVoidMethod();
+                        _ = fake.DictionaryReturningMethod();
                     }
                 });
 
-            "And I use a self-initializing fake in playback mode"
+            "And I play back a dictionary-returning method via a self-initializing fake"
                 .x(() =>
                 {
-                    using (var playbackFakeService = SelfInitializingFake<IService>.For<IService>(UnusedFactory, repository))
+                    using (var playbackFakeService = SelfInitializingFake<ISampleService>.For(UnusedFactory, repository))
                     {
                         var fake = playbackFakeService.Object;
-                        int i;
-                        DateTime dt = DateTime.MinValue;
-                        fake.VoidMethod("blah", out i, ref dt);
+                        dictionaryMethodResult = fake.DictionaryReturningMethod();
                     }
                 });
 
-            "Then the recording fake forwards calls to the wrapped service"
+            "Then the playback fake returns the recorded out and ref parameters and results"
                 .x(() =>
                 {
-                    int i;
-#if BUG_ASSIGNING_REF_VALUE_CLEARS_INCOMING_VALUE
-                    DateTime dt = new DateTime(2017, 1, 24);
-#else
-                    DateTime dt = DateTime.MinValue;
-#endif
-                    A.CallTo(() => realServiceWhileRecording.VoidMethod(A<string>._, out i, ref dt))
-                        .MustHaveHappened();
-                    A.CallTo(() => realServiceWhileRecording.NonVoidMethod()).MustHaveHappened();
-                });
-
-            "And the playback fake returns the recorded out and ref parameters and results"
-                .x(() =>
-                {
-                    voidMethodOutInteger.Should().Be(17);
-                    voidMethodRefDateTime.Should().Be(new DateTime(2017, 1, 24));
-                    nonVoidMethodResult.Should()
+                    dictionaryMethodResult.Should()
                         .HaveCount(1).And
                         .ContainKey("key1")
                         .WhichValue.Should().Be(new Guid("6c7d8912-802a-43c0-82a2-cb811058a9bd"));
                 });
         }
 
-        private static IService UnusedFactory() => null!;
+        protected override IRecordedCallRepository CreateRepository()
+        {
+            var path = Path.Combine(Path.GetTempPath(), Guid.NewGuid() + ".xml");
+            return new BinaryFileRecordedCallRepository(path);
+        }
     }
 }

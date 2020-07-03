@@ -44,4 +44,8 @@
     <Compile Remove="..\Acceptance\BinarySerialization.cs" />
   </ItemGroup>
 
+  <PropertyGroup Condition=" '$(TargetFramework)' == 'netcoreapp1.0' ">
+    <DefineConstants>$(DefineConstants);FRAMEWORK_TYPE_LACKS_ISABSTRACT</DefineConstants>
+  </PropertyGroup>
+
 </Project>

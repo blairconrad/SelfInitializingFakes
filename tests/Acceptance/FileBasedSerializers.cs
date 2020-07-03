@@ -5,19 +5,13 @@
     using System.IO;
     using System.Linq;
 
-    using FakeItEasy;
     using FluentAssertions;
-    using SelfInitializingFakes.Tests.Acceptance.Helper;
+    using SelfInitializingFakes.Tests.Acceptance.Helpers;
     using Xbehave;
     using Xunit;
 
     public static class FileBasedSerializers
     {
-        public interface IService
-        {
-            Guid NonVoidMethod();
-        }
-
         public static IEnumerable<object[]> ConcreteRepositoryTypes() =>
             typeof(FileBasedRecordedCallRepository).GetConcreteSubTypesInAssembly()
                 .Select(t => new object[] { t });
@@ -30,7 +24,7 @@
             string missingChildDirectory,
             string repositoryPath,
             IRecordedCallRepository repository,
-            IService realServiceWhileRecording)
+            ISampleService realServiceWhileRecording)
         {
             "Given a directory that exists"
                 .x(() =>
@@ -53,14 +47,14 @@
                 .x(() => repository = (IRecordedCallRepository)Activator.CreateInstance(concreteRepositoryType, repositoryPath));
 
             "And a real service to wrap while recording"
-                .x(() => realServiceWhileRecording = A.Fake<IService>());
+                .x(() => realServiceWhileRecording = new SampleService());
 
             "When I use a self-initializing fake in recording mode"
                 .x(() =>
                 {
-                    using var fakeService = SelfInitializingFake<IService>.For(() => realServiceWhileRecording, repository);
+                    using var fakeService = SelfInitializingFake<ISampleService>.For(() => realServiceWhileRecording, repository);
                     var fake = fakeService.Object;
-                    _ = fake.NonVoidMethod();
+                    _ = fake.GuidReturningMethod();
                 });
 
             "Then the repository file is created"
@@ -75,7 +69,7 @@
             string pathComponent1,
             string pathComponent2,
             IRecordedCallRepository repository,
-            IService realServiceWhileRecording)
+            ISampleService realServiceWhileRecording)
         {
             "Given a base directory"
                 .x(() => baseDirectory = Path.GetTempPath());
@@ -94,14 +88,14 @@
                     pathComponent2));
 
             "And a real service to wrap while recording"
-                .x(() => realServiceWhileRecording = A.Fake<IService>());
+                .x(() => realServiceWhileRecording = new SampleService());
 
             "When I use a self-initializing fake in recording mode"
                 .x(() =>
                 {
-                    using var fakeService = SelfInitializingFake<IService>.For(() => realServiceWhileRecording, repository);
+                    using var fakeService = SelfInitializingFake<ISampleService>.For(() => realServiceWhileRecording, repository);
                     var fake = fakeService.Object;
-                    _ = fake.NonVoidMethod();
+                    _ = fake.GuidReturningMethod();
                 });
 
             "Then the desired repository file is created"
