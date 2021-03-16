@@ -15,7 +15,7 @@ namespace FakeItEasy.Tests.Approval
     {
         private const string ProjectName = "SelfInitializingFakes";
 
-        [InlineData("net40")]
+        [InlineData("net45")]
         [InlineData("netstandard2.0")]
         [UseReporter(typeof(DiffReporter))]
         [MethodImpl(MethodImplOptions.NoInlining)]

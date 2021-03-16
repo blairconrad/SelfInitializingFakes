@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net40;netstandard2.0</TargetFrameworks>
+    <TargetFrameworks>net45;netstandard2.0</TargetFrameworks>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <AssemblyName>SelfInitializingFakes</AssemblyName>
     <PackageId>SelfInitializingFakes</PackageId>
@@ -32,11 +32,11 @@
     <PackageReference Include="FakeItEasy" Version="[5.5.0,7.0.0)" />
   </ItemGroup>
 
-  <PropertyGroup Condition=" '$(TargetFramework)' == 'net40' ">
+  <PropertyGroup Condition=" '$(TargetFramework)' == 'net45' ">
     <DefineConstants>$(DefineConstants);FEATURE_BINARY_SERIALIZATION</DefineConstants>
   </PropertyGroup>
 
-  <ItemGroup Condition=" '$(TargetFramework)' != 'net40' ">
+  <ItemGroup Condition=" '$(TargetFramework)' != 'net45' ">
     <Compile Remove="BinaryFileRecordedCallRepository.cs" />
   </ItemGroup>
 
