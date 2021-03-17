@@ -33,7 +33,7 @@
         {
             var method = typeof(Exception).GetMethod(
                 "InternalPreserveStackTrace",
-                BindingFlags.Instance | BindingFlags.NonPublic);
+                BindingFlags.Instance | BindingFlags.NonPublic)!;
             return (Action<Exception>)Delegate.CreateDelegate(typeof(Action<Exception>), null, method);
         }
     }

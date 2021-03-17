@@ -50,7 +50,7 @@
                 .x(() => repositoryPath = Path.Combine(missingChildDirectory, "subsub", "repofile"));
 
             $"And a {concreteRepositoryType} targeting that path"
-                .x(() => repository = (IRecordedCallRepository)Activator.CreateInstance(concreteRepositoryType, repositoryPath));
+                .x(() => repository = (IRecordedCallRepository)Activator.CreateInstance(concreteRepositoryType, repositoryPath)!);
 
             "And a real service to wrap while recording"
                 .x(() => realServiceWhileRecording = A.Fake<IService>());
@@ -91,7 +91,7 @@
                     concreteRepositoryType,
                     baseDirectory,
                     pathComponent1,
-                    pathComponent2));
+                    pathComponent2)!);
 
             "And a real service to wrap while recording"
                 .x(() => realServiceWhileRecording = A.Fake<IService>());
