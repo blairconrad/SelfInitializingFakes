@@ -29,7 +29,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="FakeItEasy" Version="[5.5.0,7.0.0)" />
+    <PackageReference Include="FakeItEasy" Version="[5.5.0,8.0.0)" />
   </ItemGroup>
 
   <PropertyGroup Condition=" '$(TargetFramework)' == 'net45' ">
