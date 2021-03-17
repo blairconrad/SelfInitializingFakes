@@ -1,3 +1,8 @@
+### Changed Framework and FakeItEasy Support  ([#89](https://github.com/blairconrad/SelfInitializingFakes/pull/89))
+
+- Now supports FakeItEasy 5.5.0 to 7.x.y (from 3.0.0 to 6.x.y)
+- Now supports .NET frameworks net45, netstandard2.0, net5.0 (from net40, netstandard1.6, netstandard2.0)
+
 ## 0.6.0
 
 ### New
