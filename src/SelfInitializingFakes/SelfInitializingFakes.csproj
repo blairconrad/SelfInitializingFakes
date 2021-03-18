@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net40;netstandard1.6;netstandard2.0</TargetFrameworks>
+    <TargetFrameworks>net45;netstandard2.0;net5.0</TargetFrameworks>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <AssemblyName>SelfInitializingFakes</AssemblyName>
     <PackageId>SelfInitializingFakes</PackageId>
@@ -28,28 +28,15 @@
     </Content>
   </ItemGroup>
 
-  <ItemGroup Condition="'$(TargetFramework)' != 'netstandard2.0'">
-    <PackageReference Include="FakeItEasy" Version="[3.0.0,7.0.0)" />
+  <ItemGroup>
+    <PackageReference Include="FakeItEasy" Version="[5.5.0,8.0.0)" />
   </ItemGroup>
 
-  <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
-    <PackageReference Include="FakeItEasy" Version="[4.9.2,7.0.0)" />
-  </ItemGroup>
-
-  <ItemGroup Condition="'$(TargetFramework)' == 'netstandard1.6'">
-    <!-- FakeItEasy 3.0 depends on Castle.Core 4.0, which depends on non-existent TypecConverter 4.0.1 -->
-    <PackageReference Include="System.ComponentModel.TypeConverter" Version="4.3.0" />
-  </ItemGroup>
-
-  <PropertyGroup Condition=" '$(TargetFramework)' == 'net40' ">
-    <DefineConstants>$(DefineConstants);FEATURE_BINARY_SERIALIZATION</DefineConstants>
+  <PropertyGroup Condition=" '$(TargetFramework)' == 'net45' ">
+    <DefineConstants>$(DefineConstants);FEATURE_BINARY_SERIALIZATION;LACKS_ARRAY_EMPTY</DefineConstants>
   </PropertyGroup>
 
-  <PropertyGroup Condition=" '$(TargetFramework)' == 'netstandard1.6' ">
-    <DefineConstants>$(DefineConstants);NETFX_CORE;FRAMEWORK_EXCEPTION_DISPATCH_INFO;FRAMEWORK_WEAK_TYPE_CLASS</DefineConstants>
-  </PropertyGroup>
-
-  <ItemGroup Condition=" '$(TargetFramework)' != 'net40' ">
+  <ItemGroup Condition=" '$(TargetFramework)' != 'net45' ">
     <Compile Remove="BinaryFileRecordedCallRepository.cs" />
   </ItemGroup>
 
