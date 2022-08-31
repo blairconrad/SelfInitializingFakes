@@ -1,6 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
+    <TargetFrameworks>net452;netcoreapp1.0;netcoreapp2.0</TargetFrameworks>
     <AssemblyName>SelfInitializingFakes.Tests.FIE.4.9.2</AssemblyName>
     <PackageId>SelfInitializingFakes.Tests.FIE.4.9.2</PackageId>
   </PropertyGroup>
