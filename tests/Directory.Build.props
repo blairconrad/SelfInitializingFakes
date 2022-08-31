@@ -3,7 +3,7 @@
   <Import Project="../Directory.Build.props" />
 
   <PropertyGroup>
-    <TargetFrameworks>net452;netcoreapp1.0;netcoreapp2.0</TargetFrameworks>
+    <TargetFrameworks>net452;netcoreapp2.0</TargetFrameworks>
     <GenerateRuntimeConfigurationFiles>true</GenerateRuntimeConfigurationFiles>
     <CodeAnalysisRuleSet>$(MSBuildThisFileDirectory)\SelfInitializingFakes.Tests.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
@@ -35,6 +35,10 @@
     <Compile Include="..\Acceptance\**\*.cs"><Link>Acceptance/%(Filename)%(Extension)</Link></Compile>
     <Compile Include="..\Conventions\**\*.cs"><Link>Conventions/%(Filename)%(Extension)</Link></Compile>
   </ItemGroup>
+
+  <PropertyGroup Condition=" '$(TargetFramework)' != 'netcoreapp1.0' ">
+    <DefineConstants>$(DefineConstants);FRAMEWORK_WEAK_TYPE_CLASS</DefineConstants>
+  </PropertyGroup>
 
   <PropertyGroup Condition=" '$(TargetFramework)' == 'netcoreapp1.0' ">
     <DefineConstants>$(DefineConstants);FRAMEWORK_WEAK_TYPE_CLASS</DefineConstants>
