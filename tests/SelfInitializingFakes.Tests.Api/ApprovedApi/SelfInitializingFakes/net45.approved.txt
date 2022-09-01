@@ -1,8 +1,14 @@
 ﻿[assembly: System.Runtime.InteropServices.ComVisible(false)]
 [assembly: System.Runtime.InteropServices.Guid("08462e29-25c0-4a1f-9275-23b7898e95f0")]
-[assembly: System.Runtime.Versioning.TargetFramework(".NETStandard,Version=v1.6", FrameworkDisplayName="")]
+[assembly: System.Runtime.Versioning.TargetFramework(".NETFramework,Version=v4.5", FrameworkDisplayName=".NET Framework 4.5")]
 namespace SelfInitializingFakes
 {
+    public class BinaryFileRecordedCallRepository : SelfInitializingFakes.FileBasedRecordedCallRepository
+    {
+        public BinaryFileRecordedCallRepository(params string[] pathComponents) { }
+        protected override System.Collections.Generic.IEnumerable<SelfInitializingFakes.RecordedCall> ReadFromStream(System.IO.FileStream fileStream) { }
+        protected override void WriteToStream(System.Collections.Generic.IEnumerable<SelfInitializingFakes.RecordedCall> calls, System.IO.FileStream fileStream) { }
+    }
     public abstract class FileBasedRecordedCallRepository : SelfInitializingFakes.IRecordedCallRepository
     {
         protected FileBasedRecordedCallRepository(params string[] pathComponents) { }
@@ -20,6 +26,7 @@ namespace SelfInitializingFakes
     {
         public PlaybackException() { }
         public PlaybackException(string message) { }
+        protected PlaybackException(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context) { }
         public PlaybackException(string message, System.Exception innerException) { }
     }
     public class RecordedCall
@@ -32,6 +39,7 @@ namespace SelfInitializingFakes
     {
         public RecordingException() { }
         public RecordingException(string message) { }
+        protected RecordingException(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context) { }
         public RecordingException(string message, System.Exception innerException) { }
     }
     public sealed class SelfInitializingFake<TService> : System.IDisposable

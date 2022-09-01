@@ -72,12 +72,12 @@ internal class Program
             "test",
             DependsOn("build", "testsDirectory"),
             forEach: testProjects,
-            action: testProject => Run("dotnet", $"test --configuration Release", testProject.Path));
+            action: testProject => Run("dotnet", $"test --configuration Release --no-build --nologo", testProject.Path));
 
         Target(
             "check-api",
             DependsOn("build", "testsDirectory"),
-            () => Run("dotnet", "test --configuration Release tests/SelfInitializingFakes.Tests.Api"));
+            () => Run("dotnet", "test --configuration Release --no-build --nologo tests/SelfInitializingFakes.Tests.Api"));
 
         Target(
             "approve-api",

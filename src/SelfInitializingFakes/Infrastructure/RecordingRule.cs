@@ -116,7 +116,7 @@ namespace SelfInitializingFakes.Infrastructure
                 ++index;
             }
 
-            return new RecordedCall(call.Method.ToString(), result, outAndRefValues.ToArray());
+            return new RecordedCall(call.Method.ToString()!, result, outAndRefValues.ToArray());
         }
     }
 }
