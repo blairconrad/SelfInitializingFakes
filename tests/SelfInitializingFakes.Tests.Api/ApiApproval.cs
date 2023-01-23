@@ -7,6 +7,7 @@ namespace FakeItEasy.Tests.Approval
     using System.Threading.Tasks;
     using PublicApiGenerator;
     using VerifyTests;
+    using VerifyTests.DiffPlex;
     using VerifyXunit;
     using Xunit;
 
@@ -14,6 +15,8 @@ namespace FakeItEasy.Tests.Approval
     public class ApiApproval
     {
         private const string ProjectName = "SelfInitializingFakes";
+
+        static ApiApproval() => VerifyDiffPlex.Initialize(OutputType.Compact);
 
         [InlineData("net40")]
         [InlineData("netstandard1.6")]
