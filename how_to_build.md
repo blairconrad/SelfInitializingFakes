@@ -9,18 +9,14 @@ At the time of writing the build is only confirmed to work on Windows using the 
 
 ## Prerequisites
 
-The build requires that a few pieces of software be installed on the host computer. We're somewhat aggressive about adoptiong new language features and the like, so rather than specifying exactly which versions are required, we'll tend toward
+The build requires that a few pieces of software be installed on the host computer. We're somewhat aggressive about adoption new language features and the like, so rather than specifying exactly which versions are required, we'll tend toward
 "latest" or "at least" forms of guidance. If it seems you have an incompatible version of the software, prefer to upgrade rather than downgrade.
 
-Ensure that the following are installed:
+Ensure that recent versions of the following are installed:
 
-1. a recent version of Visual Studio 2019 (currently this means 16.3 or later) or the Build Tools for Visual Studio 2019
-
-1. a recent version of the .NET Core 1.0 Runtime
-
-1. a recent version of the .NET Core 3.1 SDK
-
-## Building
+1. Visual Studio 2022 or the Build Tools for Visual Studio 2022
+1. .NET Core 1.0, 2.0, and 3.1 runtimes
+1. .NET 7 SDK
 
 ## Building
 

@@ -6,9 +6,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="ApprovalTests" Version="4.2.2" />
-    <PackageReference Include="ApprovalUtilities" Version="4.2.2" />
     <PackageReference Include="PublicApiGenerator" Version="10.0.1" />
+    <PackageReference Include="Verify.DiffPlex" Version="2.0.0" />
+    <PackageReference Include="Verify.Xunit" Version="19.7.1" />
   </ItemGroup>
 
 </Project>

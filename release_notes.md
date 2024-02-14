@@ -1,3 +1,8 @@
+### New
+
+- Support FakeItEasy 7.* ([#92](https://github.com/blairconrad/SelfInitializingFakes/pull/92))
+
+
 ## 0.6.0
 
 ### New

@@ -28,12 +28,16 @@
     </Content>
   </ItemGroup>
 
-  <ItemGroup Condition="'$(TargetFramework)' != 'netstandard2.0'">
-    <PackageReference Include="FakeItEasy" Version="[3.0.0,7.0.0)" />
+  <ItemGroup Condition="'$(TargetFramework)' != 'netstandard2.0' AND '$(TargetFramework)' != 'netstandard1.6'">
+    <PackageReference Include="FakeItEasy" Version="[3.0.0,8.0.0)" />
   </ItemGroup>
 
   <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
-    <PackageReference Include="FakeItEasy" Version="[4.9.2,7.0.0)" />
+    <PackageReference Include="FakeItEasy" Version="[4.9.2,8.0.0)" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)' == 'netstandard1.6'">
+    <PackageReference Include="FakeItEasy" Version="[3.0.0,7.0.0)" />
   </ItemGroup>
 
   <ItemGroup Condition="'$(TargetFramework)' == 'netstandard1.6'">
