@@ -1,3 +1,7 @@
+### New
+
+- Support FakeItEasy 7.4.0
+
 ## 0.6.0
 
 ### New
