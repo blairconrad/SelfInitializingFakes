@@ -1,6 +1,6 @@
 ### Removed
 
-- Support for FakeItEasy < 4.9.2
+- Support for FakeItEasy < 5.5.0
 
 ### New
 
