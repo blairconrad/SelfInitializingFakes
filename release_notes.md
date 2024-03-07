@@ -1,3 +1,7 @@
+### Removed
+
+- Support for FakeItEasy < 3.4.2
+
 ### New
 
 - Support FakeItEasy 7.4.0
