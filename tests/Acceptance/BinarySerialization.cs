@@ -75,11 +75,7 @@
                 .x(() =>
                 {
                     int i;
-#if BUG_ASSIGNING_REF_VALUE_CLEARS_INCOMING_VALUE
-                    DateTime dt = new DateTime(2017, 1, 24);
-#else
                     DateTime dt = DateTime.MinValue;
-#endif
                     A.CallTo(() => realServiceWhileRecording.VoidMethod(A<string>._, out i, ref dt))
                         .MustHaveHappened();
                     A.CallTo(() => realServiceWhileRecording.NonVoidMethod()).MustHaveHappened();
