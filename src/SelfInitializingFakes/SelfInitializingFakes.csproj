@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>netstandard1.6;netstandard2.0</TargetFrameworks>
+    <TargetFrameworks>netstandard2.0</TargetFrameworks>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <AssemblyName>SelfInitializingFakes</AssemblyName>
     <PackageId>SelfInitializingFakes</PackageId>
@@ -31,13 +31,5 @@
   <ItemGroup>
     <PackageReference Include="FakeItEasy" Version="[5.5.0,7.4.0]" />
   </ItemGroup>
-
-  <ItemGroup Condition="'$(TargetFramework)' == 'netstandard1.6'">
-    <PackageReference Include="System.Xml.XmlSerializer" Version="4.0.11" />
-  </ItemGroup>
-
-  <PropertyGroup Condition=" '$(TargetFramework)' == 'netstandard1.6' ">
-    <DefineConstants>$(DefineConstants);NETFX_CORE;FRAMEWORK_EXCEPTION_DISPATCH_INFO;FRAMEWORK_WEAK_TYPE_CLASS</DefineConstants>
-  </PropertyGroup>
 
 </Project>
