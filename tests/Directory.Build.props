@@ -21,17 +21,9 @@
     <PackageReference Include="Xbehave.Core" Version="2.4.1" />
   </ItemGroup>
 
-  <ItemGroup Condition=" '$(TargetFramework)' == 'netcoreapp1.0' ">
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.2.0" />
-  </ItemGroup>
-
   <ItemGroup Condition=" $(AssemblyName.StartsWith(`SelfInitializingFakes.Tests.FIE.`)) ">
     <Compile Include="..\Acceptance\**\*.cs"><Link>Acceptance/%(Filename)%(Extension)</Link></Compile>
     <Compile Include="..\Conventions\**\*.cs"><Link>Conventions/%(Filename)%(Extension)</Link></Compile>
   </ItemGroup>
-
-  <PropertyGroup Condition=" '$(TargetFramework)' == 'netcoreapp1.0' ">
-    <DefineConstants>$(DefineConstants);FRAMEWORK_WEAK_TYPE_CLASS</DefineConstants>
-  </PropertyGroup>
 
 </Project>
