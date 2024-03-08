@@ -1,6 +1,8 @@
 ### Removed
 
 - Support for FakeItEasy < 5.5.0
+- Support for net40 TFM
+- `BinaryFileRecordedCallRepository`
 
 ### New
 

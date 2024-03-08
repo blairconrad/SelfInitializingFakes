@@ -1,16 +1,10 @@
 ﻿namespace SelfInitializingFakes
 {
-#if FEATURE_BINARY_SERIALIZATION
-    using System;
-#endif
     using System.Diagnostics.CodeAnalysis;
 
     /// <summary>
     /// A saved call to a self-initialized fake.
     /// </summary>
-#if FEATURE_BINARY_SERIALIZATION
-    [Serializable]
-#endif
     public class RecordedCall
     {
         /// <summary>

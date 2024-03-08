@@ -18,7 +18,7 @@ recently deprecated from the .NET 4.0 version of the library and do not exist at
 ## Highlights
 
 * only requires a "real" service to exist when recording
-* built-in binary (.NET Framework only) and XML serializers
+* built-in binary XML serializers
 * user-supplied serializers can provide flexible storage
 
 ## Usage

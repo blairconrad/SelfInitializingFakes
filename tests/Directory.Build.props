@@ -25,12 +25,6 @@
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.2.0" />
   </ItemGroup>
 
-  <ItemGroup Condition=" '$(TargetFramework)' == 'net452' ">
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.4.0" />
-    <Reference Include="System" />
-    <Reference Include="Microsoft.CSharp" />
-  </ItemGroup>
-
   <ItemGroup Condition=" $(AssemblyName.StartsWith(`SelfInitializingFakes.Tests.FIE.`)) ">
     <Compile Include="..\Acceptance\**\*.cs"><Link>Acceptance/%(Filename)%(Extension)</Link></Compile>
     <Compile Include="..\Conventions\**\*.cs"><Link>Conventions/%(Filename)%(Extension)</Link></Compile>
@@ -39,9 +33,5 @@
   <PropertyGroup Condition=" '$(TargetFramework)' == 'netcoreapp1.0' ">
     <DefineConstants>$(DefineConstants);FRAMEWORK_WEAK_TYPE_CLASS</DefineConstants>
   </PropertyGroup>
-
-  <ItemGroup Condition=" '$(TargetFramework)' != 'net452' ">
-    <Compile Remove="..\Acceptance\BinarySerialization.cs" />
-  </ItemGroup>
 
 </Project>
