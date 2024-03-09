@@ -9,7 +9,7 @@ using static SimpleExec.Command;
 
 internal class Program
 {
-    public static void Main(string[] args)
+    public static async Task Main(string[] args)
     {
         var testProjects = Directory.GetDirectories("tests", "SelfInitializingFakes.Tests.FIE.*").Reverse().Select(s => new Project(s));
         var mainProjectFile = "src/SelfInitializingFakes/SelfInitializingFakes.csproj";
@@ -114,7 +114,7 @@ internal class Program
                 }
             });
 
-        RunTargetsAndExit(args);
+        await RunTargetsAndExitAsync(args).ConfigureAwait(true);
     }
 
     private class Project
