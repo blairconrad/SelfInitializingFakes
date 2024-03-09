@@ -1,12 +1,12 @@
 ### Removed
 
-- Support for FakeItEasy < 7.4.0
+- Support for FakeItEasy < 8.0.0
 - Support for net40, netstandard1.6 TFMs
 - `BinaryFileRecordedCallRepository`
 
 ### New
 
-- Support FakeItEasy 7.4.0+
+- Support FakeItEasy 8.0.0+
 
 ## 0.6.0
 
