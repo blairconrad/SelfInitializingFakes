@@ -15,17 +15,15 @@ namespace FakeItEasy.Tests.Approval
     {
         private const string ProjectName = "SelfInitializingFakes";
 
-        [InlineData("netstandard2.0")]
+        [InlineData("net6.0")]
         [UseReporter(typeof(DiffReporter))]
         [MethodImpl(MethodImplOptions.NoInlining)]
         [Theory]
         public void ApproveApi(string frameworkVersion)
         {
-            string codeBase = Assembly.GetExecutingAssembly().CodeBase!;
-            UriBuilder uri = new UriBuilder(new Uri(codeBase));
-            string assemblyPath = Uri.UnescapeDataString(uri.Path);
-            var containingDirectory = Path.GetDirectoryName(assemblyPath);
-            var configurationName = new DirectoryInfo(containingDirectory).Parent.Name;
+            string assemblyPath = Assembly.GetExecutingAssembly().Location;
+            var containingDirectory = Path.GetDirectoryName(assemblyPath)!;
+            var configurationName = new DirectoryInfo(containingDirectory).Parent!.Name;
             var assemblyFile = Path.GetFullPath(
                 Path.Combine(
                     GetSourceDirectory(),

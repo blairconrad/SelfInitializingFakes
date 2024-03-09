@@ -3,7 +3,6 @@
   <Import Project="../Directory.Build.props" />
 
   <PropertyGroup>
-    <TargetFrameworks>netcoreapp2.0</TargetFrameworks>
     <GenerateRuntimeConfigurationFiles>true</GenerateRuntimeConfigurationFiles>
     <CodeAnalysisRuleSet>$(MSBuildThisFileDirectory)\SelfInitializingFakes.Tests.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
@@ -13,11 +12,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="xunit" Version="2.4.1" />
-    <PackageReference Include="xunit.runner.visualstudio" Version="2.4.1" />
+    <PackageReference Include="xunit" Version="2.4.2" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="2.4.3" />
     <PackageReference Include="FluentAssertions" Version="5.10.0" />
     <PackageReference Include="Fluentassertions.Analyzers" Version="0.11.4" PrivateAssets="all" />
-    <PackageReference Include="Microsoft.Extensions.DependencyModel" Version="3.1.0" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.8.0" />
     <PackageReference Include="Xbehave.Core" Version="2.4.1" />
   </ItemGroup>
 
