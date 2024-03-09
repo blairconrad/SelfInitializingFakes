@@ -1,6 +1,6 @@
 ### Removed
 
-- Support for FakeItEasy < 5.5.0
+- Support for FakeItEasy < 7.4.0
 - Support for net40, netstandard1.6 TFMs
 
 ### New
