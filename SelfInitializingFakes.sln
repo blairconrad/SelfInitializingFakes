@@ -32,6 +32,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SelfInitializingFakes.Tests
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SelfInitializingFakes.Tests.FIE.7.4.0", "tests\SelfInitializingFakes.Tests.FIE.7.4.0\SelfInitializingFakes.Tests.FIE.7.4.0.csproj", "{31CFEE73-D6BC-49BD-9B56-1856AE546665}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SelfInitializingFakes.Tests.FIE.8.0.0", "tests\SelfInitializingFakes.Tests.FIE.8.0.0\SelfInitializingFakes.Tests.FIE.8.0.0.csproj", "{60D553F1-49E3-44F4-A417-25C91DDDE904}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -50,6 +52,10 @@ Global
 		{31CFEE73-D6BC-49BD-9B56-1856AE546665}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{31CFEE73-D6BC-49BD-9B56-1856AE546665}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{31CFEE73-D6BC-49BD-9B56-1856AE546665}.Release|Any CPU.Build.0 = Release|Any CPU
+		{60D553F1-49E3-44F4-A417-25C91DDDE904}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{60D553F1-49E3-44F4-A417-25C91DDDE904}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{60D553F1-49E3-44F4-A417-25C91DDDE904}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{60D553F1-49E3-44F4-A417-25C91DDDE904}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -58,6 +64,7 @@ Global
 		{08462E29-25C0-4A1F-9275-23B7898E95F0} = {E5449372-918E-45FB-BD55-7A1BCC98FF1C}
 		{ED447D19-E841-46AE-BBDE-56326FF6F4AB} = {71C0B811-4069-4D47-8D81-1F4EC66E21BF}
 		{31CFEE73-D6BC-49BD-9B56-1856AE546665} = {71C0B811-4069-4D47-8D81-1F4EC66E21BF}
+		{60D553F1-49E3-44F4-A417-25C91DDDE904} = {71C0B811-4069-4D47-8D81-1F4EC66E21BF}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {A306C694-22A2-4AFB-974B-24B3629C8F28}
