@@ -29,7 +29,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="FakeItEasy" Version="[7.4.0,7.4.0]" />
+    <PackageReference Include="FakeItEasy" Version="7.4.0" />
   </ItemGroup>
 
 </Project>
