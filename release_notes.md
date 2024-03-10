@@ -2,6 +2,7 @@
 
 - Support for FakeItEasy < 8.0.0
 - Support for net40, netstandard1.6, netstandard2.0 TFMs
+- `BinaryFileRecordedCallRepository`
 
 ### New
 
