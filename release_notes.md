@@ -7,7 +7,7 @@
 ### New
 
 - Support FakeItEasy 8.0.0+
-- Support net6.0 TFM
+- Support net10.0 TFM
 
 ## 0.6.0
 

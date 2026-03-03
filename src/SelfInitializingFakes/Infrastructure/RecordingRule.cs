@@ -10,7 +10,7 @@ namespace SelfInitializingFakes.Infrastructure
     /// Generally speaking, forwards calls to a target and retains the results, which
     /// can be retrieved from <see cref="RecordedCalls"/>.
     /// </summary>
-    internal class RecordingRule : IFakeObjectCallRule
+    internal sealed class RecordingRule : IFakeObjectCallRule
     {
         private readonly object target;
         private Exception? recordingException;

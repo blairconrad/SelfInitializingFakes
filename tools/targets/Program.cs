@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using static Bullseye.Targets;
 using static SimpleExec.Command;
 
-internal class Program
+internal sealed class Program
 {
     public static async Task Main(string[] args)
     {
@@ -117,7 +117,7 @@ internal class Program
         await RunTargetsAndExitAsync(args).ConfigureAwait(true);
     }
 
-    private class Project
+    private sealed class Project
     {
         public Project(string path) => this.Path = path;
 

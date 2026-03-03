@@ -24,10 +24,7 @@ namespace SelfInitializingFakes
         /// <param name="repository">A source of saved call information, or sink for the same.</param>
         internal SelfInitializingFake(Func<TService> serviceFactory, IRecordedCallRepository repository)
         {
-            if (serviceFactory == null)
-            {
-                throw new ArgumentNullException(nameof(serviceFactory));
-            }
+            ArgumentNullException.ThrowIfNull(serviceFactory);
 
             this.repository = repository ?? throw new ArgumentNullException(nameof(repository));
 
@@ -66,16 +63,8 @@ namespace SelfInitializingFakes
             IRecordedCallRepository repository)
             where TConcreteService : TService
         {
-            if (serviceFactory == null)
-            {
-                throw new ArgumentNullException(nameof(serviceFactory));
-            }
-
-            if (repository == null)
-            {
-                throw new ArgumentNullException(nameof(repository));
-            }
-
+            ArgumentNullException.ThrowIfNull(serviceFactory);
+            ArgumentNullException.ThrowIfNull(repository);
             return new SelfInitializingFake<TService>(() => serviceFactory.Invoke(), repository);
         }
 
