@@ -9,6 +9,10 @@
 - Support FakeItEasy 8.0.0+
 - Support net10.0 TFM
 
+### Chores
+
+- Migrate CI/CD from AppVeyor to GitHub Actions
+
 ## 0.6.0
 
 ### New

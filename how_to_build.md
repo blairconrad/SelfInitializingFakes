@@ -2,11 +2,9 @@
 
 These instructions are *only* for building from the command line, which includes compilation, test execution and packaging.
 This is the simplest way to build.
-It also replicates the build on the Continuous Integration build server and is the best indicator of whether a pull request will build.
+It also replicates the build on the Continuous Integration build server (GitHub Actions) and is the best indicator of whether a pull request will build.
 
-You can also build the solution using Visual Studio 2022 or later, but this doesn't provide the same assurances as the command line build.
-
-At the time of writing the build is only confirmed to work on Windows.
+You may build the solution using a modern IDE, but this doesn't provide the same assurances as the command line build.
 
 ## Prerequisites
 
@@ -18,12 +16,11 @@ If it seems you have an incompatible version of the software, prefer to upgrade 
 
 Ensure that the following are installed:
 
-1. a recent version of Visual Studio 2022 (currently this means 17.8 or later) or the Build Tools for Visual Studio 2022
-2. a recent version of the .NET 6.0 SDK
+1. a recent version of the .NET SDK (currently targeting .NET 10.0)
 
 ## Building
 
-Using a command prompt, navigate to your clone root folder and execute `build.cmd`.
+Using a command prompt, navigate to your clone root folder and execute `./build.ps1`.
 
 This executes the default build targets to produce .NET artifacts and runs all tests.
 

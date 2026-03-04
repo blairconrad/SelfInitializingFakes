@@ -3,15 +3,15 @@ $ErrorActionPreference = "Stop"
 Push-Location (Get-Item $PSScriptRoot).Parent.FullName
 
 try {
-    if (! $env:APPVEYOR_REPO_TAG_NAME) {
-        Write-Output "No Appveyor tag name supplied. Not deploying."
+    $releaseName = $env:GITHUB_REF_NAME
+    if (! $releaseName) {
+        Write-Output "No tag name supplied. Not deploying."
         return
     }
 
-    $releaseName = $env:APPVEYOR_REPO_TAG_NAME
     $gitHubAuthToken = $env:GITHUB_TOKEN
     $nugetApiKey = $env:NUGET_API_KEY
-    $repo = $env:APPVEYOR_REPO_NAME
+    $repo = $env:GITHUB_REPOSITORY
 
     $releaseNotesFile = 'release_notes.md'
     # Use Tls12 to communicate with GitHub
@@ -63,7 +63,7 @@ try {
 
     Write-Output "Creating GitHub release $releaseName"
     $release = Invoke-RestMethod -Uri $releasesUrl -Headers $headers -Method POST -Body $createReleaseBody -ContentType 'application/json'
-    
+
     $headers["Content-type"] = "application/octet-stream"
     $uploadsUrl = "https://uploads.github.com/repos/$repo/releases/$($release.id)/assets?name="
 
