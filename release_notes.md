@@ -12,6 +12,7 @@
 ### Chores
 
 - Migrate CI/CD from AppVeyor to GitHub Actions
+- Publish using NuGet trusted publishing via GitHub OIDC
 
 ## 0.6.0
 

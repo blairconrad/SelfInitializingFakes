@@ -10,13 +10,12 @@ try {
     }
 
     $gitHubAuthToken = $env:GITHUB_TOKEN
-    $nugetApiKey = $env:NUGET_API_KEY
     $repo = $env:GITHUB_REPOSITORY
 
     $releaseNotesFile = 'release_notes.md'
     # Use Tls12 to communicate with GitHub
     [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
-    $nugetServer = "https://www.nuget.org/api/v2/package"
+    $nugetServer = "https://api.nuget.org/v3/index.json"
     $artifactsPattern = "artifacts/output/*.nupkg"
     $releasesUrl = "https://api.github.com/repos/$repo/releases"
     $headers = @{
@@ -81,9 +80,14 @@ try {
     }
 
     Write-Output "Pushing nupkgs to nuget.org"
+    if (! $env:ACTIONS_ID_TOKEN_REQUEST_TOKEN) {
+        throw "No GitHub OIDC token available. Ensure workflow permission id-token: write is set for NuGet trusted publishing."
+    }
+
     $artifacts | ForEach-Object {
-        Write-Output "Pushing $($_.Name)"
-        & dotnet nuget push $_ --api-key $nugetApiKey --source $nugetServer --force-english-output
+        Write-Output "Pushing $($_.Name) using NuGet trusted publishing (OIDC)"
+        & dotnet nuget push $_.FullName --source $nugetServer --force-english-output
+
         if ($LASTEXITCODE -ne 0) {
             throw "Push failed with error $LASTEXITCODE"
         }

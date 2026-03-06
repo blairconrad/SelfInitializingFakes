@@ -25,3 +25,8 @@ Using a command prompt, navigate to your clone root folder and execute `./build.
 This executes the default build targets to produce .NET artifacts and runs all tests.
 
 After the build has completed, the build artifacts will be located in `artifacts`.
+
+## Publishing
+
+Package publishing is done in CI from `.github/workflows/release.yml` using NuGet trusted publishing (GitHub OIDC).
+No `NUGET_API_KEY` secret is required or used by this repository's release process.
