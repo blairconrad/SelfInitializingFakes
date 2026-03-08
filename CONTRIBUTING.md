@@ -153,3 +153,8 @@ then:
 The pull request should include a description starting with "Fixes #123." (using
 the real issue number, of course) if it fixes an issue. If there's no issue, be
 sure to clearly explain the intent of the change.
+
+## Release Publishing Authentication
+
+Release publishing to NuGet is configured as trusted publishing via GitHub OIDC.
+Do not add `NUGET_API_KEY` secret guidance or API-key-based publish steps to documentation or workflows.

@@ -6,7 +6,7 @@ namespace SelfInitializingFakes.Infrastructure
     /// <summary>
     /// A rule that defines the behaviour of a fake during playback.
     /// </summary>
-    internal class PlaybackRule : IFakeObjectCallRule
+    internal sealed class PlaybackRule : IFakeObjectCallRule
     {
         private readonly Queue<RecordedCall> expectedCalls;
 

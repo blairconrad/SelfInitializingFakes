@@ -10,7 +10,7 @@ namespace SelfInitializingFakes.Infrastructure
     /// Generally speaking, forwards calls to a target and retains the results, which
     /// can be retrieved from <see cref="RecordedCalls"/>.
     /// </summary>
-    internal class RecordingRule : IFakeObjectCallRule
+    internal sealed class RecordingRule : IFakeObjectCallRule
     {
         private readonly object target;
         private Exception? recordingException;
@@ -104,7 +104,7 @@ namespace SelfInitializingFakes.Infrastructure
             var arguments = call.Arguments.ToArray();
             var result = call.Method.Invoke(this.target, arguments);
 
-            var outAndRefValues = new List<object>();
+            var outAndRefValues = new List<object?>();
             int index = 0;
             foreach (var parameter in call.Method.GetParameters())
             {
@@ -116,7 +116,7 @@ namespace SelfInitializingFakes.Infrastructure
                 ++index;
             }
 
-            return new RecordedCall(call.Method.ToString(), result, outAndRefValues.ToArray());
+            return new RecordedCall(call.Method.ToString()!, result, outAndRefValues.ToArray());
         }
     }
 }

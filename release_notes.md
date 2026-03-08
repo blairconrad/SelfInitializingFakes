@@ -1,3 +1,19 @@
+### Removed
+
+- Support for FakeItEasy < 8.0.0
+- Support for net40, netstandard1.6, netstandard2.0 TFMs
+- `BinaryFileRecordedCallRepository`
+
+### New
+
+- Support FakeItEasy 8.0.0+
+- Support net10.0 TFM
+
+### Chores
+
+- Migrate CI/CD from AppVeyor to GitHub Actions
+- Publish using NuGet trusted publishing via GitHub OIDC
+
 ## 0.6.0
 
 ### New

@@ -1,0 +1,14 @@
+# EditorConfig for test projects
+
+root = false
+
+[*.cs]
+
+# CA1515: Consider making public types internal
+# Allow public types in test projects
+dotnet_diagnostic.CA1515.severity = none
+
+# CA1707: Remove the underscores from member name
+# Allow underscores in test method names
+dotnet_diagnostic.CA1707.severity = none
+

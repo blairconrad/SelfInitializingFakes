@@ -1,4 +1,4 @@
-﻿namespace SelfInitializingFakes
+namespace SelfInitializingFakes
 {
     using System.Collections.Generic;
     using System.IO;
@@ -29,7 +29,7 @@
         /// <param name="calls">The recorded calls to save.</param>
         public void Save(IEnumerable<RecordedCall> calls)
         {
-            Directory.CreateDirectory(Path.GetDirectoryName(this.path));
+            Directory.CreateDirectory(Path.GetDirectoryName(this.path)!);
             using var fileStream = File.Open(this.path, FileMode.Create);
             this.WriteToStream(calls, fileStream);
         }

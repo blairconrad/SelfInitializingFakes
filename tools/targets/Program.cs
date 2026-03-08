@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 using static Bullseye.Targets;
 using static SimpleExec.Command;
 
-internal class Program
+internal sealed class Program
 {
-    public static void Main(string[] args)
+    public static async Task Main(string[] args)
     {
         var testProjects = Directory.GetDirectories("tests", "SelfInitializingFakes.Tests.FIE.*").Reverse().Select(s => new Project(s));
         var mainProjectFile = "src/SelfInitializingFakes/SelfInitializingFakes.csproj";
@@ -95,7 +95,7 @@ internal class Program
                 var versionFromReleaseNotes = File.ReadLines(releaseNotesFile, Encoding.UTF8)
                     .First(line => line.StartsWith("## ", StringComparison.Ordinal)).Substring(3).Trim();
                 Console.WriteLine($"Read version '{versionFromReleaseNotes}' from release notes");
-                var tagName = Environment.GetEnvironmentVariable("APPVEYOR_REPO_TAG_NAME");
+                var tagName = Environment.GetEnvironmentVariable("GITHUB_REF_NAME");
                 if (versionFromReleaseNotes != tagName)
                 {
                     Console.WriteLine($"Release notes version does not match tag name '{tagName}'. Disambiguating.");
@@ -105,8 +105,8 @@ internal class Program
                     }
 
                     version = versionFromReleaseNotes +
-                        "+Build." + (Environment.GetEnvironmentVariable("APPVEYOR_BUILD_NUMBER") ?? "adhoc") +
-                        "-Sha." + (Environment.GetEnvironmentVariable("APPVEYOR_REPO_COMMIT") ?? "adhoc");
+                        "+Build." + (Environment.GetEnvironmentVariable("GITHUB_RUN_NUMBER") ?? "adhoc") +
+                        "-Sha." + (Environment.GetEnvironmentVariable("GITHUB_SHA") ?? "adhoc");
                 }
                 else
                 {
@@ -114,10 +114,10 @@ internal class Program
                 }
             });
 
-        RunTargetsAndExit(args);
+        await RunTargetsAndExitAsync(args).ConfigureAwait(true);
     }
 
-    private class Project
+    private sealed class Project
     {
         public Project(string path) => this.Path = path;
 

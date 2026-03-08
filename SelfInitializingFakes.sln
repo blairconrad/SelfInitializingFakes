@@ -1,18 +1,19 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.26114.2
+# Visual Studio Version 17
+VisualStudioVersion = 17.8.34525.116
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{3B5ADEC3-FC98-4938-B52C-52F421B3DBEB}"
 	ProjectSection(SolutionItems) = preProject
 		.editorconfig = .editorconfig
 		.gitattributes = .gitattributes
 		.gitignore = .gitignore
-		build.cmd = build.cmd
+		build.ps1 = build.ps1
 		Directory.Build.props = Directory.Build.props
 		how_to_build.md = how_to_build.md
 		License.txt = License.txt
 		README.md = README.md
 		SelfInitializingFakes.ruleset = SelfInitializingFakes.ruleset
+		release_notes.md = release_notes.md
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{E5449372-918E-45FB-BD55-7A1BCC98FF1C}"
@@ -26,17 +27,12 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{71C0B811
 	ProjectSection(SolutionItems) = preProject
 		tests\Directory.Build.props = tests\Directory.Build.props
 		tests\SelfInitializingFakes.Tests.ruleset = tests\SelfInitializingFakes.Tests.ruleset
+		tests\.editorconfig = tests\.editorconfig
 	EndProjectSection
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SelfInitializingFakes.Tests.FIE.3.0.0", "tests\SelfInitializingFakes.Tests.FIE.3.0.0\SelfInitializingFakes.Tests.FIE.3.0.0.csproj", "{8DFB8024-894F-46B3-B62D-B6E21F0B8945}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SelfInitializingFakes.Tests.FIE.Latest", "tests\SelfInitializingFakes.Tests.FIE.Latest\SelfInitializingFakes.Tests.FIE.Latest.csproj", "{ED447D19-E841-46AE-BBDE-56326FF6F4AB}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SelfInitializingFakes.Tests.FIE.3.4.2", "tests\SelfInitializingFakes.Tests.FIE.3.4.2\SelfInitializingFakes.Tests.FIE.3.4.2.csproj", "{7F7EC34C-AA06-460B-B0B7-EF429DD99E21}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SelfInitializingFakes.Tests.FIE.4.9.2", "tests\SelfInitializingFakes.Tests.FIE.4.9.2\SelfInitializingFakes.Tests.FIE.4.9.2.csproj", "{FB3705B3-8BD8-4293-9266-6DE11FDACB2B}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SelfInitializingFakes.Tests.FIE.5.5.0", "tests\SelfInitializingFakes.Tests.FIE.5.5.0\SelfInitializingFakes.Tests.FIE.5.5.0.csproj", "{27DE54D0-FB17-4A30-AB53-2FC98EEF2C4C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SelfInitializingFakes.Tests.FIE.8.0.0", "tests\SelfInitializingFakes.Tests.FIE.8.0.0\SelfInitializingFakes.Tests.FIE.8.0.0.csproj", "{60D553F1-49E3-44F4-A417-25C91DDDE904}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -48,37 +44,22 @@ Global
 		{08462E29-25C0-4A1F-9275-23B7898E95F0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{08462E29-25C0-4A1F-9275-23B7898E95F0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{08462E29-25C0-4A1F-9275-23B7898E95F0}.Release|Any CPU.Build.0 = Release|Any CPU
-		{8DFB8024-894F-46B3-B62D-B6E21F0B8945}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{8DFB8024-894F-46B3-B62D-B6E21F0B8945}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{8DFB8024-894F-46B3-B62D-B6E21F0B8945}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{8DFB8024-894F-46B3-B62D-B6E21F0B8945}.Release|Any CPU.Build.0 = Release|Any CPU
 		{ED447D19-E841-46AE-BBDE-56326FF6F4AB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{ED447D19-E841-46AE-BBDE-56326FF6F4AB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{ED447D19-E841-46AE-BBDE-56326FF6F4AB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{ED447D19-E841-46AE-BBDE-56326FF6F4AB}.Release|Any CPU.Build.0 = Release|Any CPU
-		{7F7EC34C-AA06-460B-B0B7-EF429DD99E21}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{7F7EC34C-AA06-460B-B0B7-EF429DD99E21}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{7F7EC34C-AA06-460B-B0B7-EF429DD99E21}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{7F7EC34C-AA06-460B-B0B7-EF429DD99E21}.Release|Any CPU.Build.0 = Release|Any CPU
-		{FB3705B3-8BD8-4293-9266-6DE11FDACB2B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{FB3705B3-8BD8-4293-9266-6DE11FDACB2B}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{FB3705B3-8BD8-4293-9266-6DE11FDACB2B}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{FB3705B3-8BD8-4293-9266-6DE11FDACB2B}.Release|Any CPU.Build.0 = Release|Any CPU
-		{27DE54D0-FB17-4A30-AB53-2FC98EEF2C4C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{27DE54D0-FB17-4A30-AB53-2FC98EEF2C4C}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{27DE54D0-FB17-4A30-AB53-2FC98EEF2C4C}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{27DE54D0-FB17-4A30-AB53-2FC98EEF2C4C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{60D553F1-49E3-44F4-A417-25C91DDDE904}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{60D553F1-49E3-44F4-A417-25C91DDDE904}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{60D553F1-49E3-44F4-A417-25C91DDDE904}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{60D553F1-49E3-44F4-A417-25C91DDDE904}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{08462E29-25C0-4A1F-9275-23B7898E95F0} = {E5449372-918E-45FB-BD55-7A1BCC98FF1C}
-		{8DFB8024-894F-46B3-B62D-B6E21F0B8945} = {71C0B811-4069-4D47-8D81-1F4EC66E21BF}
 		{ED447D19-E841-46AE-BBDE-56326FF6F4AB} = {71C0B811-4069-4D47-8D81-1F4EC66E21BF}
-		{7F7EC34C-AA06-460B-B0B7-EF429DD99E21} = {71C0B811-4069-4D47-8D81-1F4EC66E21BF}
-		{FB3705B3-8BD8-4293-9266-6DE11FDACB2B} = {71C0B811-4069-4D47-8D81-1F4EC66E21BF}
-		{27DE54D0-FB17-4A30-AB53-2FC98EEF2C4C} = {71C0B811-4069-4D47-8D81-1F4EC66E21BF}
+		{60D553F1-49E3-44F4-A417-25C91DDDE904} = {71C0B811-4069-4D47-8D81-1F4EC66E21BF}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {A306C694-22A2-4AFB-974B-24B3629C8F28}
