@@ -80,13 +80,14 @@ try {
     }
 
     Write-Output "Pushing nupkgs to nuget.org"
-    if (! $env:ACTIONS_ID_TOKEN_REQUEST_TOKEN) {
-        throw "No GitHub OIDC token available. Ensure workflow permission id-token: write is set for NuGet trusted publishing."
+    $nugetApiKey = $env:NUGET_API_KEY
+    if (! $nugetApiKey) {
+        throw "No NuGet API key available. Ensure NuGet/login@v1 is configured and NUGET_API_KEY is set."
     }
 
     $artifacts | ForEach-Object {
-        Write-Output "Pushing $($_.Name) using NuGet trusted publishing (OIDC)"
-        & dotnet nuget push $_.FullName --source $nugetServer --force-english-output
+        Write-Output "Pushing $($_.Name) using NuGet API key"
+        & dotnet nuget push $_.FullName --source $nugetServer --api-key $nugetApiKey --force-english-output
 
         if ($LASTEXITCODE -ne 0) {
             throw "Push failed with error $LASTEXITCODE"
