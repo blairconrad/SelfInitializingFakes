@@ -1,3 +1,5 @@
+## 0.7.0-alpha.1
+
 ### Removed
 
 - Support for FakeItEasy < 8.0.0
