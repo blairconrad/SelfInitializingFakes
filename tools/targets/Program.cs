@@ -18,7 +18,7 @@ internal sealed class Program
         var versionInfoFile = "./src/VersionInfo.cs";
 
         var logsDirectory = "./artifacts/logs";
-        var outputDirectory = Path.GetFullPath("./artifacts/output");
+        var outputDirectory = "./artifacts/output";
         var testsDirectory = "./artifacts/tests";
 
         string version = string.Empty;
